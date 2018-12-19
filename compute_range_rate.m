@@ -3,7 +3,7 @@ function [rRate, dRel]   =   compute_range_rate(rxPos, rxVel, txPos, txVel)
 %   between Rx and Tx
 %
 %       Computation of the range rate (time rate of change of the distance
-%       between two locations.
+%       between two locations).
 %
 %   Input:      rxPos:  3x1 vector. Receiver position
 %               rxVel:  3x1 vector. Receiver velocity

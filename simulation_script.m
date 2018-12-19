@@ -7,7 +7,7 @@ txTime      =   0;                      % Transmission time [s]
 txFreq      =   1575.42;                % Transmission frequency [MHz]
 
 %- Receiver parameters
-numRx       =   2;                      % Number of receivers
+numRx       =   3;                      % Number of receivers
 dim         =   2;                      % Dimensions
 rxPos       =   zeros(numRx, dim);      % Position matrix [km]
 rxVel       =   zeros(numRx, dim);      % Velocity matrix [m/s]
@@ -15,10 +15,14 @@ rxPos(1, :) =   [10, 5];                % Rx1 position
 rxVel(1, :) =   [0, 0];                 % Rx1 velocity
 rxPos(2, :) =   [10, 60];               % Rx2 position
 rxVel(2, :) =   [0, 0];                 % Rx2 velocity
+rxPos(3, :) =   [7, 45];                % Rx3 position
+rxVel(3, :) =   [6, -4];                % Rx3 velocity
+rxPos(4, :) =   [35, 6];                % Rx4 position
+rxVel(4, :) =   [9, 2];                 % Rx4 velocity
 
 %- CRB parameters
-SNR_dB      =  40;                     % Signal-to-Noise Ratio [dB]
-Ns          =  15;                     % Number of samples []
+SNR_dB      =  -20;                     % Signal-to-Noise Ratio [dB]
+Ns          =  2;                       % Number of samples []
 
 %- Parameters adaptation
 SNR     =   db2pow(SNR_dB);
