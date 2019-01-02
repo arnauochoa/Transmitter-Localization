@@ -13,6 +13,7 @@ function fNoise = compute_freq_noise(SNR, Ns)
     CRB     =   12 / ((2 * pi)^2 * SNR * Ns * (Ns^2 - 1));
     
     % Gaussian frequency noise computation using CRB as variance
-    fNoise  =   sqrt(CRB) * randn;    % ~N(0, CRB)
+    % fNoise  =   sqrt(CRB) * randn;    % ~N(0, CRB)
+    fNoise = normrnd(0, sqrt(CRB));
 
 end

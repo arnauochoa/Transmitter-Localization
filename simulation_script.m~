@@ -1,6 +1,6 @@
 clear all; close all; clc; %#ok<CLALL>
 
-showScenario = false;
+showScenario = fals;
 
 %- Transmitter parameters
 txPos       =   [10, 50, 3];               % Position X-Y-Z [km]

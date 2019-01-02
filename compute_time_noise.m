@@ -16,5 +16,6 @@ function tNoise = compute_time_noise(SNR, Ns, rxFreq)
     timeCRB     =   phaseCRB / (2 * pi * rxFreq)^2;
 
     % Gaussian time noise computation using CRB as variance
-    tNoise      =   sqrt(timeCRB) * randn;    % ~N(0, CRB)
+    % tNoise      =   sqrt(timeCRB) * randn;    % ~N(0, CRB)
+    tNoise = normrnd(0, sqrt(timeCRB));
 end
