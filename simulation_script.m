@@ -3,8 +3,8 @@ clear all; close all; clc; %#ok<CLALL>
 showScenario = false;
 
 %- Transmitter parameters
-txPos       =   [10, 50, 3];               % Position X-Y-Z [km]
-txVel       =   [10, 10, 5];               % Velocity X-Y-Z [m/s]
+txPos       =   [10, 50, 3];            % Position X-Y-Z [km]
+txVel       =   [10, 10, 5];            % Velocity X-Y-Z [m/s]
 txTime      =   0;                      % Transmission time [s]
 txFreq      =   1575.42;                % Transmission frequency [MHz]
 
@@ -13,17 +13,17 @@ numRx       =   4;                      % Number of receivers
 dim         =   3;                      % Dimensions
 rxPos       =   zeros(numRx, dim);      % Position matrix [km]
 rxVel       =   zeros(numRx, dim);      % Velocity matrix [m/s]
-rxPos(1, :) =   [10, 5, 3];                % Rx1 position
-rxVel(1, :) =   [0, 0, 0];                 % Rx1 velocity
-rxPos(2, :) =   [10, 60, 5];               % Rx2 position
-rxVel(2, :) =   [0, 0, 0];                 % Rx2 velocity
-rxPos(3, :) =   [7, 45, 7];                % Rx3 position
-rxVel(3, :) =   [6, -4, 0];                % Rx3 velocity
-rxPos(4, :) =   [35, 6, 0];                % Rx4 position
-rxVel(4, :) =   [9, 2, 4];                 % Rx4 velocity
+rxPos(1, :) =   [10, 5, 3];             % Rx1 position
+rxVel(1, :) =   [0, 0, 0];              % Rx1 velocity
+rxPos(2, :) =   [10, 60, 5];            % Rx2 position
+rxVel(2, :) =   [0, 0, 0];              % Rx2 velocity
+rxPos(3, :) =   [7, 45, 7];             % Rx3 position
+rxVel(3, :) =   [6, -4, 0];             % Rx3 velocity
+rxPos(4, :) =   [35, 6, 0];             % Rx4 position
+rxVel(4, :) =   [9, 2, 4];              % Rx4 velocity
 
 %- CRB parameters
-SNR_dB      =  10;                     % Signal-to-Noise Ratio [dB]
+SNR_dB      =  10;                      % Signal-to-Noise Ratio [dB]
 Ns          =  2;                       % Number of samples []
 
 %- Parameters adaptation
