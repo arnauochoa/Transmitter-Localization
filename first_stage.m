@@ -13,14 +13,9 @@ function [txEstPos, txEstVel, refRange, refRrate] = first_stage(rxPos, rxVel, to
 %               txEstVel:   3x1 vector. Source's estimated velocity
 %               refRange:   3x1 vector. Reference receiver's range to source
 %               refRrate:   3x1 vector. Reference receiver's range rate to source
-    
-    c       =   299792458;              % Speed of light (m/s)
 
-    [rxPos, rxVel, refPos, refVel, tdoas, fdoas] = ...
+    [rxPos, rxVel, refPos, refVel, dRange, dRrate] = ...
         get_reference(rxPos, rxVel, toas, foas);
-    
-    dRange  =   tdoas .* c;
-    dRrate  =   fdoas .* c; % TODO: review this 
     
     %- Vector h definition
     %-- First part of h, corresponding to TDOA

@@ -1,4 +1,4 @@
-function [rxPos, rxVel, refPos, refVel, tdoas, fdoas] = get_differences(rxPos, rxVel, toas, foas)
+function [rxPos, rxVel, refPos, refVel, dRange, dRrate] = get_differences(rxPos, rxVel, toas, foas)
 %GET_DIFFERENCES Returns the reference position and reference and the TDOAs
 %   and FDOAs wrt. the reference
 %
@@ -19,12 +19,14 @@ function [rxPos, rxVel, refPos, refVel, tdoas, fdoas] = get_differences(rxPos, r
 %                           reference receiver
 %               refPos:     1x3 vector. Position of the reference receiver
 %               refVel:     1x3 vector. Velocity of the reference receiver
-%               tdoas:      (M-1)x1 vector. TDOAs wrt. the reference
-%                           receiver
-%               fdoas:      (M-1)x1 vector. FDOAs wrt. the reference
-%                           receiver
+%               dRange:     (M-1)x1 vector. Differential ranges wrt. the
+%                           reference receiver
+%               dRrate:     (M-1)x1 vector. Differential range rates wrt.
+%                           the reference receiver
     
-    refIndex    = 1;
+    refIndex    = 1;                % Index of the reference receiver
+    c           =   299792458;      % Speed of light (m/s)
+    
     %- Assignation of a reference receiver 
     refPos              =   rxPos(refIndex, :);
     rxPos(refIndex)     =   [];
@@ -39,5 +41,9 @@ function [rxPos, rxVel, refPos, refVel, tdoas, fdoas] = get_differences(rxPos, r
     %- TDOAs and FDOAs computation
     tdoas  = abs(refTOA - toas);
     fdoas  = abs(refFOA - foas);
+    
+    %- Differential ranges and range rates for receivers
+    dRange  = tdoas .* c;
+    dRrate  = fdoas; % TODO: implement this
 end
 
