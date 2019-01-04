@@ -18,8 +18,8 @@ function [rxTime, rxFreq] = observables_generation(rxPos, rxVel, txPos, txVel, t
 %               rxFreq: Double. Received signal frequency in Hz
 
     %- Parameters initialization
-    n       =   1;                      % Refractive index
-    c       =   299792458/n;            % Speed of light (m/s)
+%    n       =   1;                      % Refractive index
+    c       =   299792458;              % Speed of light (m/s)
     
     %- Relative distance and range rate computation
     [rRate, dRel]   =   compute_range_rate(rxPos, rxVel, txPos, txVel);
