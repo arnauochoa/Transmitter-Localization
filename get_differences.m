@@ -1,4 +1,4 @@
-function [rxPos, rxVel, refPos, refVel, dRange, dRrate] = get_differences(rxPos, rxVel, toas, foas)
+function [rxPos, rxVel, refPos, refVel, dRange, dRrate] = get_differences(txFreq, rxPos, rxVel, toas, foas)
 %GET_DIFFERENCES Returns the reference position and reference and the TDOAs
 %   and FDOAs wrt. the reference
 %
@@ -29,9 +29,9 @@ function [rxPos, rxVel, refPos, refVel, dRange, dRrate] = get_differences(rxPos,
     
     %- Assignation of a reference receiver 
     refPos              =   rxPos(refIndex, :);
-    rxPos(refIndex)     =   [];
+    rxPos(refIndex, :)  =   [];
     refVel              =   rxVel(refIndex, :);
-    rxVel(refIndex)     =   [];
+    rxVel(refIndex, :)  =   [];
     
     refTOA              =   toas(refIndex);
     toas(refIndex)      =   [];
@@ -44,6 +44,6 @@ function [rxPos, rxVel, refPos, refVel, dRange, dRrate] = get_differences(rxPos,
     
     %- Differential ranges and range rates for receivers
     dRange  = tdoas .* c;
-    dRrate  = fdoas; % TODO: implement this
+    dRrate  = fdoas .* (c/txFreq);
 end
 

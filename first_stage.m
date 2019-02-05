@@ -1,4 +1,4 @@
-function [txEstPos, txEstVel, refRange, refRrate] = first_stage(rxPos, rxVel, toas, foas)
+function [txEstPos, txEstVel, refRange, refRrate] = first_stage(txFreq, rxPos, rxVel, toas, foas)
 %   FIRST_STAGE:     First estimation of source's position and velocity.
 %
 %       First estimation of source's position and velocity using the first 
@@ -14,28 +14,35 @@ function [txEstPos, txEstVel, refRange, refRrate] = first_stage(rxPos, rxVel, to
 %               refRange:   3x1 vector. Reference receiver's range to source
 %               refRrate:   3x1 vector. Reference receiver's range rate to source
 
+    M   = length(toas);
+
     [rxPos, rxVel, refPos, refVel, dRange, dRrate] = ...
-        get_reference(rxPos, rxVel, toas, foas);
+        get_differences(txFreq, rxPos, rxVel, toas, foas);
     
     %- Vector h definition
-    %-- First part of h, corresponding to TDOA
-    h1  =   (dRange.^2) - (rxPos * rxPos.') + (refPos * refPos.');
-    %-- Second part of h, corresponding to FDOA
-    h2  =   2 * (dRange .* dRrate - rxVel * rxPos.' + refVel * refPos.');
-
-    h   =   [h1; h2];
-    
+    h1  =   zeros(M-1, 1);
+    h2  =   zeros(M-1, 1);
     %- Matrix G definition
     O   =   zeros(1, 3);
-    %-- First part of G, corresponding to TDOA
-    G1  =   [(rxPos-refPos), dRange, O, 0];
-    %-- Second part of G, corresponding to FDOA
-    G2  =   [(rxVel-refVel), dRrate, (rxPos-refPos), dRange];
-    
+    G1  =   zeros(M-1, 8);
+    G2  =   zeros(M-1, 8);
+    for row = 1:M-1
+        %-- First part of h, corresponding to TDOA
+        h1(row)  =   (dRange(row)^2) - (rxPos(row, :) * rxPos(row, :).') + (refPos * refPos.');
+        %-- Second part of h, corresponding to FDOA
+        h2(row)  =   2 * (dRange(row) * dRrate(row) - rxVel(row, :) * rxPos(row, :).' + refVel * refPos.');
+        
+        %-- First part of G, corresponding to TDOA
+        G1(row, :)  =   [(rxPos(row, :) - refPos), dRange(row), O, 0];
+        %-- Second part of G, corresponding to FDOA
+        G2(row, :)  =   [(rxVel(row, :) - refVel), dRrate(row), ...
+            (rxPos(row, :) - refPos), dRange(row)];
+    end
+    h   =   [h1; h2];
     G   =   -2 .* [G1; G2];
     
     %- Weighted Least Squares
-    W   =   eye(size(G)); % TODO: external function  will find W from Q
+    W   =   eye(6); % TODO: external function will find W from Q
     
     theta       = pinv(G.' * W * G) * G.' * W * h;
     txEstPos    = theta(1);

@@ -1,6 +1,6 @@
 clear all; close all; clc; %#ok<CLALL>
 
-showScenario = false;
+showScenario = true;
 
 %- Transmitter parameters
 txPos       =   [10, 50, 3];            % Position X-Y-Z [km]
@@ -27,19 +27,20 @@ SNR_dB      =  10;                      % Signal-to-Noise Ratio [dB]
 Ns          =  2;                       % Number of samples []
 
 %- Parameters adaptation
-SNR     =   db2pow(SNR_dB);
-txFreq  =   txFreq * 1e6;
-txPos   =   txPos.*1e3;
-rxPos   =   rxPos.*1e3;
+SNR         =   db2pow(SNR_dB);
+txFreq      =   txFreq * 1e6;
+txPos       =   txPos.*1e3;
+rxPos       =   rxPos.*1e3;
 
-rxTime  =   zeros(numRx, 1);
-rxFreq  =   zeros(numRx, 1);
+rxTime      =   zeros(numRx, 1);
+rxFreq      =   zeros(numRx, 1);
 for rx = 1:numRx
     [rxTime(rx), rxFreq(rx)] = observables_generation(rxPos(rx,:), rxVel(rx,:),...
         txPos, txVel, txTime, txFreq, SNR, Ns);
 end
 
-
+[txEstPos, txEstVel, refRange, refRrate] = ...
+    first_stage(txFreq, rxPos, rxVel, rxTime, rxFreq);
 
 % -------------------------------------------------------------------------
 fprintf("\n ========= Results =========\n");
@@ -49,12 +50,14 @@ for rx = 1:numRx
     fprintf(" Received signal frequency: %f MHz \n", rxFreq(rx)/1e6);
 end
 
+
 if showScenario
     scale = 5e2;
     figure;
     scatter3(txPos(1), txPos(2), txPos(3), 'r', 'x'); hold on;
+    scatter3(txEstPos(1), txEstPos(2), txEstPos(3), 'g', 'x'); hold on;
     scatter3(rxPos(:, 1), rxPos(:, 2), rxPos(:, 3), 'b', 'x'); hold on;
-    quiver3(txPos(1), txPos(2), txPos(3), txVel(1)*scale, txVel(2)*scale, txVel(3)*scale, 'r'); hold on;
+    quiver3(txEstPos(1), txEstPos(2), txEstPos(3), txEstVel(1)*scale, txEstVel(2)*scale, txEstVel(3)*scale, 'r'); hold on;
     for i = 1:numRx
         quiver3(rxPos(i, 1), rxPos(i, 2), rxPos(i, 3), rxVel(i, 1)*scale, rxVel(i, 2)*scale, rxVel(i, 3)*scale, 'b'); hold on;
     end
@@ -65,4 +68,3 @@ if showScenario
 %     ylim([0 maxPosY+rxVel(j, 2)*scale+10e3]);
 %     zlim([0 maxPosZ+rxVel(k, 3)*scale+10e3]);
 end
-
