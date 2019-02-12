@@ -1,10 +1,12 @@
 clear all; close all; clc; %#ok<CLALL>
 
-showScenario = true;
+%- Simulation parameters
+showScenario    = true;                    % Shows position over 3D space
+N               =   10;                    % Number of realizations
 
 %- Transmitter parameters
 txPos       =   [10, 50, 3];            % Position X-Y-Z [km]
-txVel       =   [10, 10, 5];            % Velocity X-Y-Z [m/s]
+txVel       =   [0, 0, 0];            % Velocity X-Y-Z [m/s]
 txTime      =   0;                      % Transmission time [s]
 txFreq      =   1575.42;                % Transmission frequency [MHz]
 
@@ -16,11 +18,11 @@ rxVel       =   zeros(numRx, dim);      % Velocity matrix [m/s]
 rxPos(1, :) =   [10, 5, 3];             % Rx1 position
 rxVel(1, :) =   [0, 0, 0];              % Rx1 velocity
 rxPos(2, :) =   [10, 60, 5];            % Rx2 position
-rxVel(2, :) =   [0, 0, 0];              % Rx2 velocity
+rxVel(2, :) =   [5, -5, -5];              % Rx2 velocity
 rxPos(3, :) =   [7, 45, 7];             % Rx3 position
-rxVel(3, :) =   [6, -4, 0];             % Rx3 velocity
+rxVel(3, :) =   [7, 7, 3];             % Rx3 velocity
 rxPos(4, :) =   [35, 6, 0];             % Rx4 position
-rxVel(4, :) =   [9, 2, 4];              % Rx4 velocity
+rxVel(4, :) =   [-5, 3, 8];              % Rx4 velocity
 
 %- CRB parameters
 SNR_dB      =  10;                      % Signal-to-Noise Ratio [dB]
@@ -32,24 +34,53 @@ txFreq      =   txFreq * 1e6;
 txPos       =   txPos.*1e3;
 rxPos       =   rxPos.*1e3;
 
-rxTime      =   zeros(numRx, 1);
-rxFreq      =   zeros(numRx, 1);
-for rx = 1:numRx
-    [rxTime(rx), rxFreq(rx)] = observables_generation(rxPos(rx,:), rxVel(rx,:),...
-        txPos, txVel, txTime, txFreq, SNR, Ns);
+txEstPos    =   zeros(N, 3);
+txEstVel    =   zeros(N, 3);
+refRange    =   zeros(N, 3);
+refRrate    =   zeros(N, 3);
+for i = 1:N
+    rxTime      =   zeros(numRx, 1);
+    rxFreq      =   zeros(numRx, 1);
+    for rx = 1:numRx
+        [rxTime(rx), rxFreq(rx)] = observables_generation(rxPos(rx,:), rxVel(rx,:),...
+            txPos, txVel, txTime, txFreq, SNR, Ns);
+    end
+
+    [txEstPos(i, :), txEstVel(i, :), refRange(i, :), refRrate(i, :)] = ...
+        first_stage(txFreq, rxPos, rxVel, rxTime, rxFreq);
 end
 
-[txEstPos, txEstVel, refRange, refRrate] = ...
-    first_stage(txFreq, rxPos, rxVel, rxTime, rxFreq);
+%-- Results computations
+%- Mean
+meanEstPos      =   mean(txEstPos, 1);
+meanEstVel      =   mean(txEstVel, 1);
+%- Bias
+biasEstPos      =   sqrt(sum((txEstPos-txPos).^2));
+biasEstVel      =   sqrt(sum((txEstVel-txVel).^2));
+%- Standard deviation
+stdEstPos       =   std(txEstPos, 0, 1);
+stdEstVel       =   std(txEstVel, 0, 1);
+%- Root Mean Square Error evolution
+% rmseEstPos       =   sqrt(mean((txEstPos - txPos).^2, 1));
+% rmseEstVel       =   sqrt(mean((txEstVel - txVel).^2, 1));
 
 % -------------------------------------------------------------------------
-fprintf("\n ========= Results =========\n");
+fprintf("\n ========= Observables =========\n");
 for rx = 1:numRx
     fprintf(" --- Receiver %d ---\n", rx);
     fprintf(" Reception time: %f seconds \n", rxTime(rx));
     fprintf(" Received signal frequency: %f MHz \n", rxFreq(rx)/1e6);
 end
 
+fprintf("\n ========= Results =========\n");
+fprintf(" Actual position: X = %f m; Y = %f m; Z = %f m\n", txPos);
+fprintf(" Estimated position mean: X = %f m; Y = %f m; Z = %f m \n", meanEstPos);
+fprintf(" Actual velocity: X = %f m; Y = %f m; Z = %f m\n", txVel);
+fprintf(" Estimated velocity mean: X = %f m; Y = %f m; Z = %f m\n", meanEstVel);
+fprintf(" Position bias: %f m\n", biasEstPos);
+fprintf(" Velocity bias: %f m\n", biasEstVel);
+fprintf(" Estimated position std: X = %f m; Y = %f m; Z = %f m\n", stdEstVel);
+fprintf(" Estimated velocity std: X = %f m; Y = %f m; Z = %f m\n", stdEstVel);
 
 if showScenario
     scale = 5e2;

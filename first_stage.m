@@ -30,7 +30,7 @@ function [txEstPos, txEstVel, refRange, refRrate] = first_stage(txFreq, rxPos, r
         %-- First part of h, corresponding to TDOA
         h1(row)  =   (dRange(row)^2) - (rxPos(row, :) * rxPos(row, :).') + (refPos * refPos.');
         %-- Second part of h, corresponding to FDOA
-        h2(row)  =   2 * (dRange(row) * dRrate(row) - rxVel(row, :) * rxPos(row, :).' + refVel * refPos.');
+        h2(row)  =   2 * (dRrate(row) * dRange(row) - rxVel(row, :) * rxPos(row, :).' + refVel * refPos.');
         
         %-- First part of G, corresponding to TDOA
         G1(row, :)  =   [(rxPos(row, :) - refPos), dRange(row), O, 0];
@@ -42,12 +42,12 @@ function [txEstPos, txEstVel, refRange, refRrate] = first_stage(txFreq, rxPos, r
     G   =   -2 .* [G1; G2];
     
     %- Weighted Least Squares
-    W   =   eye(6); % TODO: external function will find W from Q
+    W   =   eye(2*(M-1)); % TODO: external function will find W from Q
     
     theta       = pinv(G.' * W * G) * G.' * W * h;
-    txEstPos    = theta(1);
-    txEstVel    = theta(2);
-    refRange    = theta(3);
-    refRrate    = theta(4);
+    txEstPos    = theta(1:3);
+    refRange    = theta(4);
+    txEstVel    = theta(5:7);
+    refRrate    = theta(8);
     
 end
