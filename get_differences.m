@@ -1,6 +1,6 @@
 function [rxPos, rxVel, refPos, refVel, dRange, dRrate] = get_differences(txFreq, rxPos, rxVel, toas, foas)
-%GET_DIFFERENCES Returns the reference position and reference and the TDOAs
-%   and FDOAs wrt. the reference
+%   GET_DIFFERENCES Returns the reference position and reference and the 
+%   TDOAs and FDOAs wrt. the reference
 %
 %       The reference receiver is selected and extracted from the position
 %       and velocity vectors. Then the TDOAs and FDOAs are computed with
@@ -39,11 +39,11 @@ function [rxPos, rxVel, refPos, refVel, dRange, dRrate] = get_differences(txFreq
     foas(refIndex)      =   [];
     
     %- TDOAs and FDOAs computation
-    tdoas  = abs(refTOA - toas);
-    fdoas  = abs(refFOA - foas);
+    tdoas  = toas - refTOA;
+    fdoas  = foas - refFOA;
     
     %- Differential ranges and range rates for receivers
     dRange  = tdoas .* c;
-    dRrate  = fdoas .* (c/txFreq);
+    dRrate  = -fdoas .* (c/txFreq);
 end
 

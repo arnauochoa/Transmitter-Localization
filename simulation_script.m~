@@ -2,8 +2,8 @@ clear all; close all; clc; %#ok<CLALL>
 
 %- Simulation parameters
 showScenario    =   false;                    % Shows position over 3D space
-N               =   5000;                    % Number of realizations
-nbins           =   50;
+N               =   1000;                    % Number of realizations
+nbins           =   2
 
 %- Transmitter parameters
 txPos       =   [2121, 2121, 2298];            % Position X-Y-Z [m]
@@ -95,14 +95,14 @@ fprintf("\n Estimated position std: X = %f m; Y = %f m; Z = %f m\n", stdEstVel);
 fprintf(" Estimated velocity std: X = %f m/s; Y = %f m/s; Z = %f m/s\n", stdEstVel);
 
 figure;
-histogram(errEstPos, nbins);
+histogram(errEstPos, )
 xlabel("Error [m]");
-title("Distribution of error in estimated distance");
+title("Error as distance from estimated to actual position");
 
 figure;
-histogram(errEstVel, nbins);
+histogram(errEstVel);
 xlabel("Error [m/s]");
-title("Distribution of error in estimated velocity");
+title("Error as diference in vector magnitude");
 
 if showScenario
     scale = 1e2;
