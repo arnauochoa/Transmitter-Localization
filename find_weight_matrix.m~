@@ -1,9 +1,0 @@
-function W = find_weight_matrix(dRange,dRrate)
-%   FIND_WEIGHT_MATRIX Finds weigh matrix for LS
-%
-
-% TODO: implement 
-
-W = eye(2*length(dRange));
-end
-

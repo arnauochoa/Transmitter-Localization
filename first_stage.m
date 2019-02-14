@@ -1,11 +1,11 @@
-function [txEstPos, txEstVel, refRange, refRrate] = first_stage(txFreq, rxPos, rxVel, toas, foas)
+function [txEstPos, txEstVel, refRange, refRrate] = first_stage(txFreq, rx, toas, foas)
 %   FIRST_STAGE:     First estimation of source's position and velocity.   
 %
 %       First estimation of source's position and velocity using the first 
 %       stage method described by Ho and Xo.
 %
-%   Input:      rxPos:      Mx3 matrix. Receivers' positions
-%               rxVel:      Mx3 matrix. Receivers' velocities
+%   Input:      txFreq:     Double. Transmission frequency
+%               rx:         1xM struct. Information of the receivers  
 %               toas:       Mx1 vector. Observed TOAs
 %               foas:       Mx1 vector. Observed FOAs
 %
@@ -17,8 +17,8 @@ function [txEstPos, txEstVel, refRange, refRrate] = first_stage(txFreq, rxPos, r
 
     M   = length(toas);
 
-    [rxPos, rxVel, refPos, refVel, dRange, dRrate] = ...
-        get_differences(txFreq, rxPos, rxVel, toas, foas);
+    [rx, ref, dRange, dRrate] = ...
+        get_differences(txFreq, rx, toas, foas);
     
     %- Vector h definition
     h1  =   zeros(M-1, 1);
@@ -29,15 +29,15 @@ function [txEstPos, txEstVel, refRange, refRrate] = first_stage(txFreq, rxPos, r
     G2  =   zeros(M-1, 8);
     for row = 1:M-1
         %-- First part of h, corresponding to TDOA
-        h1(row)  =   (dRange(row)^2) - (rxPos(row, :) * rxPos(row, :).') + (refPos * refPos.');
+        h1(row)  =   (dRange(row)^2) - (rx(row).pos * rx(row).pos.') + (ref.pos * ref.pos.');
         %-- Second part of h, corresponding to FDOA
-        h2(row)  =   2 * (dRrate(row) * dRange(row) - rxVel(row, :) * rxPos(row, :).' + refVel * refPos.');
+        h2(row)  =   2 * (dRrate(row) * dRange(row) - rx(row).vel * rx(row).pos.' + ref.vel * ref.pos.');
         
         %-- First part of G, corresponding to TDOA
-        G1(row, :)  =   [(rxPos(row, :) - refPos), dRange(row), O, 0];
+        G1(row, :)  =   [(rx(row).pos - ref.pos), dRange(row), O, 0];
         %-- Second part of G, corresponding to FDOA
-        G2(row, :)  =   [(rxVel(row, :) - refVel), dRrate(row), ...
-            (rxPos(row, :) - refPos), dRange(row)];
+        G2(row, :)  =   [(rx(row).vel - ref.vel), dRrate(row), ...
+            (rx(row).pos - ref.pos), dRange(row)];
     end
     h   =   [h1; h2];
     G   =   -2 .* [G1; G2];

@@ -1,14 +1,13 @@
 clear all; close all; clc; %#ok<CLALL>
 
 %- Simulation parameters
-showScenario    =   false;                    % Shows position over 3D space
-N               =   1000;                    % Number of realizations
-nbins           =   2
+showScenario    =   true;              % Shows position over 3D space
+N               =   5000;               % Number of realizations
+nbins           =   50;
 
 %- Transmitter parameters
 txPos       =   [2121, 2121, 2298];            % Position X-Y-Z [m]
 txVel       =   [10, 10, 7];            % Velocity X-Y-Z [m/s]
-txTime      =   0;                      % Transmission time [s]
 txFreq      =   1575.42;                % Transmission frequency [MHz]
 
 %- Receiver parameters
@@ -33,27 +32,8 @@ rxVel(5, :) =   [0, 0, 0];              % Rx6 velocity
 SNR_dB      =  10;                      % Signal-to-Noise Ratio [dB]
 Ns          =  2;                       % Number of samples []
 
-%- Parameters adaptation
-SNR         =   db2pow(SNR_dB);
-txFreq      =   txFreq * 1e6;   % MHz to Hz
-% txPos       =   txPos.*1e3;   % km to m
-% rxPos       =   rxPos.*1e3;   % km to m
-
-txEstPos    =   zeros(N, 3);
-txEstVel    =   zeros(N, 3);
-refRange    =   zeros(N, 3);
-refRrate    =   zeros(N, 3);
-for i = 1:N
-    rxTimes     =   zeros(numRx, 1);
-    rxFreqs     =   zeros(numRx, 1);
-    for rx = 1:numRx
-        [rxTimes(rx), rxFreqs(rx)] = observables_generation(rxPos(rx,:), rxVel(rx,:),...
-            txPos, txVel, txTime, txFreq, SNR, Ns);
-    end
-
-    [txEstPos(i, :), txEstVel(i, :), refRange(i, :), refRrate(i, :)] = ...
-        first_stage(txFreq, rxPos, rxVel, rxTimes, rxFreqs);
-end
+[rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, SNR_dB, Ns,...
+    txFreq, txPos, txVel, rxPos, rxVel);
 
 %-- Results computations
 %- Mean
@@ -95,14 +75,14 @@ fprintf("\n Estimated position std: X = %f m; Y = %f m; Z = %f m\n", stdEstVel);
 fprintf(" Estimated velocity std: X = %f m/s; Y = %f m/s; Z = %f m/s\n", stdEstVel);
 
 figure;
-histogram(errEstPos, )
+histogram(errEstPos, nbins);
 xlabel("Error [m]");
-title("Error as distance from estimated to actual position");
+title("Distribution of error in estimated distance");
 
 figure;
-histogram(errEstVel);
+histogram(errEstVel, nbins);
 xlabel("Error [m/s]");
-title("Error as diference in vector magnitude");
+title("Distribution of error in estimated velocity");
 
 if showScenario
     scale = 1e2;
@@ -112,14 +92,12 @@ if showScenario
     scatter3(rxPos(:, 1), rxPos(:, 2), rxPos(:, 3), 'b', 'x', 'DisplayName', 'Receivers'); hold on;
     scatter3(txEstPos(1), txEstPos(2), txEstPos(3), 'g', 'x', 'DisplayName', 'Estimated position'); hold on;
     quiver3(txPos(1), txPos(2), txPos(3), txVel(1)*scale, txVel(2)*scale, txVel(3)*scale, 'r'); hold on;
-    quiver3(txEstPos(1), txEstPos(2), txEstPos(3), txEstVel(1)*scale, txEstVel(2)*scale, txEstVel(3)*scale, 'g'); hold on;
+    quiver3(txEstPos(1), txEstPos(2), txEstPos(3), ...
+        txEstVel(1)*scale, txEstVel(2)*scale, txEstVel(3)*scale, 'g'); hold on;
     for i = 1:numRx
-        quiver3(rxPos(i, 1), rxPos(i, 2), rxPos(i, 3), rxVel(i, 1)*scale, rxVel(i, 2)*scale, rxVel(i, 3)*scale, 'b'); hold on;
+        quiver3(rxPos(i, 1), rxPos(i, 2), rxPos(i, 3), ...
+            rxVel(i, 1)*scale, rxVel(i, 2)*scale, rxVel(i, 3)*scale, 'b'); hold on;
     end
-%     [maxPosX, i] = max(rxPos(:,1));
-%     [maxPosY, j] = max(rxPos(:,2));
-%     [maxPosZ, k] = max(rxPos(:,3));
-%     xlim([0 maxPosX+rxVel(i, 1)*scale+10e3]);
-%     ylim([0 maxPosY+rxVel(j, 2)*scale+10e3]);
-%     zlim([0 maxPosZ+rxVel(k, 3)*scale+10e3]);
 end
+
+

@@ -1,4 +1,4 @@
-function [rxTime, rxFreq] = observables_generation(rxPos, rxVel, txPos, txVel, txTime, txFreq, SNR, Ns)
+function [rxTime, rxFreq] = observables_generation(rx, tx, scen)
 %   OBSERVABLES_GENERATION:     Calculation of the observables
 %
 %       Reception time and reception frequency generation from the given
@@ -9,7 +9,6 @@ function [rxTime, rxFreq] = observables_generation(rxPos, rxVel, txPos, txVel, t
 %               rxVel:  3x1 vector. Receiver velocity
 %               txPos:  3x1 vector. Transmitter position
 %               txVel:  3x1 vector. Transmitter velocity
-%               txTime: Double. Tranmsission time
 %               txFreq: Double. Transmitted signal's frequency
 %               SNR:    Double. Signal-to-Noise Ratio of the received signal
 %               Ns:     Double. Number of samples
@@ -22,19 +21,19 @@ function [rxTime, rxFreq] = observables_generation(rxPos, rxVel, txPos, txVel, t
     c       =   299792458;              % Speed of light (m/s)
     
     %- Relative distance and range rate computation
-    [rRate, dRel]   =   compute_range_rate(rxPos, rxVel, txPos, txVel);
+    [rRate, dRel]   =   compute_range_rate(rx, tx);
     
     %- Actual propagation time and frequency drift computation
     tProp   =   dRel/c;                 % Propagation time
-    fDop    =   txFreq * (rRate/c);     % Doppler frequency drift
+    fDop    =   scen.freq * (rRate/c);     % Doppler frequency drift
     
     %- Observed frequency computation
-    fNoise  =   compute_freq_noise(SNR, Ns);
-    rxFreq  =   txFreq + fDop + fNoise;
+    fNoise  =   compute_freq_noise(scen.snr, scen.ns);
+    rxFreq  =   scen.freq + fDop + fNoise;
     
     %- Observed reception time compution
-    tNoise  =   compute_time_noise(SNR, Ns, rxFreq);
-    rxTime  =   txTime + tProp + tNoise; 
+    tNoise  =   compute_time_noise(scen.snr, scen.ns, rxFreq);
+    rxTime  =   tProp + tNoise; 
 
 end
 

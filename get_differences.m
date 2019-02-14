@@ -1,4 +1,4 @@
-function [rxPos, rxVel, refPos, refVel, dRange, dRrate] = get_differences(txFreq, rxPos, rxVel, toas, foas)
+function [rx, ref, dRange, dRrate] = get_differences(txFreq, rx, toas, foas)
 %   GET_DIFFERENCES Returns the reference position and reference and the 
 %   TDOAs and FDOAs wrt. the reference
 %
@@ -8,17 +8,13 @@ function [rxPos, rxVel, refPos, refVel, dRange, dRrate] = get_differences(txFreq
 %       velocities vectors are also updated removing the reference
 %       receiver.
 %
-%   Input:      rxPos:      Mx3 matrix. Receivers' positions
-%               rxVel:      Mx3 matrix. Receivers' velocities
+%   Input:      rxPos:      1xM struct. Information of the receivers
 %               toas:       Mx1 vector. Observed TOAs
 %               foas:       Mx1 vector. Observed FOAs
 %
-%   Output:     rxPos:      (M-1)x3 matrix. Receivers' positions without
-%                           reference receiver
-%               rxVel:      (M-1)x3 matrix. Receivers' velocities without
-%                           reference receiver
-%               refPos:     1x3 vector. Position of the reference receiver
-%               refVel:     1x3 vector. Velocity of the reference receiver
+%   Output:     rx:         1x(M-1) struct. Receivers without the reference
+%                           receiver
+%               ref:        Struct. Reference receiver
 %               dRange:     (M-1)x1 vector. Differential ranges wrt. the
 %                           reference receiver
 %               dRrate:     (M-1)x1 vector. Differential range rates wrt.
@@ -28,10 +24,8 @@ function [rxPos, rxVel, refPos, refVel, dRange, dRrate] = get_differences(txFreq
     c           =   299792458;      % Speed of light (m/s)
     
     %- Assignation of a reference receiver 
-    refPos              =   rxPos(refIndex, :);
-    rxPos(refIndex, :)  =   [];
-    refVel              =   rxVel(refIndex, :);
-    rxVel(refIndex, :)  =   [];
+    ref             =   rx(refIndex);
+    rx(refIndex)    =   [];
     
     refTOA              =   toas(refIndex);
     toas(refIndex)      =   [];
