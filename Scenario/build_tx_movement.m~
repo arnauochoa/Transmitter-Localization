@@ -1,0 +1,47 @@
+function [radius, azim, elev, plotOpt] = build_tx_movement(var, const)
+%BUILD_TX_MOVEMENT Summary of this function goes here
+%   Detailed explanation goes here
+I           =   ones(1, var.steps);
+step        =   abs((var.end - var.start)/(var.steps-1));
+switch var.id
+    case 'r'
+        radius  =   var.start:step:var.end;
+        azim    =   const.azim * I;
+        elev    =   const.elev * I;
+        % Plot options
+        plotOpt.xVect   =   radius;
+        plotOpt.label   =   "Radius (m)";
+        plotOpt.c1      =   sprintf("azimuth = %d", const.azim);
+        plotOpt.c2      =   sprintf("elevation = %d", const.elev);
+    case 'a'
+        radius  =   radConst * I;
+        azim    =   start:step:finish;
+        elev    =   elevConst * I;
+        % Plot options
+        plotOpt.xVect   =   azim;
+        plotOpt.label   =   "Azimuth (deg)";
+        plotOpt.c1      =   sprintf("radius = %d", const.rad);
+        plotOpt.c2      =   sprintf("elevation = %d", const.elev);
+    case 'e'
+        radius  =   radConst * I;
+        azim    =   azimConst * I;
+        elev    =   start:step:finish;
+        % Plot options
+        plotOpt.xVect   =   elev;
+        plotOpt.label   =   "Elevation (deg)";
+        plotOpt.c1      =   sprintf("radius = %d", const.rad);
+        plotOpt.c2      =   sprintf("azimuth = %d", const.azim);
+    otherwise
+        radius  =   radConst * I;
+        azim    =   azimConst * I;
+        elev    =   elevConst * I;
+        % Plot options
+        plotOpt.xVect   =   I;
+        plotOpt.label   =   "Elevation (deg)";
+        plotOpt.c1      =   "All are constant";
+        plotOpt.c2      =   "";
+end
+
+
+end
+

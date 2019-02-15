@@ -29,9 +29,9 @@ function [txEstPos, txEstVel, refRange, refRrate] = first_stage(txFreq, rx, toas
     G2  =   zeros(M-1, 8);
     for row = 1:M-1
         %-- First part of h, corresponding to TDOA
-        h1(row)  =   (dRange(row)^2) - (rx(row).pos * rx(row).pos.') + (ref.pos * ref.pos.');
+        h1(row)  =   (dRange(row)^2) - dot(rx(row).pos, rx(row).pos) + dot(ref.pos, ref.pos);
         %-- Second part of h, corresponding to FDOA
-        h2(row)  =   2 * (dRrate(row) * dRange(row) - rx(row).vel * rx(row).pos.' + ref.vel * ref.pos.');
+        h2(row)  =   2 * (dot(dRrate(row), dRange(row)) - dot(rx(row).vel, rx(row).pos) + dot(ref.vel, ref.pos));
         
         %-- First part of G, corresponding to TDOA
         G1(row, :)  =   [(rx(row).pos - ref.pos), dRange(row), O, 0];

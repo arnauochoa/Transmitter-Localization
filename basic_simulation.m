@@ -1,5 +1,9 @@
-clear all; close all; clc; %#ok<CLALL>
+clearvars; close all; clc;
+addpath 'Estimation';
+addpath 'Observables';
+addpath 'Scenario';
 
+%% --- PARAMETERS DEFINITION ---
 %- Simulation parameters
 showScenario    =   true;              % Shows position over 3D space
 N               =   5000;               % Number of realizations
@@ -31,7 +35,12 @@ SNR_dB      =   10;                      % Signal-to-Noise Ratio [dB]
 Ns          =   2;                       % Number of samples 
 scen        =   struct('freq', txFreq * 1e6, 'snr', db2pow(SNR_dB), 'ns', Ns);
 
+
+%% --- SIMULATION ---
 [rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, scen, tx, rx);
+
+
+%% --- RESULTS ---
 
 %-- Results computations
 %- Mean
@@ -47,7 +56,7 @@ stdEstVel       =   std(txEstVel, 0, 1);
 errEstPos       =   sqrt(sum(txEstPos - tx.pos, 2).^2);
 errEstVel       =   sqrt(sum(txEstVel - tx.vel, 2).^2);
 
-% -------------------------------------------------------------------------
+
 fprintf("\n ========= Observables =========\n");
 for r = 1:numRx
     fprintf(" --- Receiver %d ---\n", r);
