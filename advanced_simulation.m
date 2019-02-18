@@ -6,14 +6,14 @@ addpath 'Scenario';
 %% --- PARAMETERS DEFINITION ---
 %- Simulation parameters
 showScenario    =   true;           % Shows position over 3D space
-N               =   1000;           % Number of realizations
+N               =   500;           % Number of realizations
 
 %- Transmitter parameters
 %-- Variable parameter values, 'r' - radius, 'a' - azimuth, 'e' - elevation
-var.id      =   'r';                % Parameter that will change
-var.start   =   1000;                % Start value of the variable parameter [m] or [deg]
-var.end     =   5000;                 % End value of the variable parameter [m] or [deg]
-var.steps   =   15;                  % Number of steps for the variable parameter
+var.id      =   'e';                % Parameter that will change
+var.start   =   -40;               % Start value of the variable parameter [m] or [deg]
+var.end     =   40;               % End value of the variable parameter [m] or [deg]
+var.steps   =   9;                 % Number of steps for the variable parameter
 %-- Constant parameters, value of changin parameter will be ignored
 const.rad   =   3000;               % Value for when radius is constant [m]
 const.azim  =   45;                 % Value for when azimuth is constant [deg]
@@ -47,18 +47,45 @@ scen        =   struct('freq', txFreq * 1e6, 'snr', db2pow(SNR_dB), 'ns', Ns);
 
 %% --- SIMULATION ---
 
-aux.pos =   zeros(1,3);
-aux.vel =   zeros(1,3);
-est     =   repmat(aux, 1, var.steps);
-biasPos    =   zeros(1, var.steps);
-stdPos   =   zeros(1, var.steps);
+aux.pos     =   zeros(1,3);
+aux.vel     =   zeros(1,3);
+est         =   repmat(aux, 1, var.steps);
+
+pos.x.bias  =   zeros(1, var.steps);
+pos.x.std   =   zeros(1, var.steps);
+pos.y.bias  =   zeros(1, var.steps);
+pos.y.std   =   zeros(1, var.steps);
+pos.z.bias  =   zeros(1, var.steps);
+pos.z.std   =   zeros(1, var.steps);
+
+vel.x.bias  =   zeros(1, var.steps);
+vel.x.std   =   zeros(1, var.steps);
+vel.y.bias  =   zeros(1, var.steps);
+vel.y.std   =   zeros(1, var.steps);
+vel.z.bias  =   zeros(1, var.steps);
+vel.z.std   =   zeros(1, var.steps);
+
 for i = 1:var.steps
     tx = obtain_tx_info(radius(i), azim(i), elev(i), const.angW);
     [~, ~, txEstPos, txEstVel] = simulate_scenario(N, scen, tx, rx);
-    meanEstPos = mean(txEstPos, 1);
     
-    biasPos(i) = sqrt(sum((meanEstPos - tx.pos).^2));
-    stdPos(i) = std(sqrt(sum((meanEstPos).^2)));
+    %-- Position and velocity averages
+    meanEstPos      =   mean(txEstPos, 1);
+    meanEstVel      =   mean(txEstVel, 1);
+    %-- Bias and standard deviation in Position
+    pos.x.bias(i)   =   meanEstPos(1) - tx.pos(1);
+    pos.x.std(i)    =   std(txEstPos(:, 1));
+    pos.y.bias(i)   =   meanEstPos(2) - tx.pos(2);
+    pos.y.std(i)    =   std(txEstPos(:, 2));
+    pos.z.bias(i)   =   meanEstPos(3) - tx.pos(3);
+    pos.z.std(i)    =   std(txEstPos(:, 3));
+    %-- Bias and standard deviation in Velocity
+    vel.x.bias(i)   =   meanEstVel(1) - tx.vel(1);
+    vel.x.std(i)    =   std(txEstVel(:, 1));
+    vel.y.bias(i)   =   meanEstVel(2) - tx.vel(2);
+    vel.y.std(i)    =   std(txEstVel(:, 2));
+    vel.z.bias(i)   =   meanEstVel(3) - tx.vel(3);
+    vel.z.std(i)    =   std(txEstVel(:, 3));
 end
 
 %% --- RESULTS ---
@@ -69,10 +96,68 @@ fprintf("\n ========= Results =========\n");
 
 
 if (var.id == 'r' || var.id == 'a' ||var.id == 'e')
-    figure;
-    plot(plotOpt.xVect, biasPos, '-o');
-    ylabel("Error (m)");
+    %- Bias of the position
+    f1 = figure; set(f1, 'Position', [10, 600, 400, 500]);
+    subplot(3,1,1);
+    plot(plotOpt.xVect, pos.x.bias, '-o');
+    title("Position bias");
+    ylabel("Bias of position (X) (m)");
     xlabel(plotOpt.label);
-    title(sprintf("Bias in estimation, %s %s", plotOpt.c1, plotOpt.c2));
+    subplot(3,1,2);
+    plot(plotOpt.xVect, pos.y.bias, '-o');
+    ylabel("Bias of position (Y) (m)");
+    xlabel(plotOpt.label);
+    subplot(3,1,3);
+    plot(plotOpt.xVect, pos.z.bias, '-o');
+    ylabel("Bias of position (Z) (m)");
+    xlabel(plotOpt.label);
+    
+    %- Standard deviation of the position
+    f2 = figure; set(f2, 'Position',  [420, 600, 400, 500]);
+    subplot(3,1,1);
+    plot(plotOpt.xVect, pos.x.std, '-o');
+    title("Position standard deviation");
+    ylabel("STD of position (X) (m)");
+    xlabel(plotOpt.label);
+    subplot(3,1,2);
+    plot(plotOpt.xVect, pos.y.std, '-o');
+    ylabel("STD of position (Y) (m)");
+    xlabel(plotOpt.label);
+    subplot(3,1,3);
+    plot(plotOpt.xVect, pos.z.std, '-o');
+    ylabel("STD of position (Z) (m)");
+    xlabel(plotOpt.label);
+    
+    %- Bias of the velocity
+    f3 = figure;  set(f3, 'Position',  [830, 600, 400, 500]);
+    subplot(3,1,1);
+    plot(plotOpt.xVect, vel.x.bias, '-o');
+    title("Velocity bias");
+    ylabel("Bias of velocity (X) (m/s)");
+    xlabel(plotOpt.label);
+    subplot(3,1,2);
+    plot(plotOpt.xVect, vel.y.bias, '-o');
+    ylabel("Bias of velocity (Y) (m/s)");
+    xlabel(plotOpt.label);
+    subplot(3,1,3);
+    plot(plotOpt.xVect, vel.z.bias, '-o');
+    ylabel("Bias of velocity (Z) (m/s)");
+    xlabel(plotOpt.label);
+    
+    %- Standard deviation of the velocity
+    f4 = figure;  set(f4, 'Position',  [1240, 600, 400, 500]);
+    subplot(3,1,1);
+    plot(plotOpt.xVect, vel.x.std, '-o');
+    title("Velocity standard deviation");
+    ylabel("STD of velocity (X) (m/s)");
+    xlabel(plotOpt.label);
+    subplot(3,1,2);
+    plot(plotOpt.xVect, vel.y.std, '-o');
+    ylabel("STD of velocity (Y) (m/s)");
+    xlabel(plotOpt.label);
+    subplot(3,1,3);
+    plot(plotOpt.xVect, vel.z.std, '-o');
+    ylabel("STD of velocity (Z) (m/s)");
+    xlabel(plotOpt.label);
 end
 
