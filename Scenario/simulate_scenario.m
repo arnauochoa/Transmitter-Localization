@@ -30,7 +30,7 @@ function [rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, scen, tx,
         end
 
         [txEstPos(i, :), txEstVel(i, :), refRange(i, :), refRrate(i, :)] = ...
-            first_stage(scen.freq, rx, rxTimes, rxFreqs);
+            first_stage(scen, rx, rxTimes, rxFreqs);
     end
 end
 

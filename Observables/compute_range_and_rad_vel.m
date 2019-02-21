@@ -1,6 +1,6 @@
-function [rRate, dRel]   =   compute_range_rate(rx, tx)
+function [range, radVel]   =   compute_range_and_rad_vel(rx, tx)
 %   COMPUTE_RANGE_RATE:     Computes the range rate and relative distance
-%   between Rx and Tx
+%                           between Rx and Tx
 %
 %       Computation of the range rate (time rate of change of the distance
 %       between two locations).
@@ -13,12 +13,12 @@ function [rRate, dRel]   =   compute_range_rate(rx, tx)
     
     %- Relative distance vector and norm
     d       =   rx.pos - tx.pos;
-    dRel    =   norm(d);
+    range    =   norm(d);
     
     %- Scalar projections
-    vT      =   dot(tx.vel, d) / dRel;
-    vR      =   dot(rx.vel, d) / dRel;
+    vT      =   dot(tx.vel, d) / range;
+    vR      =   dot(rx.vel, d) / range;
     
     %- Range rate
-    rRate   =   vT + vR;
+    radVel   =   vT + vR;
 end

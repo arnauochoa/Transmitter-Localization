@@ -1,10 +1,10 @@
-function [txEstPos, txEstVel, refRange, refRrate] = first_stage(txFreq, rx, toas, foas)
+function [txEstPos, txEstVel, refRange, refRrate] = first_stage(scen, rx, toas, foas)
 %   FIRST_STAGE:     First estimation of source's position and velocity.   
 %
 %       First estimation of source's position and velocity using the first 
 %       stage method described by Ho and Xo.
 %
-%   Input:      txFreq:     Double. Transmission frequency
+%   Input:      scen:       Struct. Information of the scenario
 %               rx:         1xM struct. Information of the receivers  
 %               toas:       Mx1 vector. Observed TOAs
 %               foas:       Mx1 vector. Observed FOAs
@@ -18,7 +18,7 @@ function [txEstPos, txEstVel, refRange, refRrate] = first_stage(txFreq, rx, toas
     M   = length(toas);
 
     [rx, ref, dRange, dRrate] = ...
-        get_differences(txFreq, rx, toas, foas);
+        get_differences(scen.freq, rx, toas, foas);
     
     %- Vector h definition
     h1  =   zeros(M-1, 1);
@@ -43,10 +43,10 @@ function [txEstPos, txEstVel, refRange, refRrate] = first_stage(txFreq, rx, toas
     G   =   -2 .* [G1; G2];
     
     %- Weighted Least Squares
-    W   =   find_weight_matrix(dRange, dRrate);
+    W   =   find_weight_matrix(scen);
     
-%     theta       = pinv(G' * W * G) * G' * W * h;
-    theta       = pinv(G) * h;
+    theta       = pinv(G' * W * G) * G' * W * h;
+%     theta       = pinv(G) * h;
     txEstPos    = theta(1:3);
     refRange    = theta(4);
     txEstVel    = theta(5:7);

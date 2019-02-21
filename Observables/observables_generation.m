@@ -16,23 +16,30 @@ function [rxTime, rxFreq] = observables_generation(rx, tx, scen)
 %   Output:     rxTime: Double. Reception time in seconds
 %               rxFreq: Double. Received signal frequency in Hz
 
-    %- Parameters initialization
-%    n       =   1;                      % Refractive index
-    c       =   299792458;              % Speed of light (m/s)
+    %- Constants initialization
+    c       =   physconst('LightSpeed');    % Speed of light [m/s]
+    k       =   physconst('Boltzmann');     % Boltzmann constant [J/K]
+    To      =   290;                        % Ambient temperature [K]
+    v       =   c/scen.n;                   % Propagation speed
     
-    %- Relative distance and range rate computation
-    [rRate, dRel]   =   compute_range_rate(rx, tx);
+    %- Computation of range and relative velocity between Tx and Rx
+    [range, radVel]   =   compute_range_and_rad_vel(rx, tx);
     
     %- Actual propagation time and frequency drift computation
-    tProp   =   dRel/c;                 % Propagation time
-    fDop    =   scen.freq * (rRate/c);     % Doppler frequency drift
+    tProp   =   range/v;                 % Propagation time
+    fDop    =   scen.freq * (radVel/v);  % Doppler frequency drift
     
     %- Observed frequency computation
-    fNoise  =   compute_freq_noise(scen.snr, scen.ns);
+    fNoise  =   compute_freq_noise(scen);
     rxFreq  =   scen.freq + fDop + fNoise;
     
+    %- Received power and SNR computation
+    rxPow   =   get_rx_power(scen, range);
+    No      =   k * To * scen.bw * db2pow(scen.nFig);
+    SNR     =   rxPow/No;
+    
     %- Observed reception time compution
-    tNoise  =   compute_time_noise(scen.snr, scen.ns, rxFreq);
+    tNoise  =   compute_time_noise(scen, rxFreq, SNR);
     rxTime  =   tProp + tNoise; 
 
 end

@@ -1,21 +1,16 @@
-function tNoise = compute_time_noise(SNR, Ns, rxFreq)
+function tNoise = compute_time_noise(scen, rxFreq)
 %   COMPUTE_TIME_NOISE:     Time noise computation
 %
 %       Time noise computation following a Gaussian distributuion with
 %       mean=0 and variance=CRB: N(0, CRB)
 %
-%   Input:      SNR:    Signal-to-Noise Ratio of the received signal
-%               Ns:     Number of samples
+%   Input:      scen:       Struct. Values describing the scenario
 %
-%   Output:     tNoise: Additive noise in time
-    
-    % Phase CRB computation: Kay vol. 1, p. 57
-    phaseCRB    =   2 * (2 * Ns - 1) / (SNR * Ns * (Ns + 1));
-    
-    % Time delay CRB computation
-    timeCRB     =   phaseCRB / (2 * pi * rxFreq)^2;
-
-    % Gaussian time noise computation using CRB as variance
-    % tNoise      =   sqrt(timeCRB) * randn;    % ~N(0, CRB)
-    tNoise = normrnd(0, sqrt(timeCRB));
+%   Output:     tNoise:     Double. Additive noise in time
+   
+    if scen.timeNoiseVar == 0
+        tNoise = normrnd(0, sqrt(get_time_CRB(scen.snr, scen.ns, rxFreq)));
+    else
+        tNoise = normrnd(0, sqrt(scen.timeNoiseVar));
+    end
 end

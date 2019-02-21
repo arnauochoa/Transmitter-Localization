@@ -1,46 +1,53 @@
 clearvars; close all; clc;
 addpath 'Estimation';
+addpath 'Misc';
 addpath 'Observables';
 addpath 'Scenario';
 
 %% --- PARAMETERS DEFINITION ---
 %- Simulation parameters
-showScenario    =   true;           % Shows position over 3D space
-N               =   500;           % Number of realizations
+showScenario        =   true;               % Shows position over 3D space
+N                   =   5000;                % Number of realizations
+c                   =   299792458;          % Speed of light (m/s)
 
 %- Transmitter parameters
 %-- Variable parameter values, 'r' - radius, 'a' - azimuth, 'e' - elevation
-var.id      =   'e';                % Parameter that will change
-var.start   =   -40;               % Start value of the variable parameter [m] or [deg]
-var.end     =   40;               % End value of the variable parameter [m] or [deg]
-var.steps   =   9;                 % Number of steps for the variable parameter
+var.id              =   'e';                % Parameter that will change
+var.start           =   -40;                % Start value of the variable parameter [m] or [deg]
+var.end             =   40;                 % End value of the variable parameter [m] or [deg]
+var.steps           =   9;                  % Number of steps for the variable parameter
 %-- Constant parameters, value of changin parameter will be ignored
-const.rad   =   3000;               % Value for when radius is constant [m]
-const.azim  =   45;                 % Value for when azimuth is constant [deg]
-const.elev  =   45;                 % Value for when elevation is constant [deg]
-const.angW  =   0.01;               % Angular velocity [rad/s]
+const.rad           =   3000;               % Value for when radius is constant [m]
+const.azim          =   45;                 % Value for when azimuth is constant [deg]
+const.elev          =   45;                 % Value for when elevation is constant [deg]
+const.angW          =   0.01;               % Angular velocity [rad/s]
 
 %- Receiver parameters
-numRx       =   6;                  % Number of receivers
-dim         =   3;                  % Dimensions
-rx(1).pos   =   [0, 0, 0];          % Rx1 position
-rx(1).vel   =   [0, 0, 0];          % Rx1 velocity
-rx(2).pos   =   [400, 0, 0];        % Rx2 position
-rx(2).vel   =   [0, 0, 0];          % Rx2 velocity
-rx(3).pos   =   [-400, 0, 0];       % Rx3 position
-rx(3).vel   =   [0, 0, 0];          % Rx3 velocity
-rx(4).pos   =   [0, 400, 0];        % Rx4 position
-rx(4).vel   =   [0, 0, 0];          % Rx4 velocity
-rx(5).pos   =   [0, 0, 400];        % Rx5 position
-rx(5).vel   =   [0, 0, 0];          % Rx5 velocity
-rx(6).pos   =   [0, 0, -400];       % Rx6 position
-rx(6).vel   =   [0, 0, 0];          % Rx6 velocity
+rx(1).pos           =   [0, 0, 0];          % Rx1 position
+rx(1).vel           =   [0, 0, 0];          % Rx1 velocity
+rx(2).pos           =   [400, 0, 0];        % Rx2 position
+rx(2).vel           =   [0, 0, 0];          % Rx2 velocity
+rx(3).pos           =   [-400, 0, 0];       % Rx3 position
+rx(3).vel           =   [0, 0, 0];          % Rx3 velocity
+rx(4).pos           =   [0, 400, 0];        % Rx4 position
+rx(4).vel           =   [0, 0, 0];          % Rx4 velocity
+rx(5).pos           =   [0, 0, 400];        % Rx5 position
+rx(5).vel           =   [0, 0, 0];          % Rx5 velocity
+rx(6).pos           =   [0, 0, -400];       % Rx6 position
+rx(6).vel           =   [0, 0, 0];          % Rx6 velocity
 
 %- Scenario parameters
-txFreq      =   1575.42;            % Transmission frequency [MHz]
-SNR_dB      =   10;                 % Signal-to-Noise Ratio [dB]
-Ns          =   2;                  % Number of samples 
-scen        =   struct('freq', txFreq * 1e6, 'snr', db2pow(SNR_dB), 'ns', Ns);
+txFreq              =   1575.42;            % Transmission frequency [MHz]
+SNR_dB              =   10;                 % Signal-to-Noise Ratio [dB]
+%-- Scenario structure definition
+scen.ns             =   2;                  % Number of samples
+scen.n              =   1.000293;           % Refractive index
+scen.timeNoiseVar   =   0.0025/(2*(c^2));   % Time noise variance. When 0, CRB is used
+scen.freqNoiseVar   =   0.00025/(2*(c^2));  % Frequency noise variance. When 0, CRB is used
+scen.weighting      =   'Q';                % Weigting matrix used on LS. I for identity, Q for covariance
+scen.numRx          =   length(rx);
+scen.freq           =   txFreq * 1e6;
+scen.snr            =   db2pow(SNR_dB); 
 
 %- Vectors of movement of the transmitter
 [radius, azim, elev, plotOpt] = build_tx_movement(var, const);
@@ -90,10 +97,7 @@ end
 
 %% --- RESULTS ---
 
-
-fprintf("\n ========= Results =========\n");
-
-
+% fprintf("\n ========= Results =========\n");
 
 if (var.id == 'r' || var.id == 'a' ||var.id == 'e')
     %- Bias of the position
