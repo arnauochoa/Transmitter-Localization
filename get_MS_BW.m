@@ -35,7 +35,7 @@ function MSBW = get_MS_BW(scen)
     S               =   scen.power/normAux * H;
     
     %- Compute Mean Square Bandwidth
-    f1              =   (2*pi*(f-scen.freq))^2 * abs(S)^2;
+    f1              =   (2*pi*(f))^2 * abs(S)^2;
     f2              =   abs(S)^2;
     
     num             =   int(f1, limit(1), limit(2));
@@ -44,20 +44,16 @@ function MSBW = get_MS_BW(scen)
     MSBW            =   double(num/denom);
     
     if scen.showBand
-        window      =   rectangularPulse(limit(1), limit(2), f);
-        xLim        =   [band(1)-5 band(2)+5];
-        
         figure;
-        fplot(S, limit); hold on;
-        %fplot(window, xLim, '-r');
-        %legend('PSD', 'Window');
+        fplot(S, limit); 
+        y1 = get(gca,'ylim'); hold on;
+        plot([band(1) band(1)], y1, 'r'); hold on;
+        plot([band(2) band(2)], y1, 'r'); hold on;
         xlabel("Frequency (Hz)");
         ylabel("Power Spectral Density (W/Hz)");
         
         figure;
         fplot(f1, limit); hold on;
-        %fplot(window, xLim, '-r');
-        %legend('S-PSD', 'Window');
         xlabel("Frequency (Hz)");
         ylabel("Square Power Spectral Density (W/Hz)");
         
