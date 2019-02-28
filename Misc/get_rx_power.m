@@ -1,7 +1,7 @@
 function [rxPow] = get_rx_power(scen, range)
-%   GET_RX_POWER:   Computes the received frequency
+%   GET_RX_POWER:   Computes the received signal's power
 %   	
-%       Computes the received frequency from given scenario parameters and
+%       Computes the received signal's power from given scenario parameters and
 %       range between transmitte and rreceiver
 %
 %   Input:      scen:       Struct. Information of the scenario
@@ -13,6 +13,6 @@ function [rxPow] = get_rx_power(scen, range)
     
     Lbf     =   (4 * pi * range * scen.freq/c)^2;   % Propagation losses
     
-    rxPow   =   db2pow(scen.power/Lbf);
+    rxPow   =   db2pow(scen.power)/Lbf;
 end
 

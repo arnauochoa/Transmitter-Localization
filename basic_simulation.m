@@ -7,8 +7,8 @@ addpath 'Scenario';
 %% --- PARAMETERS DEFINITION ---
 %- Simulation parameters
 showScenario        =   true;               % Shows position over 3D space
-N                   =   5000;               % Number of realizations
-nbins               =   100;                 % Number of bins for the histogram
+N                   =   50;               % Number of realizations
+nbins               =   50;                 % Number of bins for the histogram
 c                   =   299792458;          % Speed of light (m/s)
 
 %- Transmitter parameters
@@ -32,18 +32,19 @@ rx(6).pos           =   [0, 0, -400];       % Rx6 position
 rx(6).vel           =   [0, 0, 0];          % Rx6 velocity
 
 %- Scenario parameters
-scen.showBand       =   true;               % When enabled, PSD and "Square-PSD" will be plotted
+scen.showBand       =   false;              % When enabled, PSD and "Square-PSD" will be plotted
 scen.bw             =   1.023 * 1e6;        % Transmitted signal bandwidth at -3dB[Hz]
 scen.shape          =   'r';                % Signal band shape: 'r' -> rectangular, 's' -> sinc, 't' -> triangle
 scen.freq           =   1575.42 * 1e6;      % Transmitted signal frequency [Hz]
-scen.power          =   15;                 % Transmitted signal power [dBW]
+scen.power          =   17;                 % Transmitted signal power [dBW]
 scen.nFig           =   2;                  % Receiver's noise figure [dB]
 scen.ns             =   2;                  % Number of samples
 scen.n              =   1.000293;           % Refractive index
 scen.timeNoiseVar   =   0;                  % Time noise variance. When 0, CRB is used
 scen.freqNoiseVar   =   0;                  % Frequency noise variance. When 0, CRB is used
-scen.weighting      =   'Q';                % Weigting matrix used on LS. I for identity, Q for covariance
+scen.weighting      =   'I';                % Weigting matrix used on LS. I for identity, Q for covariance
 scen.numRx          =   length(rx);         % Number of receivers
+scen.refIndex       =   length(rx);         % Reference receiver index
 scen.MSBW           =   get_MS_BW(scen);    % Mean Square Bandwidth
 
 

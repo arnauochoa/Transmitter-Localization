@@ -1,4 +1,4 @@
-function [rxTime, rxFreq] = observables_generation(rx, tx, scen)
+function [rxPow, rxTime, rxFreq] = observables_generation(rx, tx, scen)
 %   OBSERVABLES_GENERATION:     Calculation of the observables
 %
 %       Reception time and reception frequency generation from the given
@@ -13,13 +13,12 @@ function [rxTime, rxFreq] = observables_generation(rx, tx, scen)
 %               SNR:    Double. Signal-to-Noise Ratio of the received signal
 %               Ns:     Double. Number of samples
 %
-%   Output:     rxTime: Double. Reception time in seconds
+%   Output:     rxTime: Double. Received signal's power
+%               rxTime: Double. Reception time in seconds
 %               rxFreq: Double. Received signal frequency in Hz
 
     %- Constants initialization
     c       =   physconst('LightSpeed');    % Speed of light [m/s]
-    k       =   physconst('Boltzmann');     % Boltzmann constant [J/K]
-    To      =   290;                        % Ambient temperature [K]
     v       =   c/scen.n;                   % Propagation speed
     
     %- Computation of range and relative velocity between Tx and Rx
@@ -29,18 +28,15 @@ function [rxTime, rxFreq] = observables_generation(rx, tx, scen)
     tProp   =   range/v;                 % Propagation time
     fDop    =   scen.freq * (radVel/v);  % Doppler frequency drift
     
+    %- Received power computation
+    rxPow   =   get_rx_power(scen, range); % TODO: apply variance in noise
+    
     %- Observed frequency computation
-    fNoise  =   compute_freq_noise(scen);
+    fNoise  =   compute_freq_noise(scen, rxPow);
     rxFreq  =   scen.freq + fDop + fNoise;
     
-    %- Received power and SNR computation
-    rxPow   =   get_rx_power(scen, range);
-    No      =   k * To * scen.bw * db2pow(scen.nFig);
-    SNR     =   rxPow/No;
-    
     %- Observed reception time compution
-    tNoise  =   compute_time_noise(scen, rxFreq, SNR);
+    tNoise  =   compute_time_noise(scen, rxPow);
     rxTime  =   tProp + tNoise; 
-
 end
 

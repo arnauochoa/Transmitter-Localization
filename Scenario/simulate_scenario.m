@@ -23,14 +23,15 @@ function [rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, scen, tx,
     refRange    =   zeros(N, 3);
     refRrate    =   zeros(N, 3);
     for i = 1:N
+        rxPows     =   zeros(numRx, 1);
         rxTimes     =   zeros(numRx, 1);
         rxFreqs     =   zeros(numRx, 1);
         for r = 1:numRx
-            [rxTimes(r), rxFreqs(r)] = observables_generation(rx(r), tx, scen);
+            [rxPows(r), rxTimes(r), rxFreqs(r)] = observables_generation(rx(r), tx, scen);
         end
 
         [txEstPos(i, :), txEstVel(i, :), refRange(i, :), refRrate(i, :)] = ...
-            first_stage(scen, rx, rxTimes, rxFreqs);
+            first_stage(scen, rx, rxTimes, rxFreqs, rxPows);
     end
 end
 
