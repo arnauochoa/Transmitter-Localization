@@ -7,7 +7,7 @@ addpath 'Scenario';
 %% --- PARAMETERS DEFINITION ---
 %- Simulation parameters
 showScenario        =   true;               % Shows position over 3D space
-N                   =   5000;               % Number of realizations
+N                   =   500;               % Number of realizations
 nbins               =   100;                 % Number of bins for the histogram
 c                   =   299792458;          % Speed of light (m/s)
 
@@ -49,7 +49,9 @@ scen.MSBW           =   get_MS_BW(scen);    % Mean Square Bandwidth
 
 
 %% --- SIMULATION ---
-[rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, scen, tx, rx);
+tic     % Start measuring execution time
+[rxPows, rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, scen, tx, rx);
+toc     % Stop measuring execution time
 
 
 %% --- RESULTS ---
@@ -72,10 +74,12 @@ errEstVel       =   sqrt(sum(txEstVel - tx.vel, 2).^2);
 fprintf("\n ========= Observables =========\n");
 for r = 1:numRx
     fprintf(" --- Receiver %d ---\n", r);
+    fprintf(" Received signal power: %f dB \n", pow2db(rxPows(r)));
     fprintf(" Reception time: %f seconds \n", rxTimes(r));
     fprintf(" Received signal frequency: %f MHz \n", rxFreqs(r)/1e6);
 end
 fprintf(" ------------------\n");
+fprintf(" Std of received times: %f s\n", pow2db(std(rxPows)));
 fprintf(" Std of received times: %f s\n", std(rxTimes));
 fprintf(" Std of received frequencies: %f Hz\n", std(rxFreqs));
 

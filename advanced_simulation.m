@@ -7,7 +7,7 @@ addpath 'Scenario';
 %% --- PARAMETERS DEFINITION ---
 %- Simulation parameters
 showScenario        =   true;               % Shows position over 3D space
-N                   =   100;                % Number of realizations
+N                   =   500;                % Number of realizations
 c                   =   299792458;          % Speed of light (m/s)
 
 %- Transmitter parameters
@@ -45,11 +45,11 @@ scen.power          =   17;                 % Transmitted signal power [dBW]
 scen.nFig           =   2;                  % Receiver's noise figure [dB]
 scen.ns             =   2;                  % Number of samples
 scen.n              =   1.000293;           % Refractive index
-scen.timeNoiseVar   =   0;                  % Time noise variance. When 0, CRB is used
-scen.freqNoiseVar   =   0;                  % Frequency noise variance. When 0, CRB is used
-scen.weighting      =   'I';                % Weigting matrix used on LS. I for identity, Q for covariance
+scen.timeNoiseVar   =   0.0025/(c^2);                  % Time noise variance. When 0, CRB is used
+scen.freqNoiseVar   =   0.00025/(c^2);                  % Frequency noise variance. When 0, CRB is used
+scen.weighting      =   'Q';                % Weigting matrix used on LS. I for identity, Q for covariance
 scen.numRx          =   length(rx);         % Number of receivers
-scen.refIndex       =   length(rx);         % Reference receiver index
+scen.refIndex       =   1;         % Reference receiver index
 scen.MSBW           =   get_MS_BW(scen);    % Mean Square Bandwidth
 
 %- Vectors of movement of the transmitter
@@ -75,9 +75,11 @@ vel.y.std   =   zeros(1, var.steps);
 vel.z.bias  =   zeros(1, var.steps);
 vel.z.std   =   zeros(1, var.steps);
 
+tic
 for i = 1:var.steps
+    fprintf("Step %i\n", i);
     tx = obtain_tx_info(radius(i), azim(i), elev(i), const.angW);
-    [~, ~, txEstPos, txEstVel] = simulate_scenario(N, scen, tx, rx);
+    [~, ~, ~, txEstPos, txEstVel] = simulate_scenario(N, scen, tx, rx);
     
     %-- Position and velocity averages
     meanEstPos      =   mean(txEstPos, 1);
@@ -97,6 +99,7 @@ for i = 1:var.steps
     vel.z.bias(i)   =   meanEstVel(3) - tx.vel(3);
     vel.z.std(i)    =   std(txEstVel(:, 3));
 end
+toc
 
 %% --- RESULTS ---
 

@@ -13,7 +13,7 @@ function [rxPow, rxTime, rxFreq] = observables_generation(rx, tx, scen)
 %               SNR:    Double. Signal-to-Noise Ratio of the received signal
 %               Ns:     Double. Number of samples
 %
-%   Output:     rxTime: Double. Received signal's power
+%   Output:     rxPow: Double. Received signal's power
 %               rxTime: Double. Reception time in seconds
 %               rxFreq: Double. Received signal frequency in Hz
 

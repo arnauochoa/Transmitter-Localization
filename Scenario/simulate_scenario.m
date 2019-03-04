@@ -1,4 +1,4 @@
-function [rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, scen, tx, rx)
+function [rxPows, rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, scen, tx, rx)
 %   SIMULATE_SCENARIO Estimates the transmitter's position and velocity
 %
 %       Builds the scenario and estimates the transmitter's position and 
@@ -20,18 +20,23 @@ function [rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, scen, tx,
         
     txEstPos    =   zeros(N, 3);
     txEstVel    =   zeros(N, 3);
-    refRange    =   zeros(N, 3);
-    refRrate    =   zeros(N, 3);
+    
+    rxPowsMat   =   zeros(numRx, N);
+    rxTimesMat  =   zeros(numRx, N);
+    rxFreqsMat  =   zeros(numRx, N);
     for i = 1:N
-        rxPows     =   zeros(numRx, 1);
-        rxTimes     =   zeros(numRx, 1);
-        rxFreqs     =   zeros(numRx, 1);
-        for r = 1:numRx
-            [rxPows(r), rxTimes(r), rxFreqs(r)] = observables_generation(rx(r), tx, scen);
+        parfor r = 1:numRx
+            [rxPowsMat(r, i), rxTimesMat(r, i), rxFreqsMat(r, i)] = observables_generation(rx(r), tx, scen);
         end
-
-        [txEstPos(i, :), txEstVel(i, :), refRange(i, :), refRrate(i, :)] = ...
-            first_stage(scen, rx, rxPows, rxTimes, rxFreqs);
     end
+    
+    parfor i = 1:N
+        [txEstPos(i, :), txEstVel(i, :), ~, ~] = ...
+            first_stage(scen, rx, rxPowsMat(:,i), rxTimesMat(:,i), rxFreqsMat);
+    end
+    
+    rxPows      =   mean(rxPowsMat, 2);
+    rxTimes     =   mean(rxTimesMat, 2);
+    rxFreqs     =   mean(rxFreqsMat, 2);
 end
 
