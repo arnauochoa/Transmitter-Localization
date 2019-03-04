@@ -7,7 +7,7 @@ addpath 'Scenario';
 %% --- PARAMETERS DEFINITION ---
 %- Simulation parameters
 showScenario        =   true;               % Shows position over 3D space
-N                   =   5000;                % Number of realizations
+N                   =   100;                % Number of realizations
 c                   =   299792458;          % Speed of light (m/s)
 
 %- Transmitter parameters
@@ -37,17 +37,20 @@ rx(6).pos           =   [0, 0, -400];       % Rx6 position
 rx(6).vel           =   [0, 0, 0];          % Rx6 velocity
 
 %- Scenario parameters
-txFreq              =   1575.42;            % Transmission frequency [MHz]
-SNR_dB              =   10;                 % Signal-to-Noise Ratio [dB]
-%-- Scenario structure definition
+scen.showBand       =   false;              % When enabled, PSD and "Square-PSD" will be plotted
+scen.bw             =   1.023 * 1e6;        % Transmitted signal bandwidth at -3dB[Hz]
+scen.shape          =   'r';                % Signal band shape: 'r' -> rectangular, 's' -> sinc, 't' -> triangle
+scen.freq           =   1575.42 * 1e6;      % Transmitted signal frequency [Hz]
+scen.power          =   17;                 % Transmitted signal power [dBW]
+scen.nFig           =   2;                  % Receiver's noise figure [dB]
 scen.ns             =   2;                  % Number of samples
 scen.n              =   1.000293;           % Refractive index
-scen.timeNoiseVar   =   0.0025/(2*(c^2));   % Time noise variance. When 0, CRB is used
-scen.freqNoiseVar   =   0.00025/(2*(c^2));  % Frequency noise variance. When 0, CRB is used
-scen.weighting      =   'Q';                % Weigting matrix used on LS. I for identity, Q for covariance
-scen.numRx          =   length(rx);
-scen.freq           =   txFreq * 1e6;
-scen.snr            =   db2pow(SNR_dB); 
+scen.timeNoiseVar   =   0;                  % Time noise variance. When 0, CRB is used
+scen.freqNoiseVar   =   0;                  % Frequency noise variance. When 0, CRB is used
+scen.weighting      =   'I';                % Weigting matrix used on LS. I for identity, Q for covariance
+scen.numRx          =   length(rx);         % Number of receivers
+scen.refIndex       =   length(rx);         % Reference receiver index
+scen.MSBW           =   get_MS_BW(scen);    % Mean Square Bandwidth
 
 %- Vectors of movement of the transmitter
 [radius, azim, elev, plotOpt] = build_tx_movement(var, const);

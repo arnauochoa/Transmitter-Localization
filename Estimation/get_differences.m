@@ -1,4 +1,4 @@
-function [rx, ref, dRange, dRrate] = get_differences(txFreq, rx, toas, foas)
+function [rx, ref, dRange, dRrate] = get_differences(scen, rx, toas, foas)
 %   GET_DIFFERENCES Returns the reference position and reference and the 
 %   TDOAs and FDOAs wrt. the reference
 %
@@ -20,17 +20,16 @@ function [rx, ref, dRange, dRrate] = get_differences(txFreq, rx, toas, foas)
 %               dRrate:     (M-1)x1 vector. Differential range rates wrt.
 %                           the reference receiver
     
-    refIndex    = 1;                % Index of the reference receiver
     c           =   299792458;      % Speed of light (m/s)
     
     %- Assignation of a reference receiver 
-    ref             =   rx(refIndex);
-    rx(refIndex)    =   [];
+    ref                 =   rx(scen.refIndex);
+    rx(scen.refIndex)   =   [];
     
-    refTOA              =   toas(refIndex);
-    toas(refIndex)      =   [];
-    refFOA              =   foas(refIndex);
-    foas(refIndex)      =   [];
+    refTOA              =   toas(scen.refIndex);
+    toas(scen.refIndex) =   [];
+    refFOA              =   foas(scen.refIndex);
+    foas(scen.refIndex) =   [];
     
     %- TDOAs and FDOAs computation
     tdoas  = toas - refTOA;
@@ -38,6 +37,6 @@ function [rx, ref, dRange, dRrate] = get_differences(txFreq, rx, toas, foas)
     
     %- Differential ranges and range rates for receivers
     dRange  = tdoas .* c;
-    dRrate  = -fdoas .* (c/txFreq);
+    dRrate  = -fdoas .* (c/scen.freq);
 end
 

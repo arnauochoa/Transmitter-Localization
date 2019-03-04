@@ -1,21 +1,21 @@
-function timeCRB = get_time_CRB(SNR, Ns, rxFreq)
+function timeCRB = get_time_CRB(scen, rxPow)
 %   GET_TIME_CRB:     Time CRB computation
 %
 %       Time CRB computation as described by Kay in "Fundamentals of 
 %       Statistical Signal Processing: Estimation Theory"
 %
-%   Input:      SNR:        Signal-to-Noise Ratio of the received signal
-%               Ns:         Number of samples
-%               rxFreq:     Received frequency
+%   Input:      scen:       Struct. Values describing the scenario
+%               rxPow:      Double. Received signal's power in Watts
 %
 %   Output:     timeCRB:    CRB of the reception time
 
-% TODO: change CRB method
-
-    % Phase CRB computation: Kay vol. 1, p. 57
-    phaseCRB    =   2 * (2 * Ns - 1) / (SNR * Ns * (Ns + 1));
+    %- Compute SNR
+    No      =   get_noise_power(scen);
+    SNR     =   rxPow/No;
     
-    % Time delay CRB computation
-    timeCRB     =   phaseCRB / (2 * pi * rxFreq)^2;
+    %- Obtain Mean Square Bandwidth
+    MSBW    =   get_MS_BW(scen);
     
+    %- Compute Cramer Rao Lower Bound (Kay p. 53)
+    timeCRB =   1 / (SNR * MSBW);
 end

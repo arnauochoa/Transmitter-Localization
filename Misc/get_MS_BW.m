@@ -43,12 +43,13 @@ function MSBW = get_MS_BW(scen)
     
     MSBW            =   double(num/denom);
     
+    %- Showing resulting band shape
     if scen.showBand
-        y1 = get(gca,'ylim');
-        
         figure;
-        fplot(S, limit); hold on;
-        plot([band(1) band(1)], y1)
+        fplot(S, limit); 
+        y1 = get(gca,'ylim'); hold on;
+        plot([band(1) band(1)], y1, 'r'); hold on;
+        plot([band(2) band(2)], y1, 'r'); hold on;
         xlabel("Frequency (Hz)");
         ylabel("Power Spectral Density (W/Hz)");
         
