@@ -7,8 +7,8 @@ addpath 'Scenario';
 %% --- PARAMETERS DEFINITION ---
 %- Simulation parameters
 showScenario        =   true;               % Shows position over 3D space
-N                   =   50;               % Number of realizations
-nbins               =   50;                 % Number of bins for the histogram
+N                   =   5000;               % Number of realizations
+nbins               =   100;                 % Number of bins for the histogram
 c                   =   299792458;          % Speed of light (m/s)
 
 %- Transmitter parameters
