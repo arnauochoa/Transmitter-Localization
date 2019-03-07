@@ -1,5 +1,9 @@
 function W = find_weight_matrix(scen, rxPows)
-%   FIND_WEIGHT_MATRIX:    Finds weighting matrix for LS.       
+%   FIND_WEIGHT_MATRIX:    Finds weighting matrix for LS. 
+%                      
+%       Finds weighting matrix for LS. The weighting matrix can be the
+%       identity matrix or the inverse covariance matrix, built from the
+%       CRLB for time and frequency.
 %
 %   Input:      scen:       Struct. Information of the scenario
 %               rxPows:     Mx1 vector. Received signals' powers

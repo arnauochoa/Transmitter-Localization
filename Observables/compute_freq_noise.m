@@ -1,7 +1,7 @@
 function fNoise = compute_freq_noise(scen, rxPow)
 %   COMPUTE_TIME_NOISE:     Time noise computation
 %
-%       Time noise computation following a Gaussian distributuion with
+%       Frequency noise computation following a Gaussian distributuion with
 %       mean=0 and variance=CRB: N(0, CRB)
 %
 %   Input:      scen:       Struct. Values describing the scenario

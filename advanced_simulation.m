@@ -6,51 +6,51 @@ addpath 'Scenario';
 
 %% --- PARAMETERS DEFINITION ---
 %- Simulation parameters
-showScenario        =   true;               % Shows position over 3D space
-N                   =   500;                % Number of realizations
-c                   =   299792458;          % Speed of light (m/s)
+showScenario        =   true;           %                   Shows position over 3D space
+N                   =   500;            %                   Number of realizations
+c                   =   299792458;      %      [m/s]        Speed of light
 
 %- Transmitter parameters
 %-- Variable parameter values, 'r' - radius, 'a' - azimuth, 'e' - elevation
-var.id              =   'e';                % Parameter that will change
-var.start           =   -40;                % Start value of the variable parameter [m] or [deg]
-var.end             =   40;                 % End value of the variable parameter [m] or [deg]
-var.steps           =   9;                  % Number of steps for the variable parameter
+var.id              =   'e';            %                   Parameter that will change
+var.start           =   -40;            %   [m] or [deg]    Start value of the variable parameter
+var.end             =   40;             %   [m] or [deg]    End value of the variable parameter 
+var.steps           =   9;              %                   Number of steps for the variable parameter
 %-- Constant parameters, value of changin parameter will be ignored
-const.rad           =   3000;               % Value for when radius is constant [m]
-const.azim          =   45;                 % Value for when azimuth is constant [deg]
-const.elev          =   45;                 % Value for when elevation is constant [deg]
-const.angW          =   0.01;               % Angular velocity [rad/s]
+const.rad           =   3000;           %       [m]         Value for when radius is constant
+const.azim          =   45;             %      [deg]        Value for when azimuth is constant
+const.elev          =   45;             %      [deg]        Value for when elevation is constant
+const.angW          =   0.01;           %     [rad/s]       Angular velocity
 
 %- Receiver parameters
-rx(1).pos           =   [0, 0, 0];          % Rx1 position
-rx(1).vel           =   [0, 0, 0];          % Rx1 velocity
-rx(2).pos           =   [400, 0, 0];        % Rx2 position
-rx(2).vel           =   [0, 0, 0];          % Rx2 velocity
-rx(3).pos           =   [-400, 0, 0];       % Rx3 position
-rx(3).vel           =   [0, 0, 0];          % Rx3 velocity
-rx(4).pos           =   [0, 400, 0];        % Rx4 position
-rx(4).vel           =   [0, 0, 0];          % Rx4 velocity
-rx(5).pos           =   [0, 0, 400];        % Rx5 position
-rx(5).vel           =   [0, 0, 0];          % Rx5 velocity
-rx(6).pos           =   [0, 0, -400];       % Rx6 position
-rx(6).vel           =   [0, 0, 0];          % Rx6 velocity
+rx(1).pos           =   [0, 0, 0];      %     [m, m, m]     Rx1 position
+rx(1).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx1 velocity
+rx(2).pos           =   [400, 0, 0];    %     [m, m, m]     Rx2 position
+rx(2).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx2 velocity
+rx(3).pos           =   [-400, 0, 0];   %     [m, m, m]     Rx3 position
+rx(3).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx3 velocity
+rx(4).pos           =   [0, 400, 0];    %     [m, m, m]     Rx4 position
+rx(4).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx4 velocity
+rx(5).pos           =   [0, 0, 400];    %     [m, m, m]     Rx5 position
+rx(5).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx5 velocity
+rx(6).pos           =   [0, 0, -400];   %     [m, m, m]     Rx6 position
+rx(6).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx6 velocity
 
 %- Scenario parameters
-scen.showBand       =   false;              % When enabled, PSD and "Square-PSD" will be plotted
-scen.bw             =   1.023 * 1e6;        % Transmitted signal bandwidth at -3dB[Hz]
-scen.shape          =   'r';                % Signal band shape: 'r' -> rectangular, 's' -> sinc, 't' -> triangle
-scen.freq           =   1575.42 * 1e6;      % Transmitted signal frequency [Hz]
-scen.power          =   17;                 % Transmitted signal power [dBW]
-scen.nFig           =   2;                  % Receiver's noise figure [dB]
-scen.ns             =   2;                  % Number of samples
-scen.n              =   1.000293;           % Refractive index
-scen.timeNoiseVar   =   0.0025/(c^2);                  % Time noise variance. When 0, CRB is used
-scen.freqNoiseVar   =   0.00025/(c^2);                  % Frequency noise variance. When 0, CRB is used
-scen.weighting      =   'Q';                % Weigting matrix used on LS. I for identity, Q for covariance
-scen.numRx          =   length(rx);         % Number of receivers
-scen.refIndex       =   1;         % Reference receiver index
-scen.MSBW           =   get_MS_BW(scen);    % Mean Square Bandwidth
+scen.showBand       =   false;          %                   When enabled, PSD and "Square-PSD" will be plotted
+scen.bw             =   1.023 * 1e6;    %                   Transmitted signal bandwidth at -3dB[Hz]
+scen.shape          =   'r';            %                   Signal band shape: 'r' -> rectangular, 's' -> sinc, 't' -> triangle
+scen.freq           =   1575.42 * 1e6;  %       [Hz]        Transmitted signal frequency
+scen.power          =   17;             %       [dBW]       Transmitted signal power
+scen.nFig           =   2;              %       [dB]        Receiver's noise figure
+scen.ns             =   2;              %                   Number of samples
+scen.n              =   1.000293;       %                   Refractive index
+scen.timeNoiseVar   =   0.0025/(c^2);   %                   Time noise variance. When 0, CRB is used
+scen.freqNoiseVar   =   0.00025/(c^2);  %                   Frequency noise variance. When 0, CRB is used
+scen.weighting      =   'Q';            %                   Weigting matrix used on LS. I for identity, Q for covariance
+scen.numRx          =   length(rx);     %                   Number of receivers
+scen.refIndex       =   1;              %                   Reference receiver index
+scen.MSBW           =   get_MS_BW(scen);%                   Mean Square Bandwidth
 
 %- Vectors of movement of the transmitter
 [radius, azim, elev, plotOpt] = build_tx_movement(var, const);

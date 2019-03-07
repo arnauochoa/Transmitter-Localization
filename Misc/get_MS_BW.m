@@ -4,7 +4,7 @@ function MSBW = get_MS_BW(scen)
 %       Calculation of the Mean Square Bandwidth for the given band
 %       information.
 %
-%   Input:      band:   Struct. Information of band shape and BW
+%   Input:      scen:   Struct. Information of the scenario
 %
 %   Output:     MSBW:   Double. Mean Square Bandwidth
 

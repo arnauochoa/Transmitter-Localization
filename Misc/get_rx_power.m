@@ -4,10 +4,10 @@ function [rxPow] = get_rx_power(scen, range)
 %       Computes the received signal's power from given scenario parameters and
 %       range between transmitte and rreceiver
 %
-%   Input:      scen:       Struct. Information of the scenario
-%               range:      Double. Distance between Tx and Rx in metres
+%   Input:      scen:   Struct. Information of the scenario
+%               range:  Double. Distance between Tx and Rx in metres
 %
-%   Output:     rxPow:      Double. Received signal's power in Watts
+%   Output:     rxPow:  Double. Received signal's power in Watts
 
     c       =   physconst('LightSpeed');    % Speed of light [m/s]
     

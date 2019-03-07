@@ -9,8 +9,9 @@ function [rxPows, rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, s
 %               tx:         Struct. Information of the transmitter
 %               rx:         1xM struct. Information of the receivers            
 %
-%   Output:     rxTimes:    numRx x1 vector. Reception times (scenario)
-%               rxFreqs:    numRx x1 vector. Received frequencies (scenario)
+%   Output:     rxPows:     numRx x1 vector. Received powers
+%               rxTimes:    numRx x1 vector. Reception times
+%               rxFreqs:    numRx x1 vector. Received frequencies
 %               txEstPos:   Nx3 matrix. Estimated positions (X-Y-Z) for the
 %                           different realizations.
 %               txEstVel:   Nx3 matrix. Estimated velocities (X-Y-Z) for the

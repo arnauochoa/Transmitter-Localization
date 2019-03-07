@@ -2,7 +2,7 @@ function timeCRB = get_time_CRB(scen, rxPow)
 %   GET_TIME_CRB:     Time CRB computation
 %
 %       Time CRB computation as described by Kay in "Fundamentals of 
-%       Statistical Signal Processing: Estimation Theory"
+%       Statistical Signal Processing: Estimation Theory", p. 53
 %
 %   Input:      scen:       Struct. Values describing the scenario
 %               rxPow:      Double. Received signal's power in Watts
@@ -16,6 +16,6 @@ function timeCRB = get_time_CRB(scen, rxPow)
     %- Obtain Mean Square Bandwidth
     MSBW    =   get_MS_BW(scen);
     
-    %- Compute Cramer Rao Lower Bound (Kay p. 53)
+    %- Time CRB computation: Kay vol. 1, p. 53
     timeCRB =   1 / (SNR * MSBW);
 end

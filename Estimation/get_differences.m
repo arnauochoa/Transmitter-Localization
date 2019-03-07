@@ -8,7 +8,8 @@ function [rx, ref, dRange, dRrate] = get_differences(scen, rx, toas, foas)
 %       velocities vectors are also updated removing the reference
 %       receiver.
 %
-%   Input:      rxPos:      1xM struct. Information of the receivers
+%   Input:      scen:       Struct. Information of the scenario
+%               rx:         1xM struct. Information of the receivers
 %               toas:       Mx1 vector. Observed TOAs
 %               foas:       Mx1 vector. Observed FOAs
 %

@@ -5,17 +5,13 @@ function [rxPow, rxTime, rxFreq] = observables_generation(rx, tx, scen)
 %       positions and velocities of the transmitter and receiver. Gaussian
 %       noise is added following the form N(0, CRB).
 %
-%   Input:      rxPos:  3x1 vector. Receiver position
-%               rxVel:  3x1 vector. Receiver velocity
-%               txPos:  3x1 vector. Transmitter position
-%               txVel:  3x1 vector. Transmitter velocity
-%               txFreq: Double. Transmitted signal's frequency
-%               SNR:    Double. Signal-to-Noise Ratio of the received signal
-%               Ns:     Double. Number of samples
+%   Input:      rx:         Struct. Receiver information
+%               tx:         Struct. Transmitter information
+%               scen:       Struct. Values describing the scenario
 %
-%   Output:     rxPow: Double. Received signal's power
-%               rxTime: Double. Reception time in seconds
-%               rxFreq: Double. Received signal frequency in Hz
+%   Output:     rxPow:      Double. Received signal's power
+%               rxTime:     Double. Reception time in seconds
+%               rxFreq:     Double. Received signal frequency in Hz
 
     %- Constants initialization
     c       =   physconst('LightSpeed');    % Speed of light [m/s]
