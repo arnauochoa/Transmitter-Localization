@@ -1,4 +1,4 @@
-function [txEstPos, txEstVel, refRange, refRrate] = first_stage(scen, rx, rxPows, rxTimes, rxFreqs)
+function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, rxPows, rxTimes, rxFreqs)
 %   FIRST_STAGE:     First estimation of source's position and velocity.   
 %
 %       First estimation of source's position and velocity using the first 

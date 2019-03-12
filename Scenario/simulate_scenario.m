@@ -27,13 +27,14 @@ function [rxPows, rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, s
     rxFreqsMat  =   zeros(numRx, N);
     for i = 1:N
         parfor r = 1:numRx
-            [rxPowsMat(r, i), rxTimesMat(r, i), rxFreqsMat(r, i)] = observables_generation(rx(r), tx, scen);
+            [rxPowsMat(r, i), rxTimesMat(r, i), rxFreqsMat(r, i)] = ...
+                observables_generation(rx(r), tx, scen);
         end
     end
     
     parfor i = 1:N
         [txEstPos(i, :), txEstVel(i, :), ~, ~] = ...
-            first_stage(scen, rx, rxPowsMat(:,i), rxTimesMat(:,i), rxFreqsMat);
+            tdoa_fdoa_method(scen, rx, rxPowsMat(:,i), rxTimesMat(:,i), rxFreqsMat);
     end
     
     rxPows      =   mean(rxPowsMat, 2);
