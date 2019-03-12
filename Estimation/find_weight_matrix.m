@@ -11,10 +11,10 @@ function W = find_weight_matrix(scen, rxPows)
 %   Output:     W:          (numRx-1)x(numRx-1) matrix. Weighting matrix
 %
     c       =   299792458;              % Speed of light (m/s)
-    
+    size    =   scen.numRx-1;
     switch scen.weighting 
         case 'I'
-            W   = eye(2*(scen.numRx - 1));
+            W   = eye(2*size);
         case 'Q'
             timeVar     =   zeros(1, scen.numRx);
             freqVar     =   zeros(1, scen.numRx);
@@ -31,16 +31,23 @@ function W = find_weight_matrix(scen, rxPows)
             refFreqVar              =   freqVar(scen.refIndex);
             freqVar(scen.refIndex)  =   [];
 
-            %- Obtain Range and Range Rate CRB wrt. reference receiver
-            rangeVar    =   c^2 * (refTimeVar + timeVar);
-            rRateVar    =   (c/scen.freq)^2 * (refFreqVar + freqVar);
+            %- Obtain TDOA and FDOA CRB wrt. reference receiver
+            tdoaVar    =   c^2 * (refTimeVar + timeVar);
+            fdoaVar    =   (c/scen.freq)^2 * (refFreqVar + freqVar);
             
             %- Build Weighting matrix
-            size        =   scen.numRx-1;
-            Q1          =   diag(rangeVar);
-            Q2          =   diag(rRateVar);
+            Q1          =   diag(tdoaVar);
+            Q2          =   diag(fdoaVar);
             O           =   zeros(size);
             Q           =   [Q1 O; O Q2];
+            W           =   inv(Q);
+        case 'R'
+            R1          =   ones(size)/2 + eye(size)/2;
+%             R2          =   ones(size)/2;
+            Q1          =   scen.tdoaVar * R1;
+            Q2          =   scen.fdoaVar * R1;
+            O           =   zeros(size);
+            Q           =   [Q1 O; Q2 Q1];
             W           =   inv(Q);
         otherwise
             W = eye(2*(scen.numRx - 1));

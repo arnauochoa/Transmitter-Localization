@@ -47,7 +47,6 @@ function [txEstPos, txEstVel, refRange, refRrate] = first_stage(scen, rx, rxPows
     W   =   find_weight_matrix(scen, rxPows);
     
     theta       = pinv(G' * W * G) * G' * W * h;
-%     theta       = pinv(G) * h;
     txEstPos    = theta(1:3);
     refRange    = theta(4);
     txEstVel    = theta(5:7);

@@ -9,10 +9,13 @@ function fNoise = compute_freq_noise(scen, rxPow)
 %
 %   Output:     fNoise:     Double. Additive noise in frequency
     
-    if scen.freqNoiseVar == 0
-        fNoise = normrnd(0, sqrt(get_freq_CRB(scen, rxPow)));
+    c       =   299792458;
+
+    if scen.fdoaVar == 0
+        fNoise  =   normrnd(0, sqrt(get_freq_CRB(scen, rxPow)));
     else
-        fNoise = normrnd(0, sqrt(scen.freqNoiseVar));
+        freqVar =   ((scen.freq/c)^2) * (scen.fdoaVar/2);
+        fNoise  =   normrnd(0, sqrt(freqVar));
     end
 
 end

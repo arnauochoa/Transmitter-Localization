@@ -9,9 +9,12 @@ function tNoise = compute_time_noise(scen, rxPow)
 %
 %   Output:     tNoise:     Double. Additive noise in time
    
-    if scen.timeNoiseVar == 0
-        tNoise = normrnd(0, sqrt(get_time_CRB(scen, rxPow)));
+    c       =   299792458;
+
+    if scen.tdoaVar == 0
+        tNoise  =   normrnd(0, sqrt(get_time_CRB(scen, rxPow)));
     else
-        tNoise = normrnd(0, sqrt(scen.timeNoiseVar));
+        timeVar =   scen.tdoaVar/(2*c^2);
+        tNoise  =   normrnd(0, sqrt(timeVar));
     end
 end

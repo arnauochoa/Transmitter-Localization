@@ -16,12 +16,11 @@ function [radius, azim, elev, plotOpt] = build_tx_movement(var, const)
 %               elev:       1xsteps. Vector describing the variation in
 %                           elevation
 %               plotOpt:    Struct. Information needed for plotting results
-
+    
     I           =   ones(1, var.steps);
-    step        =   abs((var.end - var.start)/(var.steps-1));
     switch var.id
         case 'r'
-            radius  =   var.start:step:var.end;
+            radius  =   linspace(var.start, var.end, var.steps);
             azim    =   const.azim * I;
             elev    =   const.elev * I;
             % Plot options
@@ -31,7 +30,7 @@ function [radius, azim, elev, plotOpt] = build_tx_movement(var, const)
             plotOpt.c2      =   sprintf("elevation = %dº", const.elev);
         case 'a'
             radius  =   const.rad * I;
-            azim    =   var.start:step:var.end;
+            azim    =   linspace(var.start, var.end, var.steps);
             elev    =   const.elev * I;
             % Plot options
             plotOpt.xVect   =   azim;
@@ -41,7 +40,7 @@ function [radius, azim, elev, plotOpt] = build_tx_movement(var, const)
         case 'e'
             radius  =   const.rad * I;
             azim    =   const.azim * I;
-            elev    =   var.start:step:var.end;
+            elev    =   linspace(var.start, var.end, var.steps);
             % Plot options
             plotOpt.xVect   =   elev;
             plotOpt.label   =   "Elevation (deg)";

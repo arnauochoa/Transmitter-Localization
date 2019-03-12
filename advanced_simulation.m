@@ -16,11 +16,12 @@ var.id              =   'e';            %                   Parameter that will 
 var.start           =   -40;            %   [m] or [deg]    Start value of the variable parameter
 var.end             =   40;             %   [m] or [deg]    End value of the variable parameter 
 var.steps           =   9;              %                   Number of steps for the variable parameter
+var.dir             =   sign(var.end - var.start); %        Gets direction of movement
 %-- Constant parameters, value of changin parameter will be ignored
 const.rad           =   3000;           %       [m]         Value for when radius is constant
 const.azim          =   45;             %      [deg]        Value for when azimuth is constant
 const.elev          =   45;             %      [deg]        Value for when elevation is constant
-const.angW          =   0.01;           %     [rad/s]       Angular velocity
+const.vel           =   0.01;           % [rad/s] or [m/s]  Angular velocity (for 'a' and 'e') or linear velocity (for 'r')
 
 %- Receiver parameters
 rx(1).pos           =   [0, 0, 0];      %     [m, m, m]     Rx1 position
@@ -45,9 +46,9 @@ scen.power          =   17;             %       [dBW]       Transmitted signal p
 scen.nFig           =   2;              %       [dB]        Receiver's noise figure
 scen.ns             =   2;              %                   Number of samples
 scen.n              =   1.000293;       %                   Refractive index
-scen.timeNoiseVar   =   0.0025/(c^2);   %                   Time noise variance. When 0, CRB is used
-scen.freqNoiseVar   =   0.00025/(c^2);  %                   Frequency noise variance. When 0, CRB is used
-scen.weighting      =   'Q';            %                   Weigting matrix used on LS. I for identity, Q for covariance
+scen.tdoaVar        =   0.0025/(c^2);   %                   Variance on TDOA. When 0, CRB is used
+scen.fdoaVar        =   0.00025/(c^2);  %                   Variance on FDOA. When 0, CRB is used
+scen.weighting      =   'R';            %                   Weigting matrix used on LS. I for identity, Q for covariance
 scen.numRx          =   length(rx);     %                   Number of receivers
 scen.refIndex       =   1;              %                   Reference receiver index
 scen.MSBW           =   get_MS_BW(scen);%                   Mean Square Bandwidth
@@ -56,11 +57,8 @@ scen.MSBW           =   get_MS_BW(scen);%                   Mean Square Bandwidt
 [radius, azim, elev, plotOpt] = build_tx_movement(var, const);
 
 %% --- SIMULATION ---
-
-aux.pos     =   zeros(1,3);
-aux.vel     =   zeros(1,3);
-est         =   repmat(aux, 1, var.steps);
-
+tic
+% Vectors definition
 pos.x.bias  =   zeros(1, var.steps);
 pos.x.std   =   zeros(1, var.steps);
 pos.y.bias  =   zeros(1, var.steps);
@@ -75,35 +73,38 @@ vel.y.std   =   zeros(1, var.steps);
 vel.z.bias  =   zeros(1, var.steps);
 vel.z.std   =   zeros(1, var.steps);
 
-tic
+s.pos       =   nan(1, 3);
+s.vel       =   nan(1, 3);
+tx          =   repmat(s, var.steps, 1);
+est         =   repmat(s, var.steps, 1);
 for i = 1:var.steps
     fprintf("Step %i\n", i);
-    tx = obtain_tx_info(radius(i), azim(i), elev(i), const.angW);
-    [~, ~, ~, txEstPos, txEstVel] = simulate_scenario(N, scen, tx, rx);
+    tx(i)   =   obtain_tx_info(radius(i), azim(i), elev(i), const.vel, var);
+    [~, ~, ~, txEstPos, txEstVel]   =   simulate_scenario(N, scen, tx(i), rx);
     
     %-- Position and velocity averages
-    meanEstPos      =   mean(txEstPos, 1);
-    meanEstVel      =   mean(txEstVel, 1);
+    est(i).pos          =   mean(txEstPos, 1);
+    est(i).vel          =   mean(txEstVel, 1);
     %-- Bias and standard deviation in Position
-    pos.x.bias(i)   =   meanEstPos(1) - tx.pos(1);
-    pos.x.std(i)    =   std(txEstPos(:, 1));
-    pos.y.bias(i)   =   meanEstPos(2) - tx.pos(2);
-    pos.y.std(i)    =   std(txEstPos(:, 2));
-    pos.z.bias(i)   =   meanEstPos(3) - tx.pos(3);
-    pos.z.std(i)    =   std(txEstPos(:, 3));
+    pos.x.bias(i)       =   est(i).pos(1) - tx(i).pos(1);
+    pos.x.std(i)        =   std(txEstPos(:, 1));
+    pos.y.bias(i)       =   est(i).pos(2) - tx(i).pos(2);
+    pos.y.std(i)        =   std(txEstPos(:, 2));
+    pos.z.bias(i)       =   est(i).pos(3) - tx(i).pos(3);
+    pos.z.std(i)        =   std(txEstPos(:, 3));
     %-- Bias and standard deviation in Velocity
-    vel.x.bias(i)   =   meanEstVel(1) - tx.vel(1);
-    vel.x.std(i)    =   std(txEstVel(:, 1));
-    vel.y.bias(i)   =   meanEstVel(2) - tx.vel(2);
-    vel.y.std(i)    =   std(txEstVel(:, 2));
-    vel.z.bias(i)   =   meanEstVel(3) - tx.vel(3);
-    vel.z.std(i)    =   std(txEstVel(:, 3));
+    vel.x.bias(i)       =   est(i).vel(1) - tx(i).vel(1);
+    vel.x.std(i)        =   std(txEstVel(:, 1));
+    vel.y.bias(i)       =   est(i).vel(2) - tx(i).vel(2);
+    vel.y.std(i)        =   std(txEstVel(:, 2));
+    vel.z.bias(i)       =   est(i).vel(3) - tx(i).vel(3);
+    vel.z.std(i)        =   std(txEstVel(:, 3));
 end
 toc
 
 %% --- RESULTS ---
 
-% fprintf("\n ========= Results =========\n");
+% fprintf("\n ========= Results =========\n")
 
 if (var.id == 'r' || var.id == 'a' ||var.id == 'e')
     %- Bias of the position
@@ -169,5 +170,29 @@ if (var.id == 'r' || var.id == 'a' ||var.id == 'e')
     plot(plotOpt.xVect, vel.z.std, '-o');
     ylabel("STD of velocity (Z) (m/s)");
     xlabel(plotOpt.label);
+end
+
+if showScenario
+    scale = 10;
+    figure; set(gcf, 'Position',  [100, 100, 1200, 800]);
+    legend;
+    for i = 1:var.steps
+        %- Actual positions
+        name    =   sprintf("Receiver at t=%d", i);
+        scatter3(tx(i).pos(1), tx(i).pos(2), tx(i).pos(3), 'g', 'x', 'DisplayName', name); hold on;
+        quiver3(tx(i).pos(1), tx(i).pos(2), tx(i).pos(3), ...
+            tx(i).vel(1)*scale, tx(i).vel(2)*scale, tx(i).vel(3)*scale, 'g'); hold on;
+        %- Estimated positions
+        name    =   sprintf("Estimation at t=%d", i);
+        scatter3(est(i).pos(1), est(i).pos(2), est(i).pos(3), 'r', 'x', 'DisplayName', name); hold on;
+        quiver3(est(i).pos(1), est(i).pos(2), est(i).pos(3), ...
+            est(i).vel(1)*scale, est(i).vel(2)*scale, est(i).vel(3)*scale, 'r'); hold on;
+    end
+    for i = 1:scen.numRx
+        scatter3(rx(i).pos(1), rx(i).pos(2), rx(i).pos(3), 'b', 'x', 'DisplayName', 'Receivers'); hold on;
+        quiver3(rx(i).pos(1), rx(i).pos(2), rx(i).pos(3), ...
+            rx(i).vel(1)*scale, rx(i).vel(2)*scale, rx(i).vel(3)*scale, 'b'); hold on;
+    end
+    xlabel('x'); ylabel('y'); zlabel('z');
 end
 
