@@ -47,7 +47,7 @@ function W = find_weight_matrix(scen, rxPows)
             Q1          =   scen.tdoaVar * R1;
             Q2          =   scen.fdoaVar * R1;
             O           =   zeros(size);
-            Q           =   [Q1 O; Q2 Q1];
+            Q           =   [Q1 O; O Q2];
             W           =   inv(Q);
         otherwise
             W = eye(2*(scen.numRx - 1));
