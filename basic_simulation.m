@@ -42,7 +42,7 @@ scen.shape          =   'r';            %                   Signal band shape: '
 scen.freq           =   1575.42 * 1e6;  %       [Hz]        Transmitted signal frequency
 scen.power          =   17;             %       [dBW]       Transmitted signal power
 scen.nFig           =   2;              %       [dB]        Receiver's noise figure
-scen.ns             =   2;              %                   Number of samples
+scen.ns             =   50;              %                   Number of samples
 scen.n              =   1.000293;       %                   Refractive index
 scen.tdoaVar        =   0.0025/(c^2);   %                   Time noise variance. When 0, CRB is used
 scen.fdoaVar        =   0.00025/(c^2);  %                   Frequency noise variance. When 0, CRB is used
@@ -61,7 +61,7 @@ scen.nAnt           =   2;              %                   Number of antennas o
 
 %% --- SIMULATION ---
 tic     % Start measuring execution time
-[rxPows, rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, scen, tx, rx);
+[rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB] = simulate_scenario(N, scen, tx, rx);
 toc     % Stop measuring execution time
 
 
@@ -69,17 +69,17 @@ toc     % Stop measuring execution time
 
 %-- Results computations
 %- Mean
-meanEstPos      =   mean(txEstPos, 1);
-meanEstVel      =   mean(txEstVel, 1);
+meanEstPos      =   mean(txEstPosA, 1);
+meanEstVel      =   mean(txEstVelA, 1);
 %- Bias
 biasEstPos      =   meanEstPos - tx.pos;
 biasEstVel      =   meanEstVel - tx.vel;
 %- Standard deviation
-stdEstPos       =   std(txEstPos, 0, 1);
-stdEstVel       =   std(txEstVel, 0, 1);
+stdEstPos       =   std(txEstPosA, 0, 1);
+stdEstVel       =   std(txEstVelA, 0, 1);
 %- Error evolution
-errEstPos       =   sqrt(sum(txEstPos - tx.pos, 2).^2);
-errEstVel       =   sqrt(sum(txEstVel - tx.vel, 2).^2);
+errEstPos       =   sqrt(sum(txEstPosA - tx.pos, 2).^2);
+errEstVel       =   sqrt(sum(txEstVelA - tx.vel, 2).^2);
 
 
 fprintf("\n ========= Observables =========\n");

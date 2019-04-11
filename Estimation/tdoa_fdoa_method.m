@@ -1,8 +1,8 @@
 function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, rxPows, rxTimes, rxFreqs)
-%   FIRST_STAGE:     First estimation of source's position and velocity.   
+%   FIRST_STAGE:     Estimation of source's position and velocity using TDoA and FDoA.   
 %
-%       First estimation of source's position and velocity using the first 
-%       stage method described by Ho and Xo.
+%       Estimation of source's position and velocity using the TDoA and 
+%       FDoA method described by Ho and Xo.
 %
 %   Input:      scen:       Struct. Information of the scenario
 %               rx:         1xM struct. Information of the receivers

@@ -25,7 +25,7 @@ function [rxPow, rxTime, rxFreq, estTheta] = observables_generation(rx, tx, scen
     fDop        =   scen.freq * (radVel/v);  % Doppler frequency drift
     
     %- Received power computation
-    rxPow       =   get_rx_power(scen, range); % TODO: apply variance in noise
+    rxPow       =   get_rx_power(scen, range);
     
     %- Estimated DoA computation
     estTheta    =   get_est_theta(rx, tx, scen, rxPow);
