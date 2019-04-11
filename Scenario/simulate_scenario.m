@@ -25,9 +25,10 @@ function [rxPows, rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, s
     rxPowsMat   =   zeros(numRx, N);
     rxTimesMat  =   zeros(numRx, N);
     rxFreqsMat  =   zeros(numRx, N);
+    estTheta    =   zeros(numRx, N);
     for i = 1:N
         parfor r = 1:numRx
-            [rxPowsMat(r, i), rxTimesMat(r, i), rxFreqsMat(r, i)] = ...
+            [rxPowsMat(r, i), rxTimesMat(r, i), rxFreqsMat(r, i), estTheta(r, i)] = ...
                 observables_generation(rx(r), tx, scen);
         end
     end

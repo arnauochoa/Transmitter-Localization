@@ -46,7 +46,7 @@ scen.ns             =   2;              %                   Number of samples
 scen.n              =   1.000293;       %                   Refractive index
 scen.tdoaVar        =   0.0025/(c^2);   %                   Time noise variance. When 0, CRB is used
 scen.fdoaVar        =   0.00025/(c^2);  %                   Frequency noise variance. When 0, CRB is used
-scen.doaVar         =   0;              %                   DoA error variance. When 0, CRB is used
+scen.doaVar         
 scen.weighting      =   'Q';            %                   Weigting matrix used on LS. I for identity, Q for covariance
 scen.numRx          =   length(rx);     %                   Number of receivers
 scen.refIndex       =   1;              %                   Reference receiver index
@@ -54,7 +54,6 @@ scen.MSBW           =   get_MS_BW(scen);%                   Mean Square Bandwidt
 scen.c0             =   1;              %                   Average multiplicative gain
 scen.gamma          =   5;              %                   Path loss exponent
 scen.sigmaS         =   6;              %       [dB]        Shadowing standard deviation
-scen.corrDist       =   5;              %       [m]         Correlation distance within which the shadowing effects among nodes are correlated
 scen.spacing        =   0;              %       [m]         Spacing between array elements. If 0, set to lambda/2
 scen.nAnt           =   2;              %                   Number of antennas of the array
 
