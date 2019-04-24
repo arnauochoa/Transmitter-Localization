@@ -1,8 +1,8 @@
 function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, rxPows, rxTimes, rxFreqs)
-%   FIRST_STAGE:     First estimation of source's position and velocity.   
+%   FIRST_STAGE:     Estimation of source's position and velocity using TDoA and FDoA.   
 %
-%       First estimation of source's position and velocity using the first 
-%       stage method described by Ho and Xo.
+%       Estimation of source's position and velocity using the TDoA and 
+%       FDoA method described by Ho and Xo.
 %
 %   Input:      scen:       Struct. Information of the scenario
 %               rx:         1xM struct. Information of the receivers
@@ -44,7 +44,7 @@ function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, r
     G   =   -2 .* [G1; G2];
     
     %- Weighted Least Squares
-    W   =   find_weight_matrix(scen, rxPows);
+    W   =   find_TDOA_FDOA_weight_matrix(scen, rxPows);
     
     theta       = pinv(G' * W * G) * G' * W * h;
     txEstPos    = theta(1:3);

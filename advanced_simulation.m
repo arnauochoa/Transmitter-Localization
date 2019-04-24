@@ -26,32 +26,45 @@ const.vel           =   0.01;           % [rad/s] or [m/s]  Angular velocity (fo
 %- Receiver parameters
 rx(1).pos           =   [0, 0, 0];      %     [m, m, m]     Rx1 position
 rx(1).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx1 velocity
+rx(1).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(2).pos           =   [400, 0, 0];    %     [m, m, m]     Rx2 position
 rx(2).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx2 velocity
+rx(2).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(3).pos           =   [-400, 0, 0];   %     [m, m, m]     Rx3 position
 rx(3).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx3 velocity
+rx(3).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(4).pos           =   [0, 400, 0];    %     [m, m, m]     Rx4 position
 rx(4).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx4 velocity
+rx(4).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(5).pos           =   [0, 0, 400];    %     [m, m, m]     Rx5 position
 rx(5).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx5 velocity
+rx(5).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(6).pos           =   [0, 0, -400];   %     [m, m, m]     Rx6 position
 rx(6).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx6 velocity
+rx(6).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 
 %- Scenario parameters
 scen.showBand       =   false;          %                   When enabled, PSD and "Square-PSD" will be plotted
-scen.bw             =   1.023 * 1e6;    %                   Transmitted signal bandwidth at -3dB[Hz]
+scen.bw             =   1.023 * 1e6;    %       [Hz]        Transmitted signal bandwidth TODO: define it as BW at -3dB
 scen.shape          =   'r';            %                   Signal band shape: 'r' -> rectangular, 's' -> sinc, 't' -> triangle
 scen.freq           =   1575.42 * 1e6;  %       [Hz]        Transmitted signal frequency
 scen.power          =   17;             %       [dBW]       Transmitted signal power
 scen.nFig           =   2;              %       [dB]        Receiver's noise figure
-scen.ns             =   2;              %                   Number of samples
+scen.ns             =   50;              %                   Number of samples
 scen.n              =   1.000293;       %                   Refractive index
-scen.tdoaVar        =   0.0025/(c^2);   %                   Variance on TDOA. When 0, CRB is used
-scen.fdoaVar        =   0.00025/(c^2);  %                   Variance on FDOA. When 0, CRB is used
-scen.weighting      =   'R';            %                   Weigting matrix used on LS. I for identity, Q for covariance
+scen.tdoaVar        =   0.0025/(c^2);   %                   Time noise variance. When 0, CRB is used
+scen.fdoaVar        =   0.00025/(c^2);  %                   Frequency noise variance. When 0, CRB is used
+scen.doaVar         =   0;              %                   DoA error variance. When 0, CRB is used
+scen.weighting      =   'Q';            %                   Weigting matrix used on LS. I for identity, Q for covariance
 scen.numRx          =   length(rx);     %                   Number of receivers
 scen.refIndex       =   1;              %                   Reference receiver index
 scen.MSBW           =   get_MS_BW(scen);%                   Mean Square Bandwidth
+scen.c0             =   1;              %                   Average multiplicative gain
+scen.gamma          =   5;              %                   Path loss exponent
+scen.sigmaS         =   6;              %       [dB]        Shadowing standard deviation
+scen.corrDist       =   5;              %       [m]         Correlation distance within which the shadowing effects among nodes are correlated
+scen.spacing        =   0;              %       [m]         Spacing between array elements. If 0, set to lambda/2
+scen.nAnt           =   2;              %                   Number of antennas of the array
 
 %- Vectors of movement of the transmitter
 [radius, azim, elev, plotOpt] = build_tx_movement(var, const);
@@ -80,7 +93,7 @@ est         =   repmat(s, var.steps, 1);
 for i = 1:var.steps
     fprintf("Step %i\n", i);
     tx(i)   =   obtain_tx_info(radius(i), azim(i), elev(i), const.vel, var);
-    [~, ~, ~, txEstPos, txEstVel]   =   simulate_scenario(N, scen, tx(i), rx);
+    [~, ~, ~, txEstPos, txEstVel, txEstPosB]   =   simulate_scenario(N, scen, tx(i), rx);
     
     %-- Position and velocity averages
     est(i).pos          =   mean(txEstPos, 1);

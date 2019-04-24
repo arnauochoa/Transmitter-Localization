@@ -18,37 +18,50 @@ tx.vel              =   [10, 10, 7];    %  [m/s, m/s, m/s]  Velocity X-Y-Z [m/s]
 %- Receiver parameters
 rx(1).pos           =   [0, 0, 0];      %     [m, m, m]     Rx1 position
 rx(1).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx1 velocity
+rx(1).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(2).pos           =   [400, 0, 0];    %     [m, m, m]     Rx2 position
 rx(2).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx2 velocity
+rx(2).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(3).pos           =   [-400, 0, 0];   %     [m, m, m]     Rx3 position
 rx(3).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx3 velocity
+rx(3).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(4).pos           =   [0, 400, 0];    %     [m, m, m]     Rx4 position
 rx(4).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx4 velocity
+rx(4).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(5).pos           =   [0, 0, 400];    %     [m, m, m]     Rx5 position
 rx(5).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx5 velocity
+rx(5).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(6).pos           =   [0, 0, -400];   %     [m, m, m]     Rx6 position
 rx(6).vel           =   [0, 0, 0];      %  [m/s, m/s, m/s]  Rx6 velocity
+rx(6).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
 
 %- Scenario parameters
 scen.showBand       =   false;          %                   When enabled, PSD and "Square-PSD" will be plotted
-scen.bw             =   1.023 * 1e6;    %                   Transmitted signal bandwidth at -3dB[Hz]
+scen.bw             =   1.023 * 1e6;    %       [Hz]        Transmitted signal bandwidth TODO: define it as BW at -3dB
 scen.shape          =   'r';            %                   Signal band shape: 'r' -> rectangular, 's' -> sinc, 't' -> triangle
 scen.freq           =   1575.42 * 1e6;  %       [Hz]        Transmitted signal frequency
 scen.power          =   17;             %       [dBW]       Transmitted signal power
 scen.nFig           =   2;              %       [dB]        Receiver's noise figure
-scen.ns             =   2;              %                   Number of samples
+scen.ns             =   50;              %                   Number of samples
 scen.n              =   1.000293;       %                   Refractive index
 scen.tdoaVar        =   0.0025/(c^2);   %                   Time noise variance. When 0, CRB is used
 scen.fdoaVar        =   0.00025/(c^2);  %                   Frequency noise variance. When 0, CRB is used
+scen.doaVar         =   0;              %                   DoA error variance. When 0, CRB is used
 scen.weighting      =   'Q';            %                   Weigting matrix used on LS. I for identity, Q for covariance
 scen.numRx          =   length(rx);     %                   Number of receivers
 scen.refIndex       =   1;              %                   Reference receiver index
 scen.MSBW           =   get_MS_BW(scen);%                   Mean Square Bandwidth
+scen.c0             =   1;              %                   Average multiplicative gain
+scen.gamma          =   5;              %                   Path loss exponent
+scen.sigmaS         =   6;              %       [dB]        Shadowing standard deviation
+scen.corrDist       =   5;              %       [m]         Correlation distance within which the shadowing effects among nodes are correlated
+scen.spacing        =   0;              %       [m]         Spacing between array elements. If 0, set to lambda/2
+scen.nAnt           =   2;              %                   Number of antennas of the array
 
 
 %% --- SIMULATION ---
 tic     % Start measuring execution time
-[rxPows, rxTimes, rxFreqs, txEstPos, txEstVel] = simulate_scenario(N, scen, tx, rx);
+[rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB] = simulate_scenario(N, scen, tx, rx);
 toc     % Stop measuring execution time
 
 
@@ -56,17 +69,17 @@ toc     % Stop measuring execution time
 
 %-- Results computations
 %- Mean
-meanEstPos      =   mean(txEstPos, 1);
-meanEstVel      =   mean(txEstVel, 1);
+meanEstPos      =   mean(txEstPosA, 1);
+meanEstVel      =   mean(txEstVelA, 1);
 %- Bias
 biasEstPos      =   meanEstPos - tx.pos;
 biasEstVel      =   meanEstVel - tx.vel;
 %- Standard deviation
-stdEstPos       =   std(txEstPos, 0, 1);
-stdEstVel       =   std(txEstVel, 0, 1);
+stdEstPos       =   std(txEstPosA, 0, 1);
+stdEstVel       =   std(txEstVelA, 0, 1);
 %- Error evolution
-errEstPos       =   sqrt(sum(txEstPos - tx.pos, 2).^2);
-errEstVel       =   sqrt(sum(txEstVel - tx.vel, 2).^2);
+errEstPos       =   sqrt(sum(txEstPosA - tx.pos, 2).^2);
+errEstVel       =   sqrt(sum(txEstVelA - tx.vel, 2).^2);
 
 
 fprintf("\n ========= Observables =========\n");
