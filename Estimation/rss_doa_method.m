@@ -9,12 +9,29 @@ function txEstPos = rss_doa_method(scen, rx, rxPows, estDoas)
 %   Input:      scen:       Struct. Information of the scenario
 %               rx:         1xM struct. Information of the receivers
 %               rxPows:     Mx1 vector. Received signals' powers
-%               estDoas     Mx1 vector. Estimated directions of arrival
+%               estDoas:    Mx1 vector. Estimated directions of arrival
 %
 %   Output:     txEstPos:   3x1 vector. Source's estimated position
 
 
-txEstPos = [0 0 0]';
+    %- Some initializations
+    M   =   length(rx);
+    b   =   zeros(M, 1);
+    A   =   zeros(M, 2);
+    
+    %- Assign values to b and A
+    for i = 1:M
+        b(i)    =   rx(i).pos(1) * sin(estDoas(i)) - rx(i).pos(2) * cos(estDoas(i));
+        A(i, :) =   [sin(estDoas(i)), -cos(estDoas(i))];
+    end
+    
+    %- Weighted Least Squares
+    
+    
+
+
+
+    txEstPos = [0 0 0]';
 
 end
 

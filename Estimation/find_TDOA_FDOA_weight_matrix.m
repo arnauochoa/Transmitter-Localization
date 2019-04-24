@@ -1,4 +1,4 @@
-function W = find_weight_matrix(scen, rxPows)
+function W = find_TDOA_FDOA_weight_matrix(scen, rxPows)
 %   FIND_WEIGHT_MATRIX:    Finds weighting matrix for LS. 
 %                      
 %       Finds weighting matrix for LS. The weighting matrix can be the

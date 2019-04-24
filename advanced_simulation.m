@@ -93,7 +93,7 @@ est         =   repmat(s, var.steps, 1);
 for i = 1:var.steps
     fprintf("Step %i\n", i);
     tx(i)   =   obtain_tx_info(radius(i), azim(i), elev(i), const.vel, var);
-    [~, ~, ~, txEstPos, txEstVel]   =   simulate_scenario(N, scen, tx(i), rx);
+    [~, ~, ~, txEstPos, txEstVel, txEstPosB]   =   simulate_scenario(N, scen, tx(i), rx);
     
     %-- Position and velocity averages
     est(i).pos          =   mean(txEstPos, 1);

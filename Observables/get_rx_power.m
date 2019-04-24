@@ -10,10 +10,11 @@ function [rxPow] = get_rx_power(scen, range)
 %   Output:     rxPow:  Double. Received signal's power in Watts
 
     %- Obtain shadowing variable
-    shadVar =   db2pow(scen.sigmaS)^2 * exp(-range / scen.corrDist);
-    s       =   lognrnd(0, shadVar);
+%     shadVar =   db2pow(scen.sigmaS)^2 * exp(-range / scen.corrDist);
+%     s       =   lognrnd(0, shadVar);
+%     rxPow   =   scen.power * (scen.c0 * (1/s)) / (range^scen.gamma);
 
-    rxPow   =   scen.power * (scen.c0 * (1/s)) / (range^scen.gamma);
+    rxPow   =   scen.power * scen.c0 / (range^scen.gamma);
     
 %     c       =   physconst('LightSpeed');    % Speed of light [m/s]
 %     
