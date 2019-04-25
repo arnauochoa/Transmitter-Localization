@@ -18,20 +18,21 @@ function txEstPos = rss_doa_method(scen, rx, rxPows, estDoas)
     M   =   length(rx);
     b   =   zeros(M, 1);
     A   =   zeros(M, 2);
+    d   =   zeros(M, 1);
     
     %- Assign values to b and A
     for i = 1:M
-        b(i)    =   rx(i).pos(1) * sin(estDoas(i)) - rx(i).pos(2) * cos(estDoas(i));
-        A(i, :) =   [sin(estDoas(i)), -cos(estDoas(i))];
+        b(i)        =   rx(i).pos(1) * sin(estDoas(i)) - rx(i).pos(2) * cos(estDoas(i));
+        A(i, :)     =   [sin(estDoas(i)), -cos(estDoas(i))];
+        
+        %- Orientation of the ULA wrt. the incoming DoA
+        thetaTilde  =   estDoas(i) - rx(i).orientation;
+        %- Estimated doa variance
+        d(i)        =   get_doa_CRB(scen, thetaTilde, rxPows(i));
     end
     
     %- Weighted Least Squares
-    
-    
-
-
-
-    txEstPos = [0 0 0]';
-
+    W           =   diag(d);
+    txEstPos    =   pinv(A' * W * A) * A' * W * b;
 end
 
