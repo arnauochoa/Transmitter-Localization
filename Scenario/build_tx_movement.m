@@ -1,4 +1,4 @@
-function [radius, azim, elev, plotOpt] = build_tx_movement(var, const)
+function [radius, azim, plotOpt] = build_tx_movement(var, const)
 %   OBSERVABLES_GENERATION:     Generation of the vectors describing Tx
 %                               movement
 %
@@ -22,36 +22,36 @@ function [radius, azim, elev, plotOpt] = build_tx_movement(var, const)
         case 'r'
             radius  =   linspace(var.start, var.end, var.steps);
             azim    =   const.azim * I;
-            elev    =   const.elev * I;
+%             elev    =   const.elev * I;
             % Plot options
             plotOpt.xVect   =   radius;
             plotOpt.label   =   "Radius (m)";
             plotOpt.c1      =   sprintf("azimuth = %dº, ", const.azim);
-            plotOpt.c2      =   sprintf("elevation = %dº", const.elev);
+%             plotOpt.c2      =   sprintf("elevation = %dº", const.elev);
         case 'a'
             radius  =   const.rad * I;
             azim    =   linspace(var.start, var.end, var.steps);
-            elev    =   const.elev * I;
+%             elev    =   const.elev * I;
             % Plot options
             plotOpt.xVect   =   azim;
             plotOpt.label   =   "Azimuth (deg)";
             plotOpt.c1      =   sprintf("radius = %d m, ", const.rad);
-            plotOpt.c2      =   sprintf("elevation = %dº", const.elev);
-        case 'e'
-            radius  =   const.rad * I;
-            azim    =   const.azim * I;
-            elev    =   linspace(var.start, var.end, var.steps);
-            % Plot options
-            plotOpt.xVect   =   elev;
-            plotOpt.label   =   "Elevation (deg)";
-            plotOpt.c1      =   sprintf("radius = %d m, ", const.rad);
-            plotOpt.c2      =   sprintf("azimuth = %dº", const.azim);
+%             plotOpt.c2      =   sprintf("elevation = %dº", const.elev);
+%         case 'e'
+%             radius  =   const.rad * I;
+%             azim    =   const.azim * I;
+%             elev    =   linspace(var.start, var.end, var.steps);
+%             % Plot options
+%             plotOpt.xVect   =   elev;
+%             plotOpt.label   =   "Elevation (deg)";
+%             plotOpt.c1      =   sprintf("radius = %d m, ", const.rad);
+%             plotOpt.c2      =   sprintf("azimuth = %dº", const.azim);
         otherwise
             radius  =   const.rad * I;
             azim    =   const.azim * I;
-            elev    =   const.elev * I;
+%             elev    =   const.elev * I;
             % Plot options
-            plotOpt.xVect   =   elev;
+            plotOpt.xVect   =   azim;
             plotOpt.label   =   "";
             plotOpt.c1      =   "";
             plotOpt.c2      =   "";

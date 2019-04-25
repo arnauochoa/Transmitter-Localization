@@ -16,7 +16,8 @@ function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, r
 %               refRrate:   3x1 vector. Reference receiver's range rate to source
 %
 
-    M   = length(rxTimes);
+    M       =   length(rxTimes);
+    nDim    =   2;
 
     [rx, ref, dRange, dRrate] = ...
         get_differences(scen, rx, rxTimes, rxFreqs);
@@ -25,9 +26,9 @@ function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, r
     h1  =   zeros(M-1, 1);
     h2  =   zeros(M-1, 1);
     %- Matrix G definition
-    O   =   zeros(1, 3);
-    G1  =   zeros(M-1, 8);
-    G2  =   zeros(M-1, 8);
+    O   =   zeros(1, nDim);
+    G1  =   zeros(M-1, 2*nDim+2);
+    G2  =   zeros(M-1, 2*nDim+2);
     for row = 1:M-1
         %-- First part of h, corresponding to TDOA
         h1(row)  =   (dRange(row)^2) - dot(rx(row).pos, rx(row).pos) + dot(ref.pos, ref.pos);
@@ -46,10 +47,10 @@ function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, r
     %- Weighted Least Squares
     W   =   find_TDOA_FDOA_weight_matrix(scen, rxPows);
     
-    theta       = pinv(G' * W * G) * G' * W * h;
-    txEstPos    = theta(1:3);
-    refRange    = theta(4);
-    txEstVel    = theta(5:7);
-    refRrate    = theta(8);
+    theta       =   pinv(G' * W * G) * G' * W * h;
+    txEstPos    =   theta(1:nDim);
+    refRange    =   theta(nDim+1);
+    txEstVel    =   theta(nDim+2:2*nDim+1);
+    refRrate    =   theta(2*nDim+2);
     
 end

@@ -1,10 +1,10 @@
-function tx = obtain_tx_info(R, azim, elev, vel, var)
+function tx = obtain_tx_info(R, azim, vel, var)
 %   OBTAIN_TX_INFO Generation of tx struct
 %
 %   	Generation of the tx struct (i.e. position and velocity) from
 %   	espherical coordinates and angular velocity.
 %
-%   Input:      R:     Double. Radius on espherical coordinates
+%   Input:      R:          Double. Radius on spherical coordinates
 %               azim:       Double. Azimuth angle on espherical coordinates
 %                           in rad
 %               elev:       Double. Elevation angle on espherical
@@ -17,10 +17,16 @@ function tx = obtain_tx_info(R, azim, elev, vel, var)
 %                           position an velocity in cartesian coordinates
 
     %- Position computation
-    xPos    =   R * cosd(elev) * cosd(azim);
-    yPos    =   R * cosd(elev) * sind(azim);
-    zPos    =   R * sind(elev);
-    tx.pos  =   [xPos, yPos, zPos];
+    %- 3D
+%     xPos    =   R * cosd(elev) * cosd(azim);
+%     yPos    =   R * cosd(elev) * sind(azim);
+%     zPos    =   R * sind(elev);
+%     tx.pos  =   [xPos, yPos, zPos];
+
+    %- 2D
+    xPos    =   R * cosd(azim);
+    yPos    =   R * sind(azim);
+    tx.pos  =   [xPos, yPos];
     
     %- Velocity computation
     %-- Set direction
@@ -31,22 +37,15 @@ function tx = obtain_tx_info(R, azim, elev, vel, var)
             mov     =   tx.pos/sqrt(tx.pos * tx.pos');
             tx.vel  =   vel * mov;
         case 'a'
-            el_w    =   90 - elev;
-            az_w    =   azim - 180;
-            x_w     =   vel * cosd(el_w) * cosd(az_w);
-            y_w     =   vel * cosd(el_w) * sind(az_w);
-            z_w     =   vel * sind(el_w);
-            w_vect  =   [x_w, y_w, z_w];
-        case 'e'
-            x_w     =   -vel * cosd(azim);
-            y_w     =   vel * sind(azim);
-            w_vect  =   [x_w, y_w, 0];
+            w_vect  =   [0, 0, var.dir * vel];
         otherwise
             w_vect  =   [0, 0, 0];
     end
     if var.id ~= 'r'
         %-- Linear velocity
-        tx.vel  =   cross(tx.pos, w_vect);
+        pos3d   =   [tx.pos, 0];
+        vel3d   =   cross(pos3d, w_vect);
+        tx.vel  =   vel3d(1:2);
     end
 end
 

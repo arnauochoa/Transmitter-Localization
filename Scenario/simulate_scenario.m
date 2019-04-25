@@ -18,27 +18,27 @@ function [rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB] = simulate_
 %                           different realizations.
 
     numRx       =   length(rx);
+    nDim        =   2;
         
-    txEstPosA    =   zeros(N, 3);
-    txEstVelA    =   zeros(N, 3);
+    txEstPosA    =   zeros(N, nDim);
+    txEstVelA    =   zeros(N, nDim);
     
-    txEstPosB    =   zeros(N, 3);
+    txEstPosB    =   zeros(N, nDim);
     
     rxPowsMat   =   zeros(numRx, N);
     rxTimesMat  =   zeros(numRx, N);
     rxFreqsMat  =   zeros(numRx, N);
     estDoasMat  =   zeros(numRx, N);
     for i = 1:N
-        for r = 1:numRx
-%         for r = 1:numRx
+        parfor r = 1:numRx
             [rxPowsMat(r, i), rxTimesMat(r, i), rxFreqsMat(r, i), estDoasMat(r, i)] = ...
                 observables_generation(rx(r), tx, scen);
         end
     end
     
-    for i = 1:N
+    parfor i = 1:N
         [txEstPosA(i, :), txEstVelA(i, :), ~, ~] = ...
-            tdoa_fdoa_method(scen, rx, rxPowsMat(:,i), rxTimesMat(:,i), rxFreqsMat);
+            tdoa_fdoa_method(scen, rx, rxPowsMat(:,i), rxTimesMat(:,i), rxFreqsMat(:,i));
         
         txEstPosB(i, :) = rss_doa_method(scen, rx, rxPowsMat(:, i), estDoasMat(:, i));
     end
