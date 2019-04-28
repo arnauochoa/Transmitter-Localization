@@ -3,24 +3,32 @@ addpath 'Estimation';
 addpath 'Misc';
 addpath 'Observables';
 addpath 'Scenario';
+addpath 'Tests';
 
 %% --- PARAMETERS DEFINITION ---
 %- Simulation parameters
+doSave              =   true;
+testName            =   'tl3';
 showScenario        =   true;           %                   Shows position over 3D space
-N                   =   1000;           %                   Number of realizations
+N                   =   500;           %                   Number of realizations
 c                   =   299792458;      %      [m/s]        Speed of light
 nDim                =   2;              %                   Number of dimensions (now only 2)
 
 %- Transmitter parameters
 %-- Variable parameter values, 'r' - radius, 'a' - azimuth
-var.id              =   '0';            %                   Parameter that will change
-var.start           =   0;              %   [m] or [deg]    Start value of the variable parameter
-var.end             =   360;            %   [m] or [deg]    End value of the variable parameter 
+var.id              =   'a';            %                   Parameter that will change
+var.start           =   0;              %      [deg]        Start value of the variable parameter
+var.end             =   360;            %      [deg]        End value of the variable parameter 
 var.steps           =   36;             %                   Number of steps for the variable parameter
 var.dir             =   sign(var.end - var.start); %        Gets direction of movement
+
+var.near            =   1000;             %       [m]         Nearest rotation radius
+var.far             =   3000;           %       [m]         Furthest rotation radius
+var.radSteps        =   6;             %       [m]         Steps of increment in radius
+
 %-- Constant parameters, value of changin parameter will be ignored
-const.rad           =   500;            %       [m]         Value for when radius is constant
-const.azim          =   45;             %      [deg]        Value for when azimuth is constant
+% const.rad           =   500;            %       [m]         Value for when radius is constant
+% const.azim          =   45;             %      [deg]        Value for when azimuth is constant
 % const.elev          =   45;           %      [deg]        Value for when elevation is constant
 const.vel           =   0.01;           % [rad/s] or [m/s]  Angular velocity (for 'a' and 'e') or linear velocity (for 'r')
 
@@ -70,62 +78,70 @@ scen.spacing        =   0;              %   [m]         Spacing between array el
 scen.nAnt           =   2;              %                   Number of antennas of the array
 
 %- Vectors of movement of the transmitter
-[radius, azim, plotOpt] = build_tx_movement(var, const);
+radius              =   zeros(var.radSteps, var.steps);
+azim                =   zeros(var.radSteps, var.steps);
+rad                 =   linspace(var.near, var.far, var.radSteps);
+for i = 1:var.radSteps
+    const.rad = rad(i);
+    [radius(i, :), azim(i, :), plotOpt] = build_tx_movement(var, const);
+end
 
 %% --- SIMULATION ---
 tic
 % Vectors definition
 %- TDOA/FDOA
-pos.x.biasA  =   zeros(1, var.steps);
-pos.x.stdA   =   zeros(1, var.steps);
-pos.y.biasA  =   zeros(1, var.steps);
-pos.y.stdA   =   zeros(1, var.steps);
+pos.x.biasA  =   zeros(var.radSteps, var.steps);
+pos.x.stdA   =   zeros(var.radSteps, var.steps);
+pos.y.biasA  =   zeros(var.radSteps, var.steps);
+pos.y.stdA   =   zeros(var.radSteps, var.steps);
 %- RSS/DOA
-pos.x.biasB  =   zeros(1, var.steps);
-pos.x.stdB   =   zeros(1, var.steps);
-pos.y.biasB  =   zeros(1, var.steps);
-pos.y.stdB   =   zeros(1, var.steps);
+pos.x.biasB  =   zeros(var.radSteps, var.steps);
+pos.x.stdB   =   zeros(var.radSteps, var.steps);
+pos.y.biasB  =   zeros(var.radSteps, var.steps);
+pos.y.stdB   =   zeros(var.radSteps, var.steps);
 
 %- TDOA/FDOA
-vel.x.biasA  =   zeros(1, var.steps);
-vel.x.stdA   =   zeros(1, var.steps);
-vel.y.biasA  =   zeros(1, var.steps);
-vel.y.stdA   =   zeros(1, var.steps);
+vel.x.biasA  =   zeros(var.radSteps, var.steps);
+vel.x.stdA   =   zeros(var.radSteps, var.steps);
+vel.y.biasA  =   zeros(var.radSteps, var.steps);
+vel.y.stdA   =   zeros(var.radSteps, var.steps);
 %- RSS/DOA
-vel.x.biasB  =   zeros(1, var.steps);
-vel.x.stdB   =   zeros(1, var.steps);
-vel.y.biasB  =   zeros(1, var.steps);
-vel.y.stdB   =   zeros(1, var.steps);
+vel.x.biasB  =   zeros(var.radSteps, var.steps);
+vel.x.stdB   =   zeros(var.radSteps, var.steps);
+vel.y.biasB  =   zeros(var.radSteps, var.steps);
+vel.y.stdB   =   zeros(var.radSteps, var.steps);
 
 s.pos       =   nan(1, 2);
 s.vel       =   nan(1, 2);
-tx          =   repmat(s, var.steps, 1);
-estA        =   repmat(s, var.steps, 1);
-estB        =   repmat(s, var.steps, 1);
-for i = 1:var.steps
-    fprintf("Step %i\n", i);
-    tx(i)   =   obtain_tx_info(radius(i), azim(i), const.vel, var);
-    [~, ~, ~, txEstPosA, txEstVelA, txEstPosB]   =   simulate_scenario(N, scen, tx(i), rx);
-    
-    %-- Position and velocity averages
-    estA(i).pos          =   mean(txEstPosA, 1);
-    estA(i).vel          =   mean(txEstVelA, 1);
-    estB(i).pos          =   mean(txEstPosB, 1);
-    %-- Bias and standard deviation in Position
-    pos.x.biasA(i)       =   estA(i).pos(1) - tx(i).pos(1);
-    pos.x.stdA(i)        =   std(txEstPosA(:, 1));
-    pos.y.biasA(i)       =   estA(i).pos(2) - tx(i).pos(2);
-    pos.y.stdA(i)        =   std(txEstPosA(:, 2));
-    
-    pos.x.biasB(i)       =   estB(i).pos(1) - tx(i).pos(1);
-    pos.x.stdB(i)        =   std(txEstPosB(:, 1));
-    pos.y.biasB(i)       =   estB(i).pos(2) - tx(i).pos(2);
-    pos.y.stdB(i)        =   std(txEstPosB(:, 2));
-    %-- Bias and standard deviation in Velocity
-    vel.x.biasA(i)       =   estA(i).vel(1) - tx(i).vel(1);
-    vel.x.stdA(i)        =   std(txEstVelA(:, 1));
-    vel.y.biasA(i)       =   estA(i).vel(2) - tx(i).vel(2);
-    vel.y.stdA(i)        =   std(txEstVelA(:, 2));
+tx          =   repmat(s, var.steps, var.radSteps);
+estA        =   repmat(s, var.steps, var.radSteps);
+estB        =   repmat(s, var.steps, var.radSteps);
+for j = 1:var.radSteps
+    for i = 1:var.steps
+        fprintf("Step %i\n", i);
+        tx(i, j)   =   obtain_tx_info(radius(j, i), azim(j, i), const.vel, var);
+        [~, ~, ~, txEstPosA, txEstVelA, txEstPosB]   =   simulate_scenario(N, scen, tx(i, j), rx);
+
+        %-- Position and velocity averages
+        estA(i, j).pos          =   mean(txEstPosA, 1);
+        estA(i, j).vel          =   mean(txEstVelA, 1);
+        estB(i, j).pos          =   mean(txEstPosB, 1);
+        %-- Bias and standard deviation in Position
+        pos.x.biasA(j, i)       =   estA(i, j).pos(1) - tx(i, j).pos(1);
+        pos.x.stdA(j, i)        =   std(txEstPosA(:, 1));
+        pos.y.biasA(j, i)       =   estA(i, j).pos(2) - tx(i, j).pos(2);
+        pos.y.stdA(j, i)        =   std(txEstPosA(:, 2));
+
+        pos.x.biasB(j, i)       =   estB(i, j).pos(1) - tx(i, j).pos(1);
+        pos.x.stdB(j, i)        =   std(txEstPosB(:, 1));
+        pos.y.biasB(j, i)       =   estB(i, j).pos(2) - tx(i, j).pos(2);
+        pos.y.stdB(j, i)        =   std(txEstPosB(:, 2));
+        %-- Bias and standard deviation in Velocity
+        vel.x.biasA(j, i)       =   estA(i, j).vel(1) - tx(i, j).vel(1);
+        vel.x.stdA(j, i)        =   std(txEstVelA(:, 1));
+        vel.y.biasA(j, i)       =   estA(i, j).vel(2) - tx(i, j).vel(2);
+        vel.y.stdA(j, i)        =   std(txEstVelA(:, 2));
+    end
 end
 toc
 
@@ -209,20 +225,22 @@ if showScenario
     scale = 10;
     figure; set(gcf, 'Position',  [400, 50, 950, 900]);
     legend;
-    for i = 1:var.steps
-        %- Actual positions
-        name    =   sprintf("Receiver at t=%d", i);
-        scatter(tx(i).pos(1), tx(i).pos(2), 'g', 'x', 'DisplayName', name); hold on;
-        quiver(tx(i).pos(1), tx(i).pos(2), ...
-            tx(i).vel(1)*scale, tx(i).vel(2)*scale, 'g'); hold on;
-        %- Estimated positions
-        name    =   sprintf("(TDoA/FDoA) Estimation at t=%d", i);
-        scatter(estA(i).pos(1), estA(i).pos(2), 'r', 'x', 'DisplayName', name); hold on;
-        quiver(estA(i).pos(1), estA(i).pos(2), ...
-            estA(i).vel(1)*scale, estA(i).vel(2)*scale, 'r'); hold on;
-        
-        name    =   sprintf("(RSS/DoA) Estimation at t=%d", i);
-        scatter(estB(i).pos(1), estB(i).pos(2), 'm', 'x', 'DisplayName', name); hold on;
+    for j = 1:var.radSteps
+        for i = 1:var.steps
+            %- Actual positions
+            name    =   sprintf("Receiver at t=%d", i);
+            scatter(tx(i, j).pos(1), tx(i, j).pos(2), 'g', 'x', 'DisplayName', name); hold on;
+            quiver(tx(i, j).pos(1), tx(i, j).pos(2), ...
+                tx(i, j).vel(1)*scale, tx(i, j).vel(2)*scale, 'g'); hold on;
+            %- Estimated positions
+            name    =   sprintf("(TDoA/FDoA) Estimation at t=%d", i);
+            scatter(estA(i, j).pos(1), estA(i, j).pos(2), 'r', 'x', 'DisplayName', name); hold on;
+            quiver(estA(i, j).pos(1), estA(i, j).pos(2), ...
+                estA(i, j).vel(1)*scale, estA(i, j).vel(2)*scale, 'r'); hold on;
+
+            name    =   sprintf("(RSS/DoA) Estimation at t=%d", i);
+            scatter(estB(i, j).pos(1), estB(i, j).pos(2), 'm', 'x', 'DisplayName', name); hold on;
+        end
     end
     for i = 1:scen.numRx
         scatter(rx(i).pos(1), rx(i).pos(2), 'b', 'x', 'DisplayName', 'Receivers'); hold on;
@@ -230,5 +248,24 @@ if showScenario
             rx(i).vel(1)*scale, rx(i).vel(2)*scale, 'b'); hold on;
     end
     xlabel('x'); ylabel('y');
+end
+
+
+if doSave
+    
+    nFigs       =   7;
+    directory = sprintf('Results/%s/', testName);
+
+    if ~exist(directory, 'dir')
+        mkdir(directory);
+    end
+    dataFile = strcat(directory, 'data');
+    save(dataFile, 'var', 'const', 'scen', 'rx', 'tx', 'pos', 'vel', 'estA', 'estB');
+
+    for i = 1:nFigs
+        saveas(figure(i), sprintf('%sfig_%d.fig', directory, i));
+    end
+
+    close all;
 end
 

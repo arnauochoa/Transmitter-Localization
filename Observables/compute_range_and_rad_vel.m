@@ -14,6 +14,9 @@ function [range, radVel]   =   compute_range_and_rad_vel(rx, tx)
     %- Relative distance vector and norm
     d       =   rx.pos - tx.pos;
     range   =   norm(d);
+    if range == 0 
+        range = 1e-10;
+    end
     
     %- Scalar projections
     vT      =   dot(tx.vel, d) / range;

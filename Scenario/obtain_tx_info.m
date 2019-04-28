@@ -24,9 +24,14 @@ function tx = obtain_tx_info(R, azim, vel, var)
 %     tx.pos  =   [xPos, yPos, zPos];
 
     %- 2D
-    xPos    =   R * cosd(azim);
-    yPos    =   R * sind(azim);
-    tx.pos  =   [xPos, yPos];
+    xPos        =   R * cosd(azim);
+    yPos        =   R * sind(azim);
+    tx.pos      =   [xPos, yPos];
+    
+    %- Move tx if its position is(0,0) to aprox (0,0) to prevent NaN on 
+    % some computations
+    aux         =   tx.pos == 0;
+    tx.pos(aux) =   1e-300;
     
     %- Velocity computation
     %-- Set direction
@@ -35,6 +40,11 @@ function tx = obtain_tx_info(R, azim, vel, var)
     switch var.id
         case 'r'
             mov     =   tx.pos/sqrt(tx.pos * tx.pos');
+            
+            %- Check possible division by 0
+            aux     =   isnan(mov);
+            mov(aux)=   0;
+            
             tx.vel  =   vel * mov;
         case 'a'
             w_vect  =   [0, 0, var.dir * vel];

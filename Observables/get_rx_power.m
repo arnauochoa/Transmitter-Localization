@@ -13,8 +13,11 @@ function [rxPow] = get_rx_power(scen, range)
 %     shadVar =   db2pow(scen.sigmaS)^2 * exp(-range / scen.corrDist);
 %     s       =   lognrnd(0, shadVar);
 %     rxPow   =   scen.power * (scen.c0 * (1/s)) / (range^scen.gamma);
-
-    rxPow   =   db2pow(scen.power) * scen.c0 / (range^scen.gamma);
+    aux     =   (range^scen.gamma);
+    if aux < 1
+        aux = 1;
+    end
+    rxPow   =   db2pow(scen.power) * scen.c0 / aux;
     
 %     c       =   physconst('LightSpeed');    % Speed of light [m/s]
 %     
