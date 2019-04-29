@@ -178,7 +178,8 @@ end
 %     figure; set(gcf, 'Position',  [100, 100, 1200, 800]);
 %     legend;
 %     scatter3(tx.pos(1), tx.pos(2), tx.pos(3), 'r', 'x', 'DisplayName', 'Source'); hold on;
-%     scatter3(meanEstPosA(1), meanEstPosA(2), meanEstPosA(3), 'g', 'x', 'DisplayName', 'Estimated position (TDoA/FDoA method)'); hold on;
+%     scatter3(meanEstPosA(1), meanEstPosA(2), meanEstPosA(3), 'g', 'x', 'DisplayName', ...
+%               'Estimated position (TDoA/FDoA method)'); hold on;
 %     scatter3(meanEstPosB(1), meanEstPosB(2), 0, 'm', 'x', 'DisplayName', 'Estimated position (RSS/DoA method)'); hold on;
 %     quiver3(tx.pos(1), tx.pos(2), tx.pos(3), tx.vel(1)*scale, tx.vel(2)*scale, tx.vel(3)*scale, 'r'); hold on;
 %     quiver3(meanEstPosA(1), meanEstPosA(2), meanEstPosA(3), ...

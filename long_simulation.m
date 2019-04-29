@@ -4,13 +4,14 @@ addpath 'Misc';
 addpath 'Observables';
 addpath 'Scenario';
 addpath 'Tests';
+addpath 'Lib/error_ellipse';
 
 %% --- PARAMETERS DEFINITION ---
 %- Simulation parameters
 doSave              =   true;
-testName            =   'tl3';
+testName            =   'tl4';
 showScenario        =   true;           %                   Shows position over 3D space
-N                   =   500;           %                   Number of realizations
+N                   =   1000;           %                   Number of realizations
 c                   =   299792458;      %      [m/s]        Speed of light
 nDim                =   2;              %                   Number of dimensions (now only 2)
 
@@ -22,9 +23,9 @@ var.end             =   360;            %      [deg]        End value of the var
 var.steps           =   36;             %                   Number of steps for the variable parameter
 var.dir             =   sign(var.end - var.start); %        Gets direction of movement
 
-var.near            =   1000;             %       [m]         Nearest rotation radius
-var.far             =   3000;           %       [m]         Furthest rotation radius
-var.radSteps        =   6;             %       [m]         Steps of increment in radius
+var.near            =   10;             %       [m]         Nearest rotation radius
+var.far             =   2010;           %       [m]         Furthest rotation radius
+var.radSteps        =   3;             %       [m]         Steps of increment in radius
 
 %-- Constant parameters, value of changin parameter will be ignored
 % const.rad           =   500;            %       [m]         Value for when radius is constant
@@ -116,26 +117,31 @@ s.vel       =   nan(1, 2);
 tx          =   repmat(s, var.steps, var.radSteps);
 estA        =   repmat(s, var.steps, var.radSteps);
 estB        =   repmat(s, var.steps, var.radSteps);
+
+txEstPosA   =   zeros(N, nDim, var.radSteps, var.steps);
+txEstPosB   =   zeros(N, nDim, var.radSteps, var.steps);
 for j = 1:var.radSteps
+    fprintf("RadStep %i\n", j);
     for i = 1:var.steps
         fprintf("Step %i\n", i);
         tx(i, j)   =   obtain_tx_info(radius(j, i), azim(j, i), const.vel, var);
-        [~, ~, ~, txEstPosA, txEstVelA, txEstPosB]   =   simulate_scenario(N, scen, tx(i, j), rx);
+        [~, ~, ~, txEstPosA(:, :, j, i), txEstVelA, txEstPosB(:, :, j, i)] ...
+            =   simulate_scenario(N, scen, tx(i, j), rx);
 
         %-- Position and velocity averages
-        estA(i, j).pos          =   mean(txEstPosA, 1);
+        estA(i, j).pos          =   mean(txEstPosA(:, :, j, i), 1);
         estA(i, j).vel          =   mean(txEstVelA, 1);
-        estB(i, j).pos          =   mean(txEstPosB, 1);
+        estB(i, j).pos          =   mean(txEstPosB(:, :, j, i), 1);
         %-- Bias and standard deviation in Position
         pos.x.biasA(j, i)       =   estA(i, j).pos(1) - tx(i, j).pos(1);
-        pos.x.stdA(j, i)        =   std(txEstPosA(:, 1));
+        pos.x.stdA(j, i)        =   std(txEstPosA(:, 1, j, i));
         pos.y.biasA(j, i)       =   estA(i, j).pos(2) - tx(i, j).pos(2);
-        pos.y.stdA(j, i)        =   std(txEstPosA(:, 2));
+        pos.y.stdA(j, i)        =   std(txEstPosA(:, 2, j, i));
 
         pos.x.biasB(j, i)       =   estB(i, j).pos(1) - tx(i, j).pos(1);
-        pos.x.stdB(j, i)        =   std(txEstPosB(:, 1));
+        pos.x.stdB(j, i)        =   std(txEstPosB(:, 1, j, i));
         pos.y.biasB(j, i)       =   estB(i, j).pos(2) - tx(i, j).pos(2);
-        pos.y.stdB(j, i)        =   std(txEstPosB(:, 2));
+        pos.y.stdB(j, i)        =   std(txEstPosB(:, 2, j, i));
         %-- Bias and standard deviation in Velocity
         vel.x.biasA(j, i)       =   estA(i, j).vel(1) - tx(i, j).vel(1);
         vel.x.stdA(j, i)        =   std(txEstVelA(:, 1));
@@ -260,7 +266,7 @@ if doSave
         mkdir(directory);
     end
     dataFile = strcat(directory, 'data');
-    save(dataFile, 'var', 'const', 'scen', 'rx', 'tx', 'pos', 'vel', 'estA', 'estB');
+    save(dataFile, 'var', 'const', 'scen', 'rx', 'tx', 'pos', 'vel', 'estA', 'estB', 'txEstPosA', 'txEstPosB', 'txEstVelA');
 
     for i = 1:nFigs
         saveas(figure(i), sprintf('%sfig_%d.fig', directory, i));
