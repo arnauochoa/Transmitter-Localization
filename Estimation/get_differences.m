@@ -1,4 +1,4 @@
-function [rx, ref, dRange, dRrate] = get_differences(scen, rx, toas, foas)
+function [rx, ref, dRange, dRrate] = get_differences(rx, toas, foas)
 %   GET_DIFFERENCES Returns the reference position and reference and the 
 %   TDOAs and FDOAs wrt. the reference
 %
@@ -8,8 +8,7 @@ function [rx, ref, dRange, dRrate] = get_differences(scen, rx, toas, foas)
 %       velocities vectors are also updated removing the reference
 %       receiver.
 %
-%   Input:      scen:       Struct. Information of the scenario
-%               rx:         1xM struct. Information of the receivers
+%   Input:      rx:         1xM struct. Information of the receivers
 %               toas:       Mx1 vector. Observed TOAs
 %               foas:       Mx1 vector. Observed FOAs
 %
@@ -21,7 +20,7 @@ function [rx, ref, dRange, dRrate] = get_differences(scen, rx, toas, foas)
 %               dRrate:     (M-1)x1 vector. Differential range rates wrt.
 %                           the reference receiver
     
-    c           =   299792458;      % Speed of light (m/s)
+    global v scen;
     
     %- Assignation of a reference receiver 
     ref                 =   rx(scen.refIndex);
@@ -37,7 +36,7 @@ function [rx, ref, dRange, dRrate] = get_differences(scen, rx, toas, foas)
     fdoas  = foas - refFOA;
     
     %- Differential ranges and range rates for receivers
-    dRange  = tdoas .* c;
-    dRrate  = -fdoas .* (c/scen.freq);
+    dRange  = tdoas .* v;
+    dRrate  = -fdoas .* (v/scen.freq);
 end
 

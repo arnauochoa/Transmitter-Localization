@@ -1,4 +1,4 @@
-function freqCRB = get_freq_CRB(scen, rxPow)
+function freqCRB = get_freq_CRB(rxPow)
 %   GET_TIME_CRB:     Frequency CRB computation
 %
 %       Frequency CRB computation as described by Kay in "Fundamentals of 
@@ -9,8 +9,10 @@ function freqCRB = get_freq_CRB(scen, rxPow)
 %
 %   Output:     freqCRB:    CRB of the received frequency
 
+    global scen;
+    
     %- Compute SNR
-    No      =   get_noise_power(scen);
+    No      =   get_noise_power();
     SNR     =   rxPow/No;
     
     %- Frequency CRB computation: Kay vol. 1, p. 57

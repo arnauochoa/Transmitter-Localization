@@ -1,4 +1,4 @@
-function estTheta    =   get_est_theta(rx, tx, scen, rxPow)
+function estTheta    =   get_est_theta(rx, tx, rxPow)
 %   GET_EST_THETA:      Computes the estimated Doa
 %
 %       This function computes the estimated DoA expressed in radians. A
@@ -7,11 +7,10 @@ function estTheta    =   get_est_theta(rx, tx, scen, rxPow)
 %
 %   Input:      rx:         Struct. Receiver information
 %               tx:         Struct. Transmitter information
-%               scen:       Struct. Values describing the scenario
 %               rxPow:      Double. Received power att given receiver
 %
 %   Output:     estTheta:   Double. Estimated DoA in radians
-
+    
     %- Computation of the true DoA
     theta       =   atan((tx.pos(2) - rx.pos(2)) / (tx.pos(1) - rx.pos(1)));
     
@@ -19,7 +18,7 @@ function estTheta    =   get_est_theta(rx, tx, scen, rxPow)
     thetaTilde  =   theta - rx.orientation;
     
     %- Computation of the estimated DoA
-    thetaError  =   compute_theta_error(scen, thetaTilde, rxPow);
+    thetaError  =   compute_theta_error(thetaTilde, rxPow);
     estTheta    =   theta + thetaError;
 end
 

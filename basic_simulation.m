@@ -5,10 +5,14 @@ addpath 'Observables';
 addpath 'Scenario';
 
 %% --- PARAMETERS DEFINITION ---
+global v N nDim scen;
 %- Simulation parameters
 showScenario        =   true;           %                   Shows position over 3D space
-N                   =   500;            %                   Number of realizations
-c                   =   299792458;      %      [m/s]        Speed of light
+c                   =   299792458;      %       [m/s]       Speed of light
+n                   =   1.000293;       %                   Refractive index
+v                   =   c/n;            %       [m/s]       Propagation speed
+N                   =   100;            %                   Number of realizations
+nDim                =   2;              %                   Number of dimensions (now only 2)
 nbins               =   100;            %                   Number of bins for the histogram
 
 %- Transmitter parameters
@@ -42,16 +46,15 @@ scen.shape          =   'r';            %                   Signal band shape:
                                         %                       'r' -> rectangular, 's' -> sinc, 't' -> triangle
 scen.freq           =   1575.42 * 1e6;  %       [Hz]        Transmitted signal frequency
 scen.power          =   17;             %       [dBW]       Transmitted signal power
-scen.nFig           =   2;              %       [dB]        Receiver's noise figure
+scen.nFig           =   3;              %       [dB]        Receiver's noise figure
 scen.ns             =   5;              %                   Number of samples
-scen.n              =   1.000293;       %                   Refractive index
+scen.temp           =   290;            %       [K]         Ambient temperature
 scen.tdoaVar        =   0.0025/(c^2);   %                   Time noise variance. When 0, CRB is used
 scen.fdoaVar        =   0.00025/(c^2);  %                   Frequency noise variance. When 0, CRB is used
 scen.doaVar         =   0;              %                   DoA error variance. When 0, CRB is used
 scen.weighting      =   'Q';            %                   Weigting matrix used on LS. I for identity, Q for covariance
 scen.numRx          =   length(rx);     %                   Number of receivers
 scen.refIndex       =   1;              %                   Reference receiver index
-scen.MSBW           =   get_MS_BW(scen);%                   Mean Square Bandwidth
 scen.c0             =   1;              %                   Average multiplicative gain
 scen.gamma          =   2;              %                   Path loss exponent
 scen.sigmaS         =   6;              %       [dB]        Shadowing standard deviation
@@ -59,11 +62,12 @@ scen.corrDist       =   5;              %       [m]         Correlation distance
                                         %                       among nodes are correlated.                      
 scen.spacing        =   0;              %       [m]         Spacing between array elements. If 0, set to lambda/2
 scen.nAnt           =   2;              %                   Number of antennas of the array
+scen.MSBW           =   get_MS_BW();%                   Mean Square Bandwidth
 
 
 %% --- SIMULATION ---
 tic     % Start measuring execution time
-[rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB] = simulate_scenario(N, scen, tx, rx);
+[rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB] = simulate_scenario(tx, rx);
 toc     % Stop measuring execution time
 
 

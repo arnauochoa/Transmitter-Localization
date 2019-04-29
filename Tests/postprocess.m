@@ -1,8 +1,8 @@
-clear all;
+clearvars;
 close all;
 clc;
 
-testName    =   'tl4';
+testName    =   'tl5';
 
 directory   =   strcat('Results/', testName, '/data.mat');
 
@@ -55,7 +55,7 @@ title("CDF of RSS/DoA method over radius variation");
 scale = 10;
 figure; set(gcf, 'Position',  [400, 50, 950, 900]);
 legend;
-for rad = 2
+for rad = 5
     for i = 1:var.steps
         %- Actual positions
         name    =   sprintf("Receiver at t=%d", i);

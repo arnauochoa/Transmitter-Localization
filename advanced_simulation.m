@@ -5,18 +5,22 @@ addpath 'Observables';
 addpath 'Scenario';
 
 %% --- PARAMETERS DEFINITION ---
+global v N nDim scen;
+
 %- Simulation parameters
 showScenario        =   true;           %                   Shows position over 3D space
-N                   =   1000;           %                   Number of realizations
-c                   =   299792458;      %      [m/s]        Speed of light
+c                   =   299792458;      %       [m/s]       Speed of light
+n                   =   1.000293;       %                   Refractive index
+v                   =   c/n;            %       [m/s]       Propagation speed
+N                   =   10;             %                   Number of realizations
 nDim                =   2;              %                   Number of dimensions (now only 2)
 
 %- Transmitter parameters
 %-- Variable parameter values, 'r' - radius, 'a' - azimuth
-var.id              =   '0';            %                   Parameter that will change
+var.id              =   'a';            %                   Parameter that will change
 var.start           =   0;              %   [m] or [deg]    Start value of the variable parameter
 var.end             =   360;            %   [m] or [deg]    End value of the variable parameter 
-var.steps           =   36;             %                   Number of steps for the variable parameter
+var.steps           =   10;             %                   Number of steps for the variable parameter
 var.dir             =   sign(var.end - var.start); %        Gets direction of movement
 %-- Constant parameters, value of changin parameter will be ignored
 const.rad           =   500;            %       [m]         Value for when radius is constant
@@ -53,21 +57,21 @@ scen.freq           =   1575.42 * 1e6;  %   [Hz]        Transmitted signal frequ
 scen.power          =   17;             %   [dBW]       Transmitted signal power
 scen.nFig           =   2;              %   [dB]        Receiver's noise figure
 scen.ns             =   50;             %               Number of samples
-scen.n              =   1.000293;       %               Refractive index
+scen.temp           =   290;            %   [K]         Ambient temperature
 scen.tdoaVar        =   0.0025/(c^2);   %               Time noise variance. When 0, CRB is used
 scen.fdoaVar        =   0.00025/(c^2);  %               Frequency noise variance. When 0, CRB is used
 scen.doaVar         =   0;              %               DoA error variance. When 0, CRB is used
 scen.weighting      =   'Q';            %               Weigting matrix used on LS. I for identity, Q for covariance
 scen.numRx          =   length(rx);     %               Number of receivers
 scen.refIndex       =   1;              %               Reference receiver index
-scen.MSBW           =   get_MS_BW(scen);%               Mean Square Bandwidth
 scen.c0             =   1;              %               Average multiplicative gain
-scen.gamma          =   5;              %               Path loss exponent
+scen.gamma          =   2;              %               Path loss exponent
 scen.sigmaS         =   6;              %   [dB]        Shadowing standard deviation
 scen.corrDist       =   5;              %   [m]         Correlation distance within which 
                                         %                   the shadowing effects among nodes are correlated
 scen.spacing        =   0;              %   [m]         Spacing between array elements. If 0, set to lambda/2
 scen.nAnt           =   2;              %                   Number of antennas of the array
+scen.MSBW           =   get_MS_BW();    %               Mean Square Bandwidth
 
 %- Vectors of movement of the transmitter
 [radius, azim, plotOpt] = build_tx_movement(var, const);
@@ -105,7 +109,7 @@ estB        =   repmat(s, var.steps, 1);
 for i = 1:var.steps
     fprintf("Step %i\n", i);
     tx(i)   =   obtain_tx_info(radius(i), azim(i), const.vel, var);
-    [~, ~, ~, txEstPosA, txEstVelA, txEstPosB]   =   simulate_scenario(N, scen, tx(i), rx);
+    [~, ~, ~, txEstPosA, txEstVelA, txEstPosB]   =   simulate_scenario(tx(i), rx);
     
     %-- Position and velocity averages
     estA(i).pos          =   mean(txEstPosA, 1);
