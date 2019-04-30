@@ -2,7 +2,7 @@ clearvars;
 close all;
 clc;
 
-testName    =   'tl5';
+testName    =   'test_rad_2';
 
 directory   =   strcat('Results/', testName, '/data.mat');
 
@@ -52,35 +52,6 @@ legend(radLegend, 'Location', 'southeast');
 legend('boxoff');
 title("CDF of RSS/DoA method over radius variation");
 
-scale = 10;
-figure; set(gcf, 'Position',  [400, 50, 950, 900]);
-legend;
-for rad = 5
-    for i = 1:var.steps
-        %- Actual positions
-        name    =   sprintf("Receiver at t=%d", i);
-        scatter(tx(i, rad).pos(1), tx(i, rad).pos(2), 'g', 'x', 'DisplayName', name); hold on;
-        %- Estimated positions
-        %-- TDoA/FDoA
-        name    =   sprintf("(TDoA/FDoA) Estimation at t=%d", i); 
-        scatter(estA(i, rad).pos(1), estA(i, rad).pos(2), 'r', 'x', 'DisplayName', name); hold on;
-        C       =   cov(txEstPosA(:, :, rad, i));
-        error_ellipse(C, estA(i, rad).pos);
-        %-- RSS/DoA
-        name    =   sprintf("(RSS/DoA) Estimation at t=%d", i);
-        scatter(estB(i, rad).pos(1), estB(i, rad).pos(2), 'm', 'x', 'DisplayName', name); hold on;
-        C       =   cov(txEstPosB(:, :, rad, i));
-        error_ellipse(C, estB(i, rad).pos);
-    end
-end
-
-for i = 1:scen.numRx
-    scatter(rx(i).pos(1), rx(i).pos(2), 'b', 'x', 'DisplayName', 'Receivers'); hold on;
-    quiver(rx(i).pos(1), rx(i).pos(2), ...
-        rx(i).vel(1)*scale, rx(i).vel(2)*scale, 'b'); hold on;
-end
-xlabel('x'); ylabel('y');
-
 
 % figure;
 % for i = 1:var.steps
@@ -99,5 +70,34 @@ xlabel('x'); ylabel('y');
 % legend(azLegend, 'Location', 'southeast'); 
 % legend('boxoff');
 % title("CDF of RSS/DoA method over azimuth variation");
+
+scale = 10;
+figure; set(gcf, 'Position',  [400, 50, 950, 900]);
+legend;
+for rad = 1:var.radSteps
+    for i = 1:var.steps
+        %- Actual positions
+        name    =   sprintf("Receiver at az=%d, rad=%d", i, rad);
+        scatter(tx(i, rad).pos(1), tx(i, rad).pos(2), 'g', 'x', 'DisplayName', name); hold on;
+        %- Estimated positions
+        %-- TDoA/FDoA
+        name    =   sprintf("(TDoA/FDoA) Estimation at az=%d, rad=%d", i, rad);
+        scatter(estA(i, rad).pos(1), estA(i, rad).pos(2), 'r', 'x', 'DisplayName', name); hold on;
+        C       =   cov(txEstPosA(:, :, rad, i));
+        error_ellipse(C, estA(i, rad).pos);
+        %-- RSS/DoA
+        name    =   sprintf("(RSS/DoA) Estimation at az=%d, rad=%d", i, rad);
+        scatter(estB(i, rad).pos(1), estB(i, rad).pos(2), 'm', 'x', 'DisplayName', name); hold on;
+        C       =   cov(txEstPosB(:, :, rad, i));
+        error_ellipse(C, estB(i, rad).pos);
+    end
+end
+
+for i = 1:scen.numRx
+    scatter(rx(i).pos(1), rx(i).pos(2), 'b', 'x', 'DisplayName', 'Receivers'); hold on;
+    quiver(rx(i).pos(1), rx(i).pos(2), ...
+        rx(i).vel(1)*scale, rx(i).vel(2)*scale, 'b'); hold on;
+end
+xlabel('x'); ylabel('y');
 
 

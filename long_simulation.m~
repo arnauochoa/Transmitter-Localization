@@ -10,7 +10,7 @@ addpath 'Lib/error_ellipse';
 global v N nDim scen;
 %- Simulation parameters
 doSave              =   true;
-testName            =   input('Name for this test: ', 's');
+testName            =   input('Name for this test: ');
 if isempty(testName), error('A name must be set for this test'); end
 showScenario        =   true;           %                   Shows position over 3D space
 c                   =   299792458;      %       [m/s]       Speed of light
@@ -19,16 +19,16 @@ v                   =   c/n;            %       [m/s]       Propagation speed
 N                   =   10;             %                   Number of realizations
 nDim                =   2;              %                   Number of dimensions (now only 2)
 
-%% - Transmitter parameters
+%- Transmitter parameters
 %-- Variable parameter values, 'r' - radius, 'a' - azimuth
 var.id              =   'a';            %                   Parameter that will change
-var.start           =   45;              %      [deg]        Start value of the variable parameter
-var.end             =   45;            %      [deg]        End value of the variable parameter 
-var.steps           =   1;             %                   Number of steps for the variable parameter
+var.start           =   0;              %      [deg]        Start value of the variable parameter
+var.end             =   360;            %      [deg]        End value of the variable parameter 
+var.steps           =   10;             %                   Number of steps for the variable parameter
 var.dir             =   sign(var.end - var.start); %        Gets direction of movement
 
-var.near            =   1000;             %       [m]         Nearest rotation radius
-var.far             =   5000;           %       [m]         Furthest rotation radius
+var.near            =   10;             %       [m]         Nearest rotation radius
+var.far             =   2010;           %       [m]         Furthest rotation radius
 var.radSteps        =   5;              %       [m]         Steps of increment in radius
 
 %-- Constant parameters, value of changin parameter will be ignored
@@ -37,7 +37,7 @@ var.radSteps        =   5;              %       [m]         Steps of increment i
 % const.elev          =   45;           %      [deg]        Value for when elevation is constant
 const.vel           =   0.01;           % [rad/s] or [m/s]  Angular velocity (for 'a' and 'e') or linear velocity (for 'r')
 
-%% - Receiver parameters
+%- Receiver parameters
 rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
 rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
 rx(1).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
@@ -57,7 +57,7 @@ rx(4).orientation   =   0;              %   [rad]       Orientation of the ULA w
 % rx(6).vel           =   [0, 0];         %   [m/s]       Rx6 velocity
 % rx(6).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
 
-%% - Scenario parameters
+%- Scenario parameters
 scen.showBand       =   false;          %               When enabled, PSD and "Square-PSD" will be plotted
 scen.bw             =   1.023 * 1e6;    %   [Hz]        Transmitted signal bandwidth TODO: define it as BW at -3dB
 scen.shape          =   'r';            %               Signal band shape: 
@@ -82,7 +82,7 @@ scen.spacing        =   0;              %   [m]         Spacing between array el
 scen.nAnt           =   2;              %                   Number of antennas of the array
 scen.MSBW           =   get_MS_BW();%               Mean Square Bandwidth
 
-%% - Vectors of movement of the transmitter
+%- Vectors of movement of the transmitter
 radius              =   zeros(var.radSteps, var.steps);
 azim                =   zeros(var.radSteps, var.steps);
 rad                 =   linspace(var.near, var.far, var.radSteps);
@@ -91,8 +91,9 @@ for i = 1:var.radSteps
     [radius(i, :), azim(i, :), plotOpt] = build_tx_movement(var, const);
 end
 
+%% --- SIMULATION ---
 tic
-%% Vectors definition
+% Vectors definition
 %- TDOA/FDOA
 pos.x.biasA  =   zeros(var.radSteps, var.steps);
 pos.x.stdA   =   zeros(var.radSteps, var.steps);
@@ -123,9 +124,6 @@ estB        =   repmat(s, var.steps, var.radSteps);
 
 txEstPosA   =   zeros(N, nDim, var.radSteps, var.steps);
 txEstPosB   =   zeros(N, nDim, var.radSteps, var.steps);
-
-%% --- SIMULATION ---
-
 for j = 1:var.radSteps
     fprintf("RadStep %i\n", j);
     for i = 1:var.steps
