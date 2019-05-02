@@ -1,4 +1,4 @@
-function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, rxPows, rxTimes, rxFreqs)
+function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(rx, rxPows, rxTimes, rxFreqs)
 %   FIRST_STAGE:     Estimation of source's position and velocity using TDoA and FDoA.   
 %
 %       Estimation of source's position and velocity using the TDoA and 
@@ -15,12 +15,12 @@ function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, r
 %               refRange:   3x1 vector. Reference receiver's range to source
 %               refRrate:   3x1 vector. Reference receiver's range rate to source
 %
-
+    
     M       =   length(rxTimes);
     nDim    =   2;
 
     [rx, ref, dRange, dRrate] = ...
-        get_differences(scen, rx, rxTimes, rxFreqs);
+        get_differences(rx, rxTimes, rxFreqs);
     
     %- Vector h definition
     h1  =   zeros(M-1, 1);
@@ -45,9 +45,12 @@ function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, r
     G   =   -2 .* [G1; G2];
     
     %- Weighted Least Squares
-    W   =   find_TDOA_FDOA_weight_matrix(scen, rxPows);
+    W   =   find_TDOA_FDOA_weight_matrix(rxPows);
+    
     
     theta       =   pinv(G' * W * G) * G' * W * h;
+
+
     txEstPos    =   theta(1:nDim);
     refRange    =   theta(nDim+1);
     txEstVel    =   theta(nDim+2:2*nDim+1);

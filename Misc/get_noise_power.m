@@ -1,16 +1,17 @@
-function No = get_noise_power(scen)
+function No = get_noise_power()
 %   GET_NOISE_POWER:   Computes the received noise's power
 %   	
-%       Computes the received noise's power from given scenario parameters and
-%       range between transmitte and rreceiver
+%       Computes the received noise's power from given scenario parameters 
+%       and range between transmitter and receiver
 %
 %   Input:      scen:   Struct. Information of the scenario
 %
 %   Output:     No:     Double. Received noise's power in Watts
 
-    k       =   physconst('Boltzmann');     % Boltzmann constant [J/K]
-    To      =   290;                        % Ambient temperature [K]
+    global scen
     
-    No      =   k * To * scen.bw * db2pow(scen.nFig);
+    k       =   physconst('Boltzmann');     % Boltzmann constant [J/K]
+    
+    No      =   k * scen.temp * scen.bw * db2pow(scen.nFig);
 end
 

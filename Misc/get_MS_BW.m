@@ -1,4 +1,4 @@
-function MSBW = get_MS_BW(scen)
+function MSBW = get_MS_BW()
 %   OBSERVABLES_GENERATION:     Calculation of the Mean Square Bandwidth
 %
 %       Calculation of the Mean Square Bandwidth for the given band
@@ -7,7 +7,7 @@ function MSBW = get_MS_BW(scen)
 %   Input:      scen:   Struct. Information of the scenario
 %
 %   Output:     MSBW:   Double. Mean Square Bandwidth
-
+    global scen;
     %- Band limit definition
     B               =   scen.bw/2;
     band            =   [scen.freq-B scen.freq+B];

@@ -1,4 +1,4 @@
-function [rxPow] = get_rx_power(scen, range)
+function [rxPow] = get_rx_power(range)
 %   GET_RX_POWER:   Computes the received signal's power
 %   	
 %       Computes the received signal's power from given scenario parameters and
@@ -13,6 +13,9 @@ function [rxPow] = get_rx_power(scen, range)
 %     shadVar =   db2pow(scen.sigmaS)^2 * exp(-range / scen.corrDist);
 %     s       =   lognrnd(0, shadVar);
 %     rxPow   =   scen.power * (scen.c0 * (1/s)) / (range^scen.gamma);
+
+    global scen;
+    
     aux     =   (range^scen.gamma);
     if aux < 1
         aux = 1;
