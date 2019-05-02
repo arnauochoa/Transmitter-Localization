@@ -1,4 +1,4 @@
-function No = get_noise_power()
+function No = get_noise_power(scen)
 %   GET_NOISE_POWER:   Computes the received noise's power
 %   	
 %       Computes the received noise's power from given scenario parameters 
@@ -8,8 +8,6 @@ function No = get_noise_power()
 %
 %   Output:     No:     Double. Received noise's power in Watts
 
-    global scen
-    
     k       =   physconst('Boltzmann');     % Boltzmann constant [J/K]
     
     No      =   k * scen.temp * scen.bw * db2pow(scen.nFig);

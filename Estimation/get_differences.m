@@ -1,4 +1,4 @@
-function [rx, ref, dRange, dRrate] = get_differences(rx, toas, foas)
+function [rx, ref, dRange, dRrate] = get_differences(scen, rx, toas, foas)
 %   GET_DIFFERENCES Returns the reference position and reference and the 
 %   TDOAs and FDOAs wrt. the reference
 %
@@ -20,8 +20,6 @@ function [rx, ref, dRange, dRrate] = get_differences(rx, toas, foas)
 %               dRrate:     (M-1)x1 vector. Differential range rates wrt.
 %                           the reference receiver
     
-    global v scen;
-    
     %- Assignation of a reference receiver 
     ref                 =   rx(scen.refIndex);
     rx(scen.refIndex)   =   [];
@@ -36,7 +34,7 @@ function [rx, ref, dRange, dRrate] = get_differences(rx, toas, foas)
     fdoas  = foas - refFOA;
     
     %- Differential ranges and range rates for receivers
-    dRange  = tdoas .* v;
-    dRrate  = -fdoas .* (v/scen.freq);
+    dRange  = tdoas .* scen.v;
+    dRrate  = -fdoas .* (scen.v/scen.freq);
 end
 

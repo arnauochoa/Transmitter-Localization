@@ -1,4 +1,4 @@
-function W = find_TDOA_FDOA_weight_matrix(rxPows)
+function W = find_TDOA_FDOA_weight_matrix(scen, rxPows)
 %   FIND_WEIGHT_MATRIX:    Finds weighting matrix for LS. 
 %                      
 %       Finds weighting matrix for LS. The weighting matrix can be the
@@ -10,8 +10,6 @@ function W = find_TDOA_FDOA_weight_matrix(rxPows)
 %
 %   Output:     W:          (numRx-1)x(numRx-1) matrix. Weighting matrix
 
-    global v scen;               %   Propagation speed
-
     size    =   scen.numRx - 1;
     switch scen.weighting 
         case 'I'
@@ -22,8 +20,8 @@ function W = find_TDOA_FDOA_weight_matrix(rxPows)
             
             %- Obtain Time and Frequency CRB for each receiver
             for r = 1:scen.numRx
-                timeVar(r)      =   get_time_CRB(rxPows(r));
-                freqVar(r)      =   get_freq_CRB(rxPows(r));
+                timeVar(r)      =   get_time_CRB(scen, rxPows(r));
+                freqVar(r)      =   get_freq_CRB(scen, rxPows(r));
             end
             
             %- Separate Time and Frequency CRB for reference receiver and others
@@ -33,8 +31,8 @@ function W = find_TDOA_FDOA_weight_matrix(rxPows)
             freqVar(scen.refIndex)  =   [];
 
             %- Obtain TDOA and FDOA CRB wrt. reference receiver
-            tdoaVar    =   v^2 * (refTimeVar + timeVar);
-            fdoaVar    =   (v/scen.freq)^2 * (refFreqVar + freqVar);
+            tdoaVar    =   scen.v^2 * (refTimeVar + timeVar);
+            fdoaVar    =   (scen.v/scen.freq)^2 * (refFreqVar + freqVar);
             
             %- Build Weighting matrix
             Q1          =   diag(tdoaVar);

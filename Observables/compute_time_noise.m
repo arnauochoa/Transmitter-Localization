@@ -1,4 +1,4 @@
-function tNoise = compute_time_noise(rxPow)
+function tNoise = compute_time_noise(scen, rxPow)
 %   COMPUTE_TIME_NOISE:     Time noise computation
 %
 %       Time noise computation following a Gaussian distributuion with
@@ -7,13 +7,11 @@ function tNoise = compute_time_noise(rxPow)
 %   Input:      rxPow:      Double. Received signal's power in Watts
 %
 %   Output:     tNoise:     Double. Additive noise in time
-   
-    global v scen;
 
     if scen.tdoaVar == 0
         tNoise  =   normrnd(0, sqrt(get_time_CRB(scen, rxPow)));
     else
-        timeVar =   scen.tdoaVar/(2*v^2);
+        timeVar =   scen.tdoaVar/(2*scen.v^2);
         tNoise  =   normrnd(0, sqrt(timeVar));
     end
 end

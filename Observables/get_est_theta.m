@@ -1,4 +1,4 @@
-function estTheta    =   get_est_theta(rx, tx, rxPow)
+function estTheta    =   get_est_theta(scen, rx, tx, rxPow)
 %   GET_EST_THETA:      Computes the estimated Doa
 %
 %       This function computes the estimated DoA expressed in radians. A
@@ -18,7 +18,7 @@ function estTheta    =   get_est_theta(rx, tx, rxPow)
     thetaTilde  =   theta - rx.orientation;
     
     %- Computation of the estimated DoA
-    thetaError  =   compute_theta_error(thetaTilde, rxPow);
+    thetaError  =   compute_theta_error(scen, thetaTilde, rxPow);
     estTheta    =   theta + thetaError;
 end
 

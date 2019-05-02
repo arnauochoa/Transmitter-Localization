@@ -1,4 +1,4 @@
-function fNoise = compute_freq_noise(rxPow)
+function fNoise = compute_freq_noise(scen, rxPow)
 %   COMPUTE_TIME_NOISE:     Time noise computation
 %
 %       Frequency noise computation following a Gaussian distributuion with
@@ -7,13 +7,11 @@ function fNoise = compute_freq_noise(rxPow)
 %   Input:      rxPow:      Double. Received signal's power in Watts
 %
 %   Output:     fNoise:     Double. Additive noise in frequency
-    
-    global v scen;
 
     if scen.fdoaVar == 0
         fNoise  =   normrnd(0, sqrt(get_freq_CRB(scen, rxPow)));
     else
-        freqVar =   ((scen.freq/v)^2) * (scen.fdoaVar/2);
+        freqVar =   ((scen.freq/scen.v)^2) * (scen.fdoaVar/2);
         fNoise  =   normrnd(0, sqrt(freqVar));
     end
 
