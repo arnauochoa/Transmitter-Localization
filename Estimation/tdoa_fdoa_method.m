@@ -47,7 +47,10 @@ function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(rx, rxPows,
     %- Weighted Least Squares
     W   =   find_TDOA_FDOA_weight_matrix(rxPows);
     
+    
     theta       =   pinv(G' * W * G) * G' * W * h;
+
+
     txEstPos    =   theta(1:nDim);
     refRange    =   theta(nDim+1);
     txEstVel    =   theta(nDim+2:2*nDim+1);

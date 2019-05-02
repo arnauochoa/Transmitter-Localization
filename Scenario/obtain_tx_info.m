@@ -1,4 +1,4 @@
-function tx = obtain_tx_info(R, azim, vel, var)
+function tx = obtain_tx_info(R, azim, vel, dir)
 %   OBTAIN_TX_INFO Generation of tx struct
 %
 %   	Generation of the tx struct (i.e. position and velocity) from
@@ -11,7 +11,7 @@ function tx = obtain_tx_info(R, azim, vel, var)
 %                           coordinates in rad
 %               vel:        Double. Angular velocity module in rad/s or
 %                           linear velocity in m/s (for id='r')
-%               var:        Struct. Variable parameter values
+%               mov:        Struct. Description of movement
 %
 %   Output:     tx:         Structure. Transmitter information, includes
 %                           position an velocity in cartesian coordinates
@@ -35,27 +35,13 @@ function tx = obtain_tx_info(R, azim, vel, var)
     
     %- Velocity computation
     %-- Set direction
-    vel     =   var.dir * vel;
+    vel     =   dir * vel;
     %-- Angular velocity vector
-    switch var.id
-        case 'r'
-            mov     =   tx.pos/sqrt(tx.pos * tx.pos');
-            
-            %- Check possible division by 0
-            aux     =   isnan(mov);
-            mov(aux)=   0;
-            
-            tx.vel  =   vel * mov;
-        case 'a'
-            w_vect  =   [0, 0, var.dir * vel];
-        otherwise
-            w_vect  =   [0, 0, 0];
-    end
-    if var.id ~= 'r'
-        %-- Linear velocity
-        pos3d   =   [tx.pos, 0];
-        vel3d   =   cross(pos3d, w_vect);
-        tx.vel  =   vel3d(1:2);
-    end
+    w_vect  =   [0, 0, dir * vel];
+
+    %-- Linear velocity
+    pos3d   =   [tx.pos, 0];
+    vel3d   =   cross(pos3d, w_vect);
+    tx.vel  =   vel3d(1:2);
 end
 
