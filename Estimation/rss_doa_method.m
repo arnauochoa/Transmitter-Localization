@@ -1,4 +1,4 @@
-function txEstPos = rss_doa_method(rx, rxPows, estDoas)
+function txEstPos = rss_doa_method(scen, rx, rxPows, estDoas)
 %   RSS_DOA_METHOD:     Estimation of source's position and velocity using 
 %                       RSS and DoA.
 %
@@ -26,7 +26,7 @@ function txEstPos = rss_doa_method(rx, rxPows, estDoas)
         %- Orientation of the ULA wrt. the incoming DoA
         thetaTilde  =   estDoas(i) - rx(i).orientation;
         %- Estimated doa variance
-        d(i)        =   get_doa_CRB(thetaTilde, rxPows(i));
+        d(i)        =   get_doa_CRB(scen, thetaTilde, rxPows(i));
     end
     
     %- Weighted Least Squares

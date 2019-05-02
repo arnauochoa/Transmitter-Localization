@@ -1,4 +1,4 @@
-function thetaError  =   compute_theta_error(thetaTilde, rxPow)
+function thetaError  =   compute_theta_error(scen, thetaTilde, rxPow)
 %   COMPUTE_THETA_ERROR:      Computes the error in DoA estimation
 %
 %       This function computes the error in the estimation of the DoA 
@@ -11,10 +11,8 @@ function thetaError  =   compute_theta_error(thetaTilde, rxPow)
 %
 %   Output:     thetaError: Double. Error in DoA estimation
     
-    global scen;
-    
     if scen.doaVar == 0
-        thetaError  =   normrnd(0, sqrt(get_doa_CRB(thetaTilde, rxPow)));
+        thetaError  =   normrnd(0, sqrt(get_doa_CRB(scen, thetaTilde, rxPow)));
     else
         thetaError  =   normrnd(0, sqrt(scen.doaVar));
     end

@@ -1,4 +1,4 @@
-function thetaCRB = get_doa_CRB(thetaTilde, rxPow)
+function thetaCRB = get_doa_CRB(scen, thetaTilde, rxPow)
 %   GET_DOA_CRB:      Computes the error in DoA estimation
 %
 %       This function computes CRB of the DoA estimation error following
@@ -11,11 +11,8 @@ function thetaCRB = get_doa_CRB(thetaTilde, rxPow)
 %
 %   Output:     thetaCRB:   Double. CRB of the DoA estimation error
 
-    global v;       %   Propagation speed
-    global scen;    %   Struct. Values describing the scenario
-
     %- Some initializations
-    lambda      =   v / scen.freq;
+    lambda      =   scen.v / scen.freq;
     if scen.spacing == 0
         d       =   lambda / 2;
     else
@@ -23,7 +20,7 @@ function thetaCRB = get_doa_CRB(thetaTilde, rxPow)
     end
 
     %- Computation of noise power
-    No          =   get_noise_power();
+    No          =   get_noise_power(scen);
 
     %- Computation of CRB
     k           =   2*pi*d / lambda;
