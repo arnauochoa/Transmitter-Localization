@@ -66,10 +66,10 @@ mov.radVals         =   linspace(rad.start, rad.end, rad.steps);
 tic
 schemes  =  rx_schemes();
 for s = 1:length(schemes)
-    try
-        fullTestName     =   sprintf('%s/scheme_%d', testName, s);
-        rx           =   schemes{s};
-        scen.numRx          =   length(rx);     %               Number of receivers
+%     try
+        fullTestName    =   sprintf('%s/scheme_%d', testName, s);
+        rx              =   schemes{s};
+        scen.numRx      =   length(rx);
         %% Vectors definition
         %- TDOA/FDOA
         pos.x.biasA  =   zeros(rad.steps, azim.steps);
@@ -186,8 +186,8 @@ for s = 1:length(schemes)
             close all;
         end
         
-    catch e
-        fprintf('Error with scheme: %d', s);
-        warning(e.message);
-    end
+%     catch e
+%         fprintf('Error with scheme: %d', s);
+%         warning(getReport(e));
+%     end
 end
