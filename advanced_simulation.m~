@@ -27,44 +27,34 @@ azim.start          =   315;            %     [deg]     First value of azimuth
 azim.end            =   0;              %     [deg]     Last value of azimuth
 azim.steps          =   8;              %               Steps of increment in azimuth
 
-rad.start           =   500;            %     [m]       First value of radius
-rad.end             =   500;           %     [m]       Last value of radius
-rad.steps           =   1;              %               Steps of increment in radius
+rad.start           =   875;            %     [m]       First value of radius
+rad.end             =   1100;           %     [m]       Last value of radius
+rad.steps           =   2;              %               Steps of increment in radius
 
 mov.vel             =   0.01;           %   [rad/s]     Angular velocity
 
 %% - Scenario parameters
-scen.showBand       =   false;          %               When enabled, PSD and "Square-PSD"
-                                        %                   will be plotted
-scen.bw             =   15.345 * 1e6;   %   [Hz]        Transmitted signal bandwidth 
-                                        %                   TODO: define it as BW at -3dB
+scen.showBand       =   false;          %               When enabled, PSD and "Square-PSD" will be plotted
+scen.bw             =   1.023 * 1e6;    %   [Hz]        Transmitted signal bandwidth TODO: define it as BW at -3dB
 scen.shape          =   'r';            %               Signal band shape: 
-                                        %                   'r' -> rectangular, 
-                                        %                   's' -> sinc, 
-                                        %                   't' -> triangle
+                                        %                   'r' -> rectangular, 's' -> sinc, 't' -> triangle
 scen.freq           =   1575.42 * 1e6;  %     [Hz]      Transmitted signal frequency
-scen.power          =   -10;             %    [dBW]      Transmitted signal power
-scen.nFig           =   5;              %     [dB]      Receiver's noise figure
-scen.ns             =   4;             %               Number of samples
-scen.temp           =   500;            %     [K]       Ambient temperature
-scen.tdoaVar        =   0;              %               Time noise variance. 
-                                        %                   When 0, CRB is used
-scen.fdoaVar        =   0;              %               Frequency noise variance. 
-                                        %                   When 0, CRB is used
-scen.doaVar         =   0;              %               DoA error variance. 
-                                        %                   When 0, CRB is used
-scen.weighting      =   'Q';            %               Weigting matrix used on LS. 
-                                        %                   I for identity, Q for covariance
+scen.power          =   17;             %    [dBW]      Transmitted signal power
+scen.nFig           =   2;              %     [dB]      Receiver's noise figure
+scen.ns             =   50;             %               Number of samples
+scen.temp           =   290;            %     [K]       Ambient temperature
+scen.tdoaVar        =   0;              %               Time noise variance. When 0, CRB is used
+scen.fdoaVar        =   0;              %               Frequency noise variance. When 0, CRB is used
+scen.doaVar         =   0;              %               DoA error variance. When 0, CRB is used
+scen.weighting      =   'Q';            %               Weigting matrix used on LS. I for identity, Q for covariance
 scen.refIndex       =   1;              %               Reference receiver index
 scen.c0             =   1;              %               Average multiplicative gain
 scen.gamma          =   5;              %               Path loss exponent
 scen.sigmaS         =   6;              %   [dB]        Shadowing standard deviation
 scen.corrDist       =   5;              %   [m]         Correlation distance within which 
-                                        %                   the shadowing effects among 
-                                        %                   nodes are correlated
-scen.spacing        =   0;              %   [m]         Spacing between array elements. 
-                                        %                   If 0, set to lambda/2
-scen.nAnt           =   2;              %               Number of antennas of the array
+                                        %                   the shadowing effects among nodes are correlated
+scen.spacing        =   0;              %   [m]         Spacing between array elements. If 0, set to lambda/2
+scen.nAnt           =   2;              %                   Number of antennas of the array
 scen.v              =   c/n;            %    [m/s]      Propagation speed
 scen.MSBW           =   get_MS_BW(scen);%               Mean Square Bandwidth
 

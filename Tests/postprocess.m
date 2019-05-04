@@ -2,13 +2,13 @@ clearvars;
 close all;
 clc;
 
-testName    =   'multiple_schemes_1/scheme_15';
+testName    =   'new_test_2/scheme_1';
 directory   =   strcat('Results/', testName);
 filePath    =   strcat(directory, '/data.mat');
 load(filePath);
 
 fig         =   [];
-radToPlot   =   4:4; % Indices of radius to show on 2D plot
+radToPlot   =   1:1; % Indices of radius to show on 2D plot
 
 % Bias and variance plots over azimuth
 if azim.steps > 1
