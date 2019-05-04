@@ -41,13 +41,13 @@ rx(4).orientation   =   0;              %       [rad]       Orientation of the U
 %- Scenario parameters
 scen.showBand       =   false;          %                   When enabled, PSD and "Square-PSD" will be plotted
 scen.bw             =   15.345 * 1e6;    %       [Hz]        Transmitted signal bandwidth TODO: define it as BW at -3dB
-scen.shape          =   's';            %                   Signal band shape: 
+scen.shape          =   'r';            %                   Signal band shape: 
                                         %                       'r' -> rectangular, 's' -> sinc, 't' -> triangle
 scen.freq           =   1575.42 * 1e6;  %       [Hz]        Transmitted signal frequency
 scen.power          =   -10;            %       [dBW]       Transmitted signal power
-scen.nFig           =   5;              %       [dB]        Receiver's noise figure
-scen.ns             =   4;              %                   Number of samples
-scen.temp           =   600;           %       [K]         Ambient temperature
+scen.nFig           =   4;              %       [dB]        Receiver's noise figure
+scen.ns             =   2;              %                   Number of samples
+scen.temp           =   1000;            %       [K]         Ambient temperature
 scen.tdoaVar        =   0;              %                   Time noise variance. When 0, CRB is used
 scen.fdoaVar        =   0;              %                   Frequency noise variance. When 0, CRB is used
 scen.doaVar         =   0;              %                   DoA error variance. When 0, CRB is used

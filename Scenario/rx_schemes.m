@@ -1,4 +1,4 @@
-function schemes = rx_schemes()
+function schemes = rx_schemes(selectedSchemes)
 
     schemes             =   {};
     aux.pos             =   [0 0];
@@ -284,6 +284,7 @@ function schemes = rx_schemes()
     
     rx(i+1).pos     =   [-400, -400];
     rx(i+2).pos     =   [400, -400];
-    schemes{end+1}      =   rx;
+    schemes{end+1}  =   rx;
     
+    schemes         =   schemes(selectedSchemes);
 end

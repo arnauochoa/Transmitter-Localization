@@ -9,10 +9,10 @@ function MSBW = get_MS_BW(scen)
 %   Output:     MSBW:   Double. Mean Square Bandwidth
     %- Band limit definition
     B               =   scen.bw/2;
-    band            =   [scen.freq-B scen.freq+B];
+    band            =   [-B B];
     %- Integration limit definition
     L               =   2*B;
-    limit           =   [scen.freq-L scen.freq+L];
+    limit           =   [-L L];
     %- Frequency symbolic variable definition
     f               =   sym('f');
     
@@ -24,7 +24,7 @@ function MSBW = get_MS_BW(scen)
         case 't'
             H      =   triangularPulse(band(1), band(2), f);
         case 's'
-            H      =   sinc((f - scen.freq)/B);
+            H      =   sinc(f/B);
         otherwise
             H      =   rectangularPulse(band(1), band(2), f);
     end

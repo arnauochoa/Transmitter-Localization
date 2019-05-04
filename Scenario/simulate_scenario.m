@@ -44,8 +44,8 @@ function [rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB] = simulate_
         txEstPosB(i, :) = rss_doa_method(scen, rx, rxPowsMat(:, i), estDoasMat(:, i));
     end
     
-    rxPows      =   mean(rxPowsMat, 2);
-    rxTimes     =   mean(rxTimesMat, 2);
-    rxFreqs     =   mean(rxFreqsMat, 2);
+    rxPows      =   rxPowsMat;
+    rxTimes     =   rxTimesMat;
+    rxFreqs     =   rxFreqsMat;
 end
 
