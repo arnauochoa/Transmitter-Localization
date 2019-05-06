@@ -82,17 +82,14 @@ meanEstVel      =   mean(txEstVelA, 1);
 %- Bias
 biasEstPosA     =   meanEstPosA - tx.pos;
 biasEstPosB     =   meanEstPosB - tx.pos;
-biasEstPosC     =   meanEstPosC - tx.pos;
 biasEstVel      =   meanEstVel - tx.vel;
 %- Standard deviation
 stdEstPosA      =   std(txEstPosA, 0, 1);
 stdEstPosB      =   std(txEstPosB, 0, 1);
-stdEstPosC      =   std(txEstPosC, 0, 1);
 stdEstVel       =   std(txEstVelA, 0, 1);
 %- Error evolution
 errEstPosA      =   sqrt(sum(txEstPosA - tx.pos, 2).^2);
 errEstPosB      =   sqrt(sum(txEstPosB - tx.pos, 2).^2);
-errEstPosC      =   sqrt(sum(txEstPosC - tx.pos, 2).^2);
 errEstVel       =   sqrt(sum(txEstVelA - tx.vel, 2).^2);
 
 
@@ -119,17 +116,15 @@ fprintf(" Velocity bias: X = %f m/s; Y = %f m/s\n", biasEstVel);
 fprintf("\n Estimated position std: X = %f m; Y = %f m\n", stdEstPosA);
 fprintf(" Estimated velocity std: X = %f m/s; Y = %f m/s\n", stdEstVel);
 
-fprintf("\n ========= Results TDoA =========\n");
-fprintf("\n Actual position: X = %f m; Y = %f m\n", tx.pos);
-fprintf(" Estimated position mean: X = %f m; Y = %f m\n", meanEstPosC);
-fprintf("\n Position bias: X = %f m; Y = %f m\n", biasEstPosC);
-fprintf("\n Estimated position std: X = %f m; Y = %f m\n", stdEstPosC);
-
 fprintf("\n ========= Results RSS/DoA =========\n");
 fprintf("\n Actual position: X = %f m; Y = %f m\n", tx.pos);
 fprintf(" Estimated position mean: X = %f m; Y = %f m\n", meanEstPosB);
+% fprintf("\n Actual velocity: X = %f m/s; Y = %f m/s; Z = %f m/s\n", tx.vel);
+% fprintf(" Estimated velocity mean: X = %f m/s; Y = %f m/s; Z = %f m/s\n", meanEstVelB);
 fprintf("\n Position bias: X = %f m; Y = %f m\n", biasEstPosB);
+% fprintf(" Velocity bias: X = %f m/s; Y = %f m/s; Z = %f m/s\n", biasEstVel);
 fprintf("\n Estimated position std: X = %f m; Y = %f m\n", stdEstPosB);
+% fprintf(" Estimated velocity std: X = %f m/s; Y = %f m/s; Z = %f m/s\n", stdEstVel);
 
 % %- TDOA/FDOA
 % figure;
@@ -169,11 +164,10 @@ fprintf("\n Estimated position std: X = %f m; Y = %f m\n", stdEstPosB);
 figure;
 cdfplot(errEstPosA); hold on;
 cdfplot(errEstPosB);
-cdfplot(errEstPosC);
 xlabel("Error [m]");
 ylabel("CDF");
 title("CDF of error in estimated position");
-legend('TDoA/FDoA', 'RSS/DoA', 'TDoA');
+legend('TDoA/FDoA', 'RSS/DoA');
 
 %- 2D
 % if showScenario

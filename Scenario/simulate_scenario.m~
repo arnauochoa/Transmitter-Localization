@@ -1,4 +1,4 @@
-function [rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB, txEstPosC] = simulate_scenario(scen, tx, rx)
+function [rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB] = simulate_scenario(scen, tx, rx)
 %   SIMULATE_SCENARIO Estimates the transmitter's position and velocity
 %
 %       Builds the scenario and estimates the transmitter's position and 
@@ -25,7 +25,6 @@ function [rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB, txEstPosC] 
     txEstVelA    =   zeros(N, nDim);
     
     txEstPosB    =   zeros(N, nDim);
-    txEstPosC    =   zeros(N, nDim);
     
     rxPowsMat   =   zeros(numRx, N);
     rxTimesMat  =   zeros(numRx, N);
@@ -38,11 +37,11 @@ function [rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB, txEstPosC] 
         end
     end
     
-    for i = 1:N
+    parfor i = 1:N
         [txEstPosA(i, :), txEstVelA(i, :), ~, ~] = ...
             tdoa_fdoa_method(scen, rx, rxPowsMat(:,i), rxTimesMat(:,i), rxFreqsMat(:,i));
         
-        [txEstPosC(i, :), ~] = tdoa_method(scen, rx, rxPowsMat(:, i), rxTimesMat(:, i));
+        [txEstPosA(i, :), ~] = tdoa_method(scen, rx, rxPowsMat(:, i), rxTimesMat(:, i);
         
         txEstPosB(i, :) = rss_doa_method(scen, rx, rxPowsMat(:, i), estDoasMat(:, i));
     end
