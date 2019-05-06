@@ -41,8 +41,8 @@ function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, r
         G2(row, :)  =   [(rx(row).vel - ref.vel), dRrate(row), ...
             (rx(row).pos - ref.pos), dRange(row)];
     end
-    h   =   [h1; h2];
-    G   =   -2 .* [G1; G2];
+    h   =   -[h1; h2];
+    G   =   2 .* [G1; G2];
     
     %- Weighted Least Squares
     W   =   find_TDOA_FDOA_weight_matrix(scen, rxPows);

@@ -10,7 +10,7 @@ global N nDim;
 showScenario        =   true;           %                   Shows position over 3D space
 c                   =   299792458;      %       [m/s]       Speed of light
 n                   =   1.000293;       %                   Refractive index
-N                   =   500;            %                   Number of realizations
+N                   =   100;            %                   Number of realizations
 nDim                =   2;              %                   Number of dimensions (now only 2)
 nbins               =   100;            %                   Number of bins for the histogram
 
