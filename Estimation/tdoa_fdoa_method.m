@@ -10,26 +10,29 @@ function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, r
 %               rxTimes:    Mx1 vector. Observed TOAs
 %               rxFreqs:    Mx1 vector. Observed FOAs
 %
-%   Output:     txEstPos:   3x1 vector. Source's estimated position
-%               txEstVel:   3x1 vector. Source's estimated velocity
-%               refRange:   3x1 vector. Reference receiver's range to source
-%               refRrate:   3x1 vector. Reference receiver's range rate to source
+%   Output:     txEstPos:   2x1 vector. Source's estimated position
+%               txEstVel:   2x1 vector. Source's estimated velocity
+%               refRange:   2x1 vector. Reference receiver's range to source
+%               refRrate:   2x1 vector. Reference receiver's range rate to source
 %
-    
-    M       =   length(rxTimes);
-    nDim    =   2;
+    nDim = length(rx(1).pos);
 
     [rx, ref, dRange, dRrate] = ...
         get_differences(scen, rx, rxTimes, rxFreqs);
     
+    N   =   length(dRange);
+    if N ~= scen.numRx-1
+        warning('Length of dRange is different of numRx-1');
+    end
+    
     %- Vector h definition
-    h1  =   zeros(M-1, 1);
-    h2  =   zeros(M-1, 1);
+    h1  =   zeros(N, 1);
+    h2  =   zeros(N, 1);
     %- Matrix G definition
     O   =   zeros(1, nDim);
-    G1  =   zeros(M-1, 2*nDim+2);
-    G2  =   zeros(M-1, 2*nDim+2);
-    for row = 1:M-1
+    G1  =   zeros(N, 2*nDim+2);
+    G2  =   zeros(N, 2*nDim+2);
+    for row = 1:N
         %-- First part of h, corresponding to TDOA
         h1(row)  =   (dRange(row)^2) - dot(rx(row).pos, rx(row).pos) + dot(ref.pos, ref.pos);
         %-- Second part of h, corresponding to FDOA
@@ -46,7 +49,6 @@ function [txEstPos, txEstVel, refRange, refRrate] = tdoa_fdoa_method(scen, rx, r
     
     %- Weighted Least Squares
     W   =   find_TDOA_FDOA_weight_matrix(scen, rxPows);
-    
     
     theta       =   pinv(G' * W * G) * G' * W * h;
 
