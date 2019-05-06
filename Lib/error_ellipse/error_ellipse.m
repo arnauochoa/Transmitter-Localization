@@ -32,7 +32,8 @@ default_properties = struct(...
   'conf', 0.5, ... % Percent confidence/100
   'scale', 1, ... % Scale factor, e.g. 1e-3 to plot m as km
   'style', '', ...  % Plot style
-  'clip', inf); % Clipping radius
+  'clip', inf, ... % Clipping radius
+  'Color', [1 0 0]); 
 
 if length(varargin) >= 1 & isnumeric(varargin{1})
   default_properties.C = varargin{1};
@@ -133,7 +134,7 @@ elseif r==2 & c==2
   end
 
   [x,y,z] = getpoints(C,prop.clip);
-  h1=plot(scale*(x0+k*x),scale*(y0+k*y),prop.style);
+  h1=plot(scale*(x0+k*x),scale*(y0+k*y),prop.style, 'Color', prop.Color);
   set(h1,'zdata',z+1)
   if nargout
     h=h1;

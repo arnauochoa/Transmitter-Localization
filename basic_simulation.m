@@ -15,19 +15,19 @@ nDim                =   2;              %                   Number of dimensions
 nbins               =   100;            %                   Number of bins for the histogram
 
 %- Transmitter parameters
-tx.pos              =   [800, 800];     %    [m]      Position X-Y [m]
+tx.pos              =   [0, 900];     %    [m]      Position X-Y [m]
 tx.vel              =   [10, 10];       %  [m/s]  Velocity X-Y [m/s]
 
 %- Receiver parameters
 rx(1).pos           =   [0, 0];         %     [m]     Rx1 position
 rx(1).vel           =   [0, 0];      %      [m/s]  Rx1 velocity
-rx(1).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
+rx(1).orientation   =   pi/4;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(2).pos           =   [400, 0];    %     [m]     Rx2 position
 rx(2).vel           =   [0, 0];      %  [m/s, m/s, m/s]  Rx2 velocity
-rx(2).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
+rx(2).orientation   =   pi/6;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(3).pos           =   [-400, 0];   %     [m, m, m]     Rx3 position
 rx(3).vel           =   [0, 0];      %  [m/s, m/s, m/s]  Rx3 velocity
-rx(3).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
+rx(3).orientation   =   2*pi;              %       [rad]       Orientation of the ULA wrt. the X axis
 rx(4).pos           =   [0, 400];    %     [m, m, m]     Rx4 position
 rx(4).vel           =   [0, 0];      %  [m/s, m/s, m/s]  Rx4 velocity
 rx(4).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
