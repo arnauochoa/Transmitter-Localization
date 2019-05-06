@@ -19,17 +19,17 @@ N                   =   500;              %               Number of realizations
 nDim                =   2;              %               Number of dimensions (now only 2)
 
 %% - Receiver parameters --> Defined on rx_schemes
-selectedSchemes     =   2;
+selectedSchemes     =   1;
 
 %% - Transmitter parameters
 %-- Variable parameter values, 'r' - radius, 'a' - azimuth
-azim.start          =   90;            %     [deg]     First value of azimuth
+azim.start          =   9;            %     [deg]     First value of azimuth
 azim.end            =   90;              %     [deg]     Last value of azimuth
 azim.steps          =   1;              %               Steps of increment in azimuth
 
-rad.start           =   800;            %     [m]       First value of radius
+rad.start           =   200;            %     [m]       First value of radius
 rad.end             =   800;           %     [m]       Last value of radius
-rad.steps           =   1;              %               Steps of increment in radius
+rad.steps           =   3;              %               Steps of increment in radius
 
 mov.vel             =   0.01;           %   [rad/s]     Angular velocity
 

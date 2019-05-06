@@ -1,4 +1,4 @@
-function schemes = rx_schemes(selectedSchemes)
+function schemes = rx_schemes()
 
     schemes             =   {};
     aux.pos             =   [0 0];
@@ -8,35 +8,35 @@ function schemes = rx_schemes(selectedSchemes)
     %% SCHEME 1
     rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
     rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
-    rx(1).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(1).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(2).pos           =   [400, 0];       %    [m]        Rx2 position
     rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
-    rx(2).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(2).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(3).pos           =   [-400, 0];      %    [m]        Rx3 position
     rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
-    rx(3).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(3).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(4).pos           =   [0, 400];       %    [m]        Rx4 position
     rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
-    rx(4).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(4).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(5).pos           =   [0, -400];      %    [m]        Rx5 position
     rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
-    rx(5).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
 
     schemes{end+1}      =   rx;
 
     %% SCHEME 2
     rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
     rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
-    rx(1).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(1).orientation   =   pi/6;              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(2).pos           =   [200, 0];       %    [m]        Rx2 position
     rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
-    rx(2).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(2).orientation   =   pi/2;              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(3).pos           =   [-400, 0];      %    [m]        Rx3 position
     rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
-    rx(3).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(3).orientation   =   pi/4;              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(4).pos           =   [0, 400];       %    [m]        Rx4 position
     rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
-    rx(4).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(4).orientation   =   3*pi/4;              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(5).pos           =   [0, -400];      %    [m]        Rx5 position
     rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
     rx(5).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
@@ -46,19 +46,19 @@ function schemes = rx_schemes(selectedSchemes)
     %% SCHEME 3
     rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
     rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
-    rx(1).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(1).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(2).pos           =   [200, 0];       %    [m]        Rx2 position
     rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
-    rx(2).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(2).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(3).pos           =   [-400, 0];      %    [m]        Rx3 position
     rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
-    rx(3).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(3).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(4).pos           =   [0, 400];       %    [m]        Rx4 position
     rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
-    rx(4).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(4).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
     rx(5).pos           =   [0, -200];      %    [m]        Rx5 position
     rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
-    rx(5).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
 
     schemes{end+1}      =   rx;
 
@@ -285,6 +285,4 @@ function schemes = rx_schemes(selectedSchemes)
     rx(i+1).pos     =   [-400, -400];
     rx(i+2).pos     =   [400, -400];
     schemes{end+1}  =   rx;
-    
-    schemes         =   schemes(selectedSchemes);
 end

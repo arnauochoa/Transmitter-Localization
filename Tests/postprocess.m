@@ -2,13 +2,13 @@ clearvars;
 close all;
 clc;
 
-testName    =   'new_test_2/scheme_1';
+testName    =   'orientation_test/scheme_1';
 directory   =   strcat('Results/', testName);
 filePath    =   strcat(directory, '/data.mat');
 load(filePath);
 
 fig         =   [];
-radToPlot   =   1:1; % Indices of radius to show on 2D plot
+radToPlot   =   1; % Indices of radius to show on 2D plot
 
 % Bias and variance plots over azimuth
 if azim.steps > 1
@@ -261,32 +261,44 @@ title("CDF of RSS/DoA method over azimuth variation");
 
 scale = 10;
 fig = [fig, figure]; set(gcf, 'Position',  [400, 50, 950, 900]);
-legend;
 for r = radToPlot
     for a = 1:azim.steps
         %- Actual positions
         name    =   sprintf("Receiver at az=%d, rad=%d", a, r);
-        scatter(tx(r, a).pos(1), tx(r, a).pos(2), 'g', 'o', 'DisplayName', name); hold on;
+        scatter(tx(r, a).pos(1), tx(r, a).pos(2), 'g', 'x', 'DisplayName', name); hold on;
         %- Estimated positions
         %-- TDoA/FDoA
+        color   =   rand(1, 3);
         name    =   sprintf("(TDoA/FDoA) Estimation at az=%d, rad=%d", a, r);
-        scatter(estA(r, a).pos(1), estA(r, a).pos(2), 'r', 'x', 'DisplayName', name); hold on;
+        scatter(estA(r, a).pos(1), estA(r, a).pos(2), [], color, 'o', 'DisplayName', name); 
+        hold on;
         C       =   cov(txEstPosA(:, :, r, a));
-        error_ellipse(C, estA(r, a).pos);
+        error_ellipse(C, estA(r, a).pos, 'Color', color); 
         %-- RSS/DoA
+        color   =   rand(1, 3);
         name    =   sprintf("(RSS/DoA) Estimation at az=%d, rad=%d", a, r);
-        scatter(estB(r, a).pos(1), estB(r, a).pos(2), 'm', 'x', 'DisplayName', name); hold on;
+        scatter(estB(r, a).pos(1), estB(r, a).pos(2), [], color, 's', 'DisplayName', name);
+        hold on;
         C       =   cov(txEstPosB(:, :, r, a));
-        error_ellipse(C, estB(r, a).pos);
+        error_ellipse(C, estB(r, a).pos, 'Color', color);
     end
 end
 
 for i = 1:scen.numRx
-    scatter(rx(i).pos(1), rx(i).pos(2), 'b', 'x', 'DisplayName', 'Receivers'); hold on;
+    scatter(rx(i).pos(1), rx(i).pos(2), 'b', 'v', 'DisplayName', 'Receivers'); hold on;
     quiver(rx(i).pos(1), rx(i).pos(2), ...
         rx(i).vel(1)*scale, rx(i).vel(2)*scale, 'b'); hold on;
 end
 xlabel('x'); ylabel('y');
+L = legend('a', 'b', 'c', 'd');
+x = findall(gcf, 'marker', 'x');
+set(x, 'DisplayName', 'Actual position');
+o = findall(gcf, 'marker', 'o');
+set(o, 'DisplayName', 'TDoA/FDoA estimation');
+s = findall(gcf, 'marker', 's');
+set(s, 'DisplayName', 'RSS/DoA estimation');
+l = findall(gcf, 'linestyle', '-');
+set(l, 'DisplayName', '50% error ellipse');
 
 fprintf('Selected test: %s \n\n', testName);
 saveAnswer  =   menu('Save figures?', 'YES', 'NO');
