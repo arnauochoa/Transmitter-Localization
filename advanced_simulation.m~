@@ -19,17 +19,17 @@ N                   =   500;              %               Number of realizations
 nDim                =   2;              %               Number of dimensions (now only 2)
 
 %% - Receiver parameters --> Defined on rx_schemes
-selectedSchemes     =   1;
+selectedSchemes     =   1:2;
 
 %% - Transmitter parameters
 %-- Variable parameter values, 'r' - radius, 'a' - azimuth
-azim.start          =   9;            %     [deg]     First value of azimuth
+azim.start          =   0;            %     [deg]     First value of azimuth
 azim.end            =   90;              %     [deg]     Last value of azimuth
-azim.steps          =   1;              %               Steps of increment in azimuth
+azim.steps          =   3;              %               Steps of increment in azimuth
 
 rad.start           =   200;            %     [m]       First value of radius
-rad.end             =   800;           %     [m]       Last value of radius
-rad.steps           =   3;              %               Steps of increment in radius
+rad.end             =   1100;           %     [m]       Last value of radius
+rad.steps           =   4;              %               Steps of increment in radius
 
 mov.vel             =   0.01;           %   [rad/s]     Angular velocity
 
@@ -57,7 +57,7 @@ scen.weighting      =   'Q';            %               Weigting matrix used on 
                                         %                   I for identity, Q for covariance
 scen.refIndex       =   1;              %               Reference receiver index
 scen.c0             =   1;              %               Average multiplicative gain
-scen.gamma          =   5;              %               Path loss exponent
+scen.gamma          =   2;              %               Path loss exponent
 scen.sigmaS         =   6;              %   [dB]        Shadowing standard deviation
 scen.corrDist       =   5;              %   [m]         Correlation distance within which 
                                         %                   the shadowing effects among 
@@ -67,6 +67,7 @@ scen.spacing        =   0;              %   [m]         Spacing between array el
 scen.nAnt           =   2;              %               Number of antennas of the array
 scen.v              =   c/n;            %    [m/s]      Propagation speed
 scen.MSBW           =   get_MS_BW(scen);%               Mean Square Bandwidth
+% TODO compute noise power once and save it on scen
 
 %% - Vectors of movement of the transmitter
 mov.dir             =   sign(azim.end - azim.start); %        Gets direction of movement
@@ -116,9 +117,9 @@ for s = selectedSchemes
         %% --- SIMULATION ---
 
         for r = 1:rad.steps
-            fprintf("Radius = %d m\n", mov.radVals(r));
+            fprintf(" Radius = %d m\n", mov.radVals(r));
             for a = 1:azim.steps
-                fprintf("Azimuth = %i º\n", mov.azimVals(a));
+                fprintf("  Azimuth = %i º\n", mov.azimVals(a));
                 tx(r, a)   =   obtain_tx_info(mov.radVals(r), mov.azimVals(a), mov.vel, mov.dir);
                 [~, ~, ~, txEstPosA(:, :, r, a), txEstVelA, txEstPosB(:, :, r, a)] ...
                     =   simulate_scenario(scen, tx(r, a), rx);
@@ -144,6 +145,7 @@ for s = selectedSchemes
                 vel.y.stdA(r, a)        =   std(txEstVelA(:, 2));
             end
         end
+        fprintf("End of scheme %i", s);
         toc
 
         %% --- RESULTS ---

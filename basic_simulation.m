@@ -15,32 +15,29 @@ nDim                =   2;              %                   Number of dimensions
 nbins               =   100;            %                   Number of bins for the histogram
 
 %- Transmitter parameters
-tx.pos              =   [0, 300];     %    [m]      Position X-Y [m]
+tx.pos              =   [700, 0];     %    [m]      Position X-Y [m]
 tx.vel              =   [0, 10];       %  [m/s]  Velocity X-Y [m/s]
 
 %- Receiver parameters
-rx(1).pos           =   [0, 0];         %     [m]     Rx1 position
-rx(1).vel           =   [0, 0];      %      [m/s]  Rx1 velocity
-rx(1).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
-rx(2).pos           =   [400, 0];    %     [m]     Rx2 position
-rx(2).vel           =   [0, 0];      %  [m/s, m/s, m/s]  Rx2 velocity
-rx(2).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
-rx(3).pos           =   [-400, 0];   %     [m, m, m]     Rx3 position
-rx(3).vel           =   [0, 0];      %  [m/s, m/s, m/s]  Rx3 velocity
-rx(3).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
-rx(4).pos           =   [0, 400];    %     [m, m, m]     Rx4 position
-rx(4).vel           =   [0, 0];      %  [m/s, m/s, m/s]  Rx4 velocity
-rx(4).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
-rx(5).pos           =   [0, -400];    %     [m, m, m]     Rx5 position
-rx(5).vel           =   [0, 0];      %  [m/s, m/s, m/s]  Rx5 velocity
-rx(5).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
-% rx(6).pos           =   [0, 0];   %     [m, m, m]     Rx6 position
-% rx(6).vel           =   [0, 0];      %  [m/s, m/s, m/s]  Rx6 velocity
-% rx(6).orientation   =   0;              %       [rad]       Orientation of the ULA wrt. the X axis
+rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
+rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
+rx(1).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
+rx(2).pos           =   [400, 0];       %    [m]        Rx2 position
+rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
+rx(2).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
+rx(3).pos           =   [-400, 0];      %    [m]        Rx3 position
+rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
+rx(3).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
+rx(4).pos           =   [0, 400];       %    [m]        Rx4 position
+rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
+rx(4).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
+rx(5).pos           =   [0, -400];      %    [m]        Rx5 position
+rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
+rx(5).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
 
 %- Scenario parameters
 scen.showBand       =   false;          %                   When enabled, PSD and "Square-PSD" will be plotted
-scen.bw             =   15.345 * 1e6;    %       [Hz]        Transmitted signal bandwidth TODO: define it as BW at -3dB
+scen.bw             =   15.345 * 1e6;   %       [Hz]        Transmitted signal bandwidth TODO: define it as BW at -3dB
 scen.shape          =   's';            %                   Signal band shape: 
                                         %                       'r' -> rectangular, 's' -> sinc, 't' -> triangle
 scen.freq           =   1575.42 * 1e6;  %       [Hz]        Transmitted signal frequency
