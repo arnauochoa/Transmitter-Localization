@@ -5,10 +5,10 @@ clc;
 addpath 'Misc';
 
 scen.showBand       =   true;               % When enabled, PSD and "Square-PSD" will be plotted
-scen.bw             =   1.023 * 1e6;        % Transmitted signal bandwidth at -3dB[Hz]
-scen.shape          =   'r';                % Signal band shape: 'r' -> rectangular, 's' -> sinc, 't' -> triangle
+scen.bw             =   10.23 * 1e6;        % Transmitted signal bandwidth at -3dB[Hz]
+scen.shape          =   's2';                % Signal band shape: 'r' -> rectangular, 's' -> sinc, 't' -> triangle
 scen.freq           =   1575.42 * 1e6;      % Transmitted signal frequency [Hz]
-scen.power          =   15;                 % Transmitted signal power [dBW]
+scen.power          =   -5;                 % Transmitted signal power [dBW]
 scen.nFig           =   2;                  % Receiver's noise figure [dB]
 scen.ns             =   2;                  % Number of samples
 scen.n              =   1.000293;           % Refractive index

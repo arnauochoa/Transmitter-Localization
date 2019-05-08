@@ -36,17 +36,17 @@ mov.vel             =   0.01;           %   [rad/s]     Angular velocity
 %% - Scenario parameters
 scen.showBand       =   false;          %               When enabled, PSD and "Square-PSD"
                                         %                   will be plotted
-scen.bw             =   15.345 * 1e6;   %   [Hz]        Transmitted signal bandwidth 
+scen.bw             =   10.23 * 1e6;    %   [Hz]        Transmitted signal bandwidth 
                                         %                   TODO: define it as BW at -3dB
-scen.shape          =   'r';            %               Signal band shape: 
+scen.shape          =   's2';           %               Signal band shape: 
                                         %                   'r' -> rectangular, 
                                         %                   's' -> sinc, 
                                         %                   't' -> triangle
 scen.freq           =   1575.42 * 1e6;  %     [Hz]      Transmitted signal frequency
-scen.power          =   -10;             %    [dBW]      Transmitted signal power
-scen.nFig           =   5;              %     [dB]      Receiver's noise figure
+scen.power          =   -5;             %    [dBW]      Transmitted signal power
+scen.nFig           =   2;              %     [dB]      Receiver's noise figure
 scen.ns             =   10;             %               Number of samples
-scen.temp           =   500;            %     [K]       Ambient temperature
+scen.temp           =   290;            %     [K]       Ambient temperature
 scen.tdoaVar        =   0;              %               Time noise variance. 
                                         %                   When 0, CRB is used
 scen.fdoaVar        =   0;              %               Frequency noise variance. 
@@ -188,7 +188,7 @@ for s = selectedSchemes
             mkdir(directory);
         end
         dataFile = strcat(directory, 'data');
-        save(dataFile, 'mov', 'scen', 'rad', 'azim', 'rx', 'tx', 'pos', 'vel', 'estA', ...
+        save(dataFile,'N', 'mov', 'scen', 'rad', 'azim', 'rx', 'tx', 'pos', 'vel', 'estA', ...
             'estB', 'txEstPosA', 'txEstPosB', 'txEstVelA', 'nDim');
 
         for a = 1:length(fig)
@@ -203,5 +203,4 @@ for s = selectedSchemes
 %         warning(getReport(e));
 %     end
 end
-fprintf("End of simulations. ");
-toc
+fprintf("End of simulations. \n");

@@ -20,7 +20,7 @@ function [rxPow] = get_rx_power(scen, range)
 %     end
 %     rxPow   =   db2pow(scen.power) * scen.c0 / aux;
     
-    c       =   physconst('LightSpeed');    % Speed of light [m/s]
+%     c       =   physconst('LightSpeed');    % Speed of light [m/s]
     
     Lbf     =   (4 * pi * range * scen.freq/scen.v)^2;   % Propagation losses
     
