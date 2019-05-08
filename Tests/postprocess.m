@@ -2,14 +2,14 @@ clearvars;
 close all;
 clc;
 
-testName    =   'Cabric_new_test/scheme_2';
+testName    =   'tt/scheme_2';
 directory   =   strcat('Results/', testName);
 filePath    =   strcat(directory, '/data.mat');
 load(filePath);
 
 azIndForCDF     =   1;    % Indices of azimuth values to compare on CDF
-radIndForCDF    =   1:4;  % Indices of azimuth values to compare on CDF
-radIndFor2D     =   1:4;  % Indices of radius to show on 2D plot
+radIndForCDF    =   1;  % Indices of azimuth values to compare on CDF
+radIndFor2D     =   1;  % Indices of radius to show on 2D plot
 
 fig         =   [];
 

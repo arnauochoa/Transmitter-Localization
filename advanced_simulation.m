@@ -15,7 +15,7 @@ if isempty(testName), error('A name must be set for this test'); end
 showScenario        =   true;           %               Shows position over 2D space
 c                   =   299792458;      %    [m/s]      Speed of light
 n                   =   1.000293;       %             	Refractive index
-N                   =   500;              %               Number of realizations
+N                   =   200;            %               Number of realizations
 nDim                =   2;              %               Number of dimensions (now only 2)
 
 %% - Receiver parameters --> Defined on rx_schemes
@@ -27,9 +27,9 @@ azim.start          =   0;            %     [deg]     First value of azimuth
 azim.end            =   90;              %     [deg]     Last value of azimuth
 azim.steps          =   3;              %               Steps of increment in azimuth
 
-rad.start           =   200;            %     [m]       First value of radius
-rad.end             =   1100;           %     [m]       Last value of radius
-rad.steps           =   4;              %               Steps of increment in radius
+rad.start           =   800;            %     [m]       First value of radius
+rad.end             =   800;           %     [m]       Last value of radius
+rad.steps           =   1;              %               Steps of increment in radius
 
 mov.vel             =   0.01;           %   [rad/s]     Angular velocity
 
@@ -67,7 +67,7 @@ scen.spacing        =   0;              %   [m]         Spacing between array el
 scen.nAnt           =   2;              %               Number of antennas of the array
 scen.v              =   c/n;            %    [m/s]      Propagation speed
 scen.MSBW           =   get_MS_BW(scen);%               Mean Square Bandwidth
-% TODO compute noise power once and save it on scen
+scen.No             =   get_noise_power(scen);% [W]     Noise Power
 
 %% - Vectors of movement of the transmitter
 mov.dir             =   sign(azim.end - azim.start); %        Gets direction of movement
@@ -120,7 +120,7 @@ for s = selectedSchemes
         for a = 1:azim.steps
             fprintf("  Azimuth = %i º\n", mov.azimVals(a));
             tx(r, a)   =   obtain_tx_info(mov.radVals(r), mov.azimVals(a), mov.vel, mov.dir);
-            [~, ~, ~, txEstPosA(:, :, r, a), txEstVelA, txEstPosB(:, :, r, a)] ...
+            [~, ~, ~, ~, txEstPosA(:, :, r, a), txEstVelA, txEstPosB(:, :, r, a)] ...
                 =   simulate_scenario(scen, tx(r, a), rx);
 
             %-- Position and velocity averages

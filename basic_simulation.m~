@@ -10,12 +10,12 @@ global N nDim;
 showScenario        =   true;           %                   Shows position over 3D space
 c                   =   299792458;      %       [m/s]       Speed of light
 n                   =   1.000293;       %                   Refractive index
-N                   =   100;            %                   Number of realizations
+N                   =   500;            %                   Number of realizations
 nDim                =   2;              %                   Number of dimensions (now only 2)
 nbins               =   100;            %                   Number of bins for the histogram
 
 %- Transmitter parameters
-tx.pos              =   [1, 500];     %    [m]      Position X-Y [m]
+tx.pos              =   [700, 0];     %    [m]      Position X-Y [m]
 tx.vel              =   [0, 10];       %  [m/s]  Velocity X-Y [m/s]
 
 %- Receiver parameters
@@ -82,13 +82,13 @@ toc     % Stop measuring execution time
 
 %% --- RESULTS ---
 
-SNR             =   pow2db(mean(rxPows, 2)./scen.No);
+SNR             =   mean(rxPows,
 
 %-- Results computations
 %- Mean
 meanEstPosA     =   mean(txEstPosA, 1);   % TDOA/FDOA
 meanEstPosB     =   mean(txEstPosB, 1);   % RSS/DOA
-meanEstVel      =   mean(txEstVelA, 1);   % TDOA/FDOA
+meanEstVel      =   mean(txEstVelA, 1);
 %- Bias
 biasEstPosA     =   meanEstPosA - tx.pos;
 biasEstPosB     =   meanEstPosB - tx.pos;
@@ -106,17 +106,17 @@ errEstVel       =   sqrt(sum(txEstVelA - tx.vel, 2).^2);
 fprintf("\n ========= Observables =========\n");
 for r = 1:scen.numRx
     fprintf(" --- Receiver %d ---\n", r);
-    fprintf(" Received signal power: %f dBW \n", pow2db(mean(rxPows(r, :))));
-    fprintf(" Received signal SNR: %f dB \n", SNR(r));
+    fprintf(" Received signal power: %f dB \n", pow2db(mean(rxPows(r, :))));
+    fprintf(" Received signal power: %f dB \n", pow2db(mean(rxPows(r, :))));
     fprintf(" Reception time: %e seconds \n", mean(rxTimes(r, :)));
     fprintf(" Received signal frequency: %f MHz \n", mean(rxFreqs(r, :))/1e6);
-    fprintf(" Estimated signal DoA: %f º \n", rad2deg(mean(estDoas(r, :))));
+    fprintf(" Estimated signal DoA: %f MHz \n", rad2deg(mean(estDoas(r, :))));
     
     fprintf(" ------------------\n");
-    fprintf(" Std of received powers: %f dB\n", pow2db(std(rxPows(r, :))));
+    fprintf(" Std of received powers: %f s\n", pow2db(std(rxPows(r, :))));
     fprintf(" Std of received times: %e s\n", std(rxTimes(r, :)));
     fprintf(" Std of received frequencies: %e Hz\n", std(rxFreqs(r, :)));
-    fprintf(" Std of estimated signal DoA: %f º \n", rad2deg(std(estDoas(r, :))));
+    fprintf(" Std of estimated signal DoA: %f MHz \n", rad2deg(std(estDoas(r, :))));
 end
 
 fprintf("\n ========= Results TDoA/FDoA =========\n");

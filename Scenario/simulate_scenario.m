@@ -1,4 +1,4 @@
-function [rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB] = simulate_scenario(scen, tx, rx)
+function [rxPows, rxTimes, rxFreqs, estDoas, txEstPosA, txEstVelA, txEstPosB] = simulate_scenario(scen, tx, rx)
 %   SIMULATE_SCENARIO Estimates the transmitter's position and velocity
 %
 %       Builds the scenario and estimates the transmitter's position and 
@@ -21,31 +21,27 @@ function [rxPows, rxTimes, rxFreqs, txEstPosA, txEstVelA, txEstPosB] = simulate_
     numRx       =   length(rx);
     nDim        =   2;
         
-    txEstPosA    =   zeros(N, nDim);
-    txEstVelA    =   zeros(N, nDim);
+    txEstPosA   =   zeros(N, nDim);
+    txEstVelA   =   zeros(N, nDim);
     
-    txEstPosB    =   zeros(N, nDim);
+    txEstPosB   =   zeros(N, nDim);
     
-    rxPowsMat   =   zeros(numRx, N);
-    rxTimesMat  =   zeros(numRx, N);
-    rxFreqsMat  =   zeros(numRx, N);
-    estDoasMat  =   zeros(numRx, N);
+    rxPows      =   zeros(numRx, N);
+    rxTimes     =   zeros(numRx, N);
+    rxFreqs     =   zeros(numRx, N);
+    estDoas     =   zeros(numRx, N);
     for i = 1:N
         parfor r = 1:numRx
-            [rxPowsMat(r, i), rxTimesMat(r, i), rxFreqsMat(r, i), estDoasMat(r, i)] = ...
+            [rxPows(r, i), rxTimes(r, i), rxFreqs(r, i), estDoas(r, i)] = ...
                 observables_generation(scen, rx(r), tx);
         end
     end
     
     parfor i = 1:N
         [txEstPosA(i, :), txEstVelA(i, :), ~, ~] = ...
-            tdoa_fdoa_method(scen, rx, rxPowsMat(:,i), rxTimesMat(:,i), rxFreqsMat(:,i));
+            tdoa_fdoa_method(scen, rx, rxPows(:,i), rxTimes(:,i), rxFreqs(:,i));
         
-        txEstPosB(i, :) = rss_doa_method(scen, rx, rxPowsMat(:, i), estDoasMat(:, i));
+        txEstPosB(i, :) = rss_doa_method(scen, rx, rxPows(:, i), estDoas(:, i));
     end
-    
-    rxPows      =   rxPowsMat;
-    rxTimes     =   rxTimesMat;
-    rxFreqs     =   rxFreqsMat;
 end
 

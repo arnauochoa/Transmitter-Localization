@@ -19,12 +19,9 @@ function thetaCRB = get_doa_CRB(scen, thetaTilde, rxPow)
         d       =   scen.spacing;
     end
 
-    %- Computation of noise power
-    No          =   get_noise_power(scen);
-
     %- Computation of CRB
     k           =   2*pi*d / lambda;
-    beta        =   (6 * No) / ((k^2) * scen.ns * scen.nAnt * (scen.nAnt^2 - 1));
+    beta        =   (6 * scen.No) / ((k^2) * scen.ns * scen.nAnt * (scen.nAnt^2 - 1));
     thetaCRB    =   beta * (1 / rxPow) * (1 / cos(thetaTilde)^2);
 end
 
