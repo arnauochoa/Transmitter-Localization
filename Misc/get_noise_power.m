@@ -10,6 +10,6 @@ function No = get_noise_power(scen)
 
     k       =   physconst('Boltzmann');     % Boltzmann constant [J/K]
     
-    No      =   k * scen.temp * scen.bw * db2pow(scen.nFig);
+    No      =   k .* scen.temp .* scen.bw .* db2pow(scen.nFig);
 end
 

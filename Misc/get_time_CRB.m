@@ -9,8 +9,7 @@ function timeCRB = get_time_CRB(scen, rxPow)
 %   Output:     timeCRB:    CRB of the reception time
     
     %- Compute SNR
-    No      =   get_noise_power(scen);
-    SNR     =   rxPow/No;
+    SNR     =   rxPow/scen.No;
     
     %- Obtain Mean Square Bandwidth
     MSBW    =   get_MS_BW(scen);

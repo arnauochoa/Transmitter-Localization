@@ -25,13 +25,15 @@ function MSBW = get_MS_BW(scen)
             H      =   triangularPulse(band(1), band(2), f);
         case 's'
             H      =   sinc(f/B);
+        case 's2'
+            H      =   (sinc(f/B))^2;
         otherwise
             H      =   rectangularPulse(band(1), band(2), f);
     end
     
     %-- Assign true power
     normAux         =   double(int(H, limit(1), limit(2)));
-    S               =   scen.power/normAux * H;
+    S               =   db2pow(scen.power)/normAux * H;
     
     %- Compute Mean Square Bandwidth
     f1              =   (2*pi*(f))^2 * abs(S)^2;
@@ -56,6 +58,11 @@ function MSBW = get_MS_BW(scen)
         fplot(f1, limit); hold on;
         xlabel("Frequency (Hz)");
         ylabel("Square Power Spectral Density (W/Hz)");
+        
+        figure;
+        fplot(10*log10(f1), limit); hold on;
+        xlabel("Frequency (Hz)");
+        ylabel("Square Power Spectral Density (dBW-Hz)");
         
     end
 end

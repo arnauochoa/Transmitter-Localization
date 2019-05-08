@@ -10,8 +10,7 @@ function freqCRB = get_freq_CRB(scen, rxPow)
 %   Output:     freqCRB:    CRB of the received frequency
     
     %- Compute SNR
-    No      =   get_noise_power(scen);
-    SNR     =   rxPow/No;
+    SNR     =   rxPow/scen.No;
     
     %- Frequency CRB computation: Kay vol. 1, p. 57
     freqCRB     =   12 / ((2 * pi)^2 * SNR * scen.ns * (scen.ns^2 - 1));
