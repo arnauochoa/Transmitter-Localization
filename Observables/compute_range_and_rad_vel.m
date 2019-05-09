@@ -1,9 +1,9 @@
 function [range, radVel]   =   compute_range_and_rad_vel(rx, tx)
-%   COMPUTE_RANGE_RATE:     Computes the range rate and relative distance
-%                           between Rx and Tx
+%   COMPUTE_RANGE_AND_RAD_VEL:     Computes the range rate and relative distance
+%                                  between Rx and Tx
 %
-%       Computation of the range rate (time rate of change of the distance
-%       between two locations).
+%       Computation of the range  and the radial velocity between
+%       transmitter and given receiver.
 %
 %   Input:      rx:         Struct. Receiver information
 %               tx:         Struct. Transmitter information
@@ -14,6 +14,9 @@ function [range, radVel]   =   compute_range_and_rad_vel(rx, tx)
     %- Relative distance vector and norm
     d       =   rx.pos - tx.pos;
     range   =   norm(d);
+    if range == 0 
+        range = 1e-10;
+    end
     
     %- Scalar projections
     vT      =   dot(tx.vel, d) / range;

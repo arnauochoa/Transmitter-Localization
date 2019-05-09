@@ -4,14 +4,13 @@ function timeCRB = get_time_CRB(scen, rxPow)
 %       Time CRB computation as described by Kay in "Fundamentals of 
 %       Statistical Signal Processing: Estimation Theory", p. 53
 %
-%   Input:      scen:       Struct. Values describing the scenario
+%   Input:      scen:       Struct. Information of the scenario
 %               rxPow:      Double. Received signal's power in Watts
 %
 %   Output:     timeCRB:    CRB of the reception time
-
+    
     %- Compute SNR
-    No      =   get_noise_power(scen);
-    SNR     =   rxPow/No;
+    SNR     =   rxPow/scen.No;
     
     %- Obtain Mean Square Bandwidth
     MSBW    =   get_MS_BW(scen);

@@ -21,8 +21,6 @@ function [rx, ref, dRange, dRrate] = get_differences(scen, rx, toas, foas)
 %               dRrate:     (M-1)x1 vector. Differential range rates wrt.
 %                           the reference receiver
     
-    c           =   299792458;      % Speed of light (m/s)
-    
     %- Assignation of a reference receiver 
     ref                 =   rx(scen.refIndex);
     rx(scen.refIndex)   =   [];
@@ -37,7 +35,7 @@ function [rx, ref, dRange, dRrate] = get_differences(scen, rx, toas, foas)
     fdoas  = foas - refFOA;
     
     %- Differential ranges and range rates for receivers
-    dRange  = tdoas .* c;
-    dRrate  = -fdoas .* (c/scen.freq);
+    dRange  = tdoas .* scen.v;
+    dRrate  = -fdoas .* (scen.v/scen.freq);
 end
 

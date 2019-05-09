@@ -1,7 +1,7 @@
-function W = find_weight_matrix(scen, rxPows)
-%   FIND_WEIGHT_MATRIX:    Finds weighting matrix for LS. 
+function W = find_TDOA_FDOA_weight_matrix(scen, rxPows)
+%   FIND_TDOA_FDOA_WEIGHT_MATRIX:    Finds weighting matrix for TDOA/FDOA method. 
 %                      
-%       Finds weighting matrix for LS. The weighting matrix can be the
+%       Finds weighting matrix for the TDoA/FDoA method. The weighting matrix can be the
 %       identity matrix or the inverse covariance matrix, built from the
 %       CRLB for time and frequency.
 %
@@ -9,10 +9,9 @@ function W = find_weight_matrix(scen, rxPows)
 %               rxPows:     Mx1 vector. Received signals' powers
 %
 %   Output:     W:          (numRx-1)x(numRx-1) matrix. Weighting matrix
-%
-    c       =   299792458;              % Speed of light (m/s)
-    size    =   scen.numRx-1;
-    switch scen.weighting 
+
+    size    =   scen.numRx - 1;
+    switch scen.tdoaWeighting 
         case 'I'
             W   = eye(2*size);
         case 'Q'
@@ -32,8 +31,8 @@ function W = find_weight_matrix(scen, rxPows)
             freqVar(scen.refIndex)  =   [];
 
             %- Obtain TDOA and FDOA CRB wrt. reference receiver
-            tdoaVar    =   c^2 * (refTimeVar + timeVar);
-            fdoaVar    =   (c/scen.freq)^2 * (refFreqVar + freqVar);
+            tdoaVar    =   scen.v^2 * (refTimeVar + timeVar);
+            fdoaVar    =   (scen.v/scen.freq)^2 * (refFreqVar + freqVar);
             
             %- Build Weighting matrix
             Q1          =   diag(tdoaVar);
