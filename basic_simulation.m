@@ -1,8 +1,13 @@
+% 
+% ADVANCED_SIMULATION:  Script used for launching an basic simulation. In
+%                       this simulation the distribution of the receivers
+%                       can be defined in rx_distributions and the
+%                       position and velocity of the transmitter can be 
+%                       defined as vectors. With the scen struct, the different
+%                       parameters describing the scenario can be defined.
+%
+
 clearvars; close all; clc;
-addpath 'Estimation';
-addpath 'Misc';
-addpath 'Observables';
-addpath 'Scenario';
 
 %% --- PARAMETERS DEFINITION ---
 global N nDim;
@@ -10,7 +15,7 @@ global N nDim;
 showScenario        =   true;           %                   Shows position over 3D space
 c                   =   299792458;      %       [m/s]       Speed of light
 n                   =   1.000293;       %                   Refractive index
-N                   =   100;            %                   Number of realizations
+N                   =   200;            %                   Number of realizations
 nDim                =   2;              %                   Number of dimensions (now only 2)
 nbins               =   100;            %                   Number of bins for the histogram
 
@@ -18,24 +23,12 @@ nbins               =   100;            %                   Number of bins for t
 tx.pos              =   [400, 400];     %    [m]      Position X-Y [m]
 tx.vel              =   [0, 10];       %  [m/s]  Velocity X-Y [m/s]
 
-%- Receiver parameters
-rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
-rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
-rx(1).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
-rx(2).pos           =   [400, 0];       %    [m]        Rx2 position
-rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
-rx(2).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
-rx(3).pos           =   [-400, 0];      %    [m]        Rx3 position
-rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
-rx(3).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
-rx(4).pos           =   [0, 400];       %    [m]        Rx4 position
-rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
-rx(4).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
-rx(5).pos           =   [0, -400];      %    [m]        Rx5 position
-rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
-rx(5).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
+%% - Receiver parameters --> Defined on rx_distributions
+selectedRxDist      =   1;
+distributions       =   rx_distributions();
+rx                  =   distributions{selectedRxDist};
 
-%- Scenario parameters
+%% - Scenario parameters
 scen.numRx          =   length(rx);     %               Number of receivers
 scen.showBand       =   false;          %               When enabled, PSD and "Square-PSD"
                                         %                   will be plotted
@@ -123,6 +116,7 @@ for r = 1:scen.numRx
     fprintf(" Std of estimated signal DoA: %f º \n", rad2deg(std(estDoas(r, :))));
 end
 
+%- Resulting estimations
 fprintf("\n ========= Results TDoA/FDoA =========\n");
 fprintf("\n Actual position: X = %f m; Y = %f m\n", tx.pos);
 fprintf(" Estimated position mean: X = %f m; Y = %f m\n", meanEstPosA);
@@ -138,6 +132,15 @@ fprintf("\n Actual position: X = %f m; Y = %f m\n", tx.pos);
 fprintf(" Estimated position mean: X = %f m; Y = %f m\n", meanEstPosB);
 fprintf("\n Position bias: X = %f m; Y = %f m\n", biasEstPosB);
 fprintf("\n Estimated position std: X = %f m; Y = %f m\n", stdEstPosB);
+
+%- CDFs for comparison
+figure;
+cdfplot(errEstPosA); hold on;
+cdfplot(errEstPosB);
+xlabel("Error [m]");
+ylabel("CDF");
+title("CDF of error in estimated position");
+legend('TDoA/FDoA', 'RSS/DoA');
 
 % %- TDOA/FDOA
 % figure;
@@ -174,51 +177,46 @@ fprintf("\n Estimated position std: X = %f m; Y = %f m\n", stdEstPosB);
 % ylabel("CDF");
 % title("CDF of error in estimated position for RSS/DoA method");
 
-figure;
-cdfplot(errEstPosA); hold on;
-cdfplot(errEstPosB);
-xlabel("Error [m]");
-ylabel("CDF");
-title("CDF of error in estimated position");
-legend('TDoA/FDoA', 'RSS/DoA');
+%% 2D plot
+scale   =   10;
+figure; set(gcf, 'Position',  [400, 50, 950, 900]);
+rxPos   =   cell2mat({rx.pos}.');
+rxVel   =   cell2mat({rx.vel}.').*scale;
+scatter(rxPos(:, 1), rxPos(:, 2), 'b', 'v'); hold on;
+quiver(rxPos(:, 1), rxPos(:, 2), rxVel(:, 1), rxVel(:, 2), 'b'); hold on;
 
-%- 2D
+
 if showScenario
-    scale = 50;
-    figure; set(gcf, 'Position',  [100, 100, 1200, 800]);
-    legend;
-    scatter(tx.pos(1), tx.pos(2), 'r', 'o', 'DisplayName', 'Source'); hold on;
-    scatter(meanEstPosA(1), meanEstPosA(2), 'g', 'x', 'DisplayName', 'Estimated position (TDoA/FDoA method)'); hold on;
-    scatter(meanEstPosB(1), meanEstPosB(2), 'm', 'x', 'DisplayName', 'Estimated position (RSS/DoA method)'); hold on;
-    quiver(tx.pos(1), tx.pos(2), tx.vel(1)*scale, tx.vel(2)*scale, 'r'); hold on;
-    quiver(meanEstPosA(1), meanEstPosA(2), ...
-        meanEstVel(1)*scale, meanEstVel(2)*scale, 'g'); hold on;
-    for i = 1:scen.numRx
-        scatter(rx(i).pos(1), rx(i).pos(2), 'b', 'x', 'DisplayName', 'Receivers'); hold on;
-        quiver(rx(i).pos(1), rx(i).pos(2), ...
-            rx(i).vel(1)*scale, rx(i).vel(2)*scale, 'b'); hold on;
-    end
+        %- Actual positions
+        scatter(tx.pos(1), tx.pos(2), 'g', 'x'); hold on;
+        %- Estimated positions
+        %-- TDoA/FDoA
+        color   =   rand(1, 3);
+        scatter(meanEstPosA(1), meanEstPosA(2), [], color, 'o'); 
+        hold on;
+        C       =   cov(txEstPosA);
+        error_ellipse(C, meanEstPosA, 'style', '--', 'Color', color); 
+        %-- RSS/DoA
+        color   =   rand(1, 3);
+        scatter(meanEstPosB(1), meanEstPosB(2), [], color, 's');
+        hold on;
+        C       =   cov(txEstPosB);
+        error_ellipse(C, meanEstPosB, 'style', '--', 'Color', color);
 end
 
-
-%- 3D
-% if showScenario
-%     scale = 50;
-%     figure; set(gcf, 'Position',  [100, 100, 1200, 800]);
-%     legend;
-%     scatter3(tx.pos(1), tx.pos(2), tx.pos(3), 'r', 'x', 'DisplayName', 'Source'); hold on;
-%     scatter3(meanEstPosA(1), meanEstPosA(2), meanEstPosA(3), 'g', 'x', 'DisplayName', ...
-%               'Estimated position (TDoA/FDoA method)'); hold on;
-%     scatter3(meanEstPosB(1), meanEstPosB(2), 0, 'm', 'x', 'DisplayName', 'Estimated position (RSS/DoA method)'); 
-%     hold on;
-%     quiver3(tx.pos(1), tx.pos(2), tx.pos(3), tx.vel(1)*scale, tx.vel(2)*scale, tx.vel(3)*scale, 'r'); hold on;
-%     quiver3(meanEstPosA(1), meanEstPosA(2), meanEstPosA(3), ...
-%         meanEstVel(1)*scale, meanEstVel(2)*scale, meanEstVel(3)*scale, 'g'); hold on;
-%     for i = 1:scen.numRx
-%         scatter3(rx(i).pos(1), rx(i).pos(2), rx(i).pos(3), 'b', 'x', 'DisplayName', 'Receivers'); hold on;
-%         quiver3(rx(i).pos(1), rx(i).pos(2), rx(i).pos(3), ...
-%             rx(i).vel(1)*scale, rx(i).vel(2)*scale, rx(i).vel(3)*scale, 'b'); hold on;
-%     end
-% end
+xlabel('x'); ylabel('y');
+L = legend('a', 'b', 'c', 'd', 'e', 'f', 'Location', 'best');
+v = findall(gcf, 'marker', 'v');
+set(v, 'DisplayName', 'Rx positions');
+x = findall(gcf, 'marker', 'x');
+set(x, 'DisplayName', 'Actual Tx position');
+o = findall(gcf, 'marker', 'o');
+set(o, 'DisplayName', 'TDoA/FDoA estimation');
+s = findall(gcf, 'marker', 's');
+set(s, 'DisplayName', 'RSS/DoA estimation');
+l1 = findall(gcf, 'linestyle', '--');
+set(l1, 'DisplayName', '50% error ellipse');
+l2 = findall(gcf, 'linestyle', '-');
+set(l2, 'DisplayName', 'Rx velocities');
 
 

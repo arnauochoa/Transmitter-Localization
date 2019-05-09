@@ -17,13 +17,6 @@ function tx = obtain_tx_info(R, azim, vel, dir)
 %                           position an velocity in cartesian coordinates
 
     %- Position computation
-    %- 3D
-%     xPos    =   R * cosd(elev) * cosd(azim);
-%     yPos    =   R * cosd(elev) * sind(azim);
-%     zPos    =   R * sind(elev);
-%     tx.pos  =   [xPos, yPos, zPos];
-
-    %- 2D
     xPos        =   R * cosd(azim);
     yPos        =   R * sind(azim);
     tx.pos      =   [xPos, yPos];

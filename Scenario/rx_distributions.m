@@ -1,6 +1,15 @@
-function schemes = rx_schemes()
+function distrubutions = rx_distributions()
+%   RX_SCHEMES: Generation of RX distributions
+%
+%   	Definition of the distribution of the receivers including
+%   	position, velocity and orientation of the antenna array for each
+%   	receiver.
+%
+%   Output:     distrubutions:  Cell array. Schemes of the receivers. Every
+%                               cell is an array with the receivers of the 
+%                               given scheme.
 
-    schemes             =   {};
+    distrubutions       =   {};
     aux.pos             =   [0 0];
     aux.vel             =   [0 0];
     aux.orientation     =   0;
@@ -22,7 +31,7 @@ function schemes = rx_schemes()
     rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
     rx(5).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
 
     %% SCHEME 2
     rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
@@ -41,7 +50,7 @@ function schemes = rx_schemes()
     rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
     rx(5).orientation   =   0;    %   [rad]       Orientation of the ULA wrt. the X axis
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
 
     %% SCHEME 3
     rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
@@ -60,7 +69,7 @@ function schemes = rx_schemes()
     rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
     rx(5).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
 
     %% SCHEME 4
     rx(1).pos           =   [0, -400];         %    [m]        Rx1 position
@@ -76,7 +85,7 @@ function schemes = rx_schemes()
     rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
     rx(4).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
 
     %% SCHEME 5
     rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
@@ -101,7 +110,7 @@ function schemes = rx_schemes()
     rx(7).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
     rx(7).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
 
     %% SCHEME 6
     rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
@@ -126,7 +135,7 @@ function schemes = rx_schemes()
     rx(7).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
     rx(7).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
     
     %% SCHEME 7
     rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
@@ -151,7 +160,7 @@ function schemes = rx_schemes()
     rx(7).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
     rx(7).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
     
     %% SCHEME 8
     rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
@@ -176,7 +185,7 @@ function schemes = rx_schemes()
     rx(7).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
     rx(7).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
     
     %% SCHEME 9
     rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
@@ -207,7 +216,7 @@ function schemes = rx_schemes()
     rx(9).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
     rx(9).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
     
     %% SCHEME 10
     lim         =   500;
@@ -218,7 +227,7 @@ function schemes = rx_schemes()
         rx(i).pos   =   r(1:2);
     end
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
     
     %% SCHEME 11
     lim1        =   200;
@@ -232,7 +241,7 @@ function schemes = rx_schemes()
     
     rx(i+1).pos     =   [-400, -400];
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
     
     %% SCHEME 12
     lim1        =   200;
@@ -246,7 +255,7 @@ function schemes = rx_schemes()
     
     rx(i+1).pos     =   [-400, -400];
     rx(i+2).pos     =   [400, -400];
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
     
     %% SCHEME 13
     limPos      =   [-500 500];
@@ -257,7 +266,7 @@ function schemes = rx_schemes()
         rx(i).pos   =   randi(limPos, 1, 2);
         rx(i).vel   =   randi(limVel, 1, 2);
     end
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
     
     %% SCHEME 14
     limPos      =   [200 400];
@@ -270,7 +279,7 @@ function schemes = rx_schemes()
     end
     rx(i+1).pos     =   [-400, -400];
 
-    schemes{end+1}      =   rx;
+    distrubutions{end+1}      =   rx;
     
     %% SCHEME 15
     limPos      =   [-500 500];
@@ -284,5 +293,5 @@ function schemes = rx_schemes()
     
     rx(i+1).pos     =   [-400, -400];
     rx(i+2).pos     =   [400, -400];
-    schemes{end+1}  =   rx;
+    distrubutions{end+1}  =   rx;
 end

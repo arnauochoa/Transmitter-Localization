@@ -6,7 +6,8 @@ function txEstPos = rss_doa_method(scen, rx, rxPows, estDoas)
 %       Weighted version of the Stansfield algorithm described by Werner et
 %       al.
 %
-%   Input:      rx:         1xM struct. Information of the receivers
+%   Input:      scen:           Struct. Information of the scenario
+%               rx:         1xM struct. Information of the receivers
 %               rxPows:     Mx1 vector. Received signals' powers
 %               estDoas:    Mx1 vector. Estimated directions of arrival
 %
@@ -16,7 +17,6 @@ function txEstPos = rss_doa_method(scen, rx, rxPows, estDoas)
     b           =   zeros(scen.numRx, 1);
     A           =   zeros(scen.numRx, 2);
     thetaTilde  =   zeros(scen.numRx, 1);
-%     d   =   zeros(scen.numRx, 1);
     
     %- Assign values to b and A
     for i = 1:scen.numRx

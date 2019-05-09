@@ -4,18 +4,21 @@ function [rxPows, rxTimes, rxFreqs, estDoas, txEstPosA, txEstVelA, txEstPosB] = 
 %       Builds the scenario and estimates the transmitter's position and 
 %       velocity for the given scenario. 
 %
-%   Input:      N:          Double. Number of realizations for every step
-%               scen:       Struct. Information of the scenario
+%   Input:      scen:       Struct. Information of the scenario
 %               tx:         Struct. Information of the transmitter
 %               rx:         1xM struct. Information of the receivers            
 %
-%   Output:     rxPows:     numRx x1 vector. Received powers
-%               rxTimes:    numRx x1 vector. Reception times
-%               rxFreqs:    numRx x1 vector. Received frequencies
-%               txEstPos:   Nx3 matrix. Estimated positions (X-Y-Z) for the
-%                           different realizations.
-%               txEstVel:   Nx3 matrix. Estimated velocities (X-Y-Z) for the
-%                           different realizations.
+%   Output:     rxPows:     numRx x N matrix. Received powers
+%               rxTimes:    numRx x N matrix. Reception times
+%               rxFreqs:    numRx x N matrix. Received frequencies
+%               estDoas:    numRx x N matrix. Estimated DoAs
+%               txEstPosA:  Nx3 matrix. Positions [X, Y] with the TDoA/FDoA
+%                           method
+%               txEstPosA:  Nx3 matrix. Velocities [X, Y] with the TDoA/FDoA
+%                           method
+%               txEstPosB:  Nx3 matrix. Positions [X, Y] with the RSS/DoA
+%                           method
+
     global N;
     
     numRx       =   length(rx);
