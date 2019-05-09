@@ -5,7 +5,8 @@ function estTheta    =   get_est_theta(scen, rx, tx, rxPow)
 %       positive angle is defined as a rotation in anti-clockwise sense
 %       with respect to the X axis.
 %
-%   Input:      rx:         Struct. Receiver information
+%   Input:      scen:       Struct. Information of the scenario
+%               rx:         Struct. Receiver information
 %               tx:         Struct. Transmitter information
 %               rxPow:      Double. Received power att given receiver
 %

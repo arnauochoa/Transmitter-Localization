@@ -6,7 +6,8 @@ function thetaError  =   compute_theta_error(scen, thetaTilde, rxPow)
 %       A positive angle is defined as a rotation in anti-clockwise sense
 %       with respect to the X axis.
 %
-%   Input:      thetaTilde: Double. Array orientation wrt. the incoming DoA
+%   Input:      scen:       Struct. Information of the scenario
+%               thetaTilde: Double. Array orientation wrt. the incoming DoA
 %               rxPow:      Double. Received power att given receiver
 %
 %   Output:     thetaError: Double. Error in DoA estimation

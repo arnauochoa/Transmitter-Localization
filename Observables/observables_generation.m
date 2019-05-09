@@ -5,7 +5,8 @@ function [rxPow, rxTime, rxFreq, estTheta] = observables_generation(scen, rx, tx
 %       positions and velocities of the transmitter and receiver. Gaussian
 %       noise is added following the form N(0, CRB).
 %
-%   Input:      rx:         Struct. Receiver information
+%   Input:      scen:           Struct. Information of the scenario
+%               rx:         Struct. Receiver information
 %               tx:         Struct. Transmitter information
 %
 %   Output:     rxPow:      Double. Received signal's power

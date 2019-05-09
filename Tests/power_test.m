@@ -1,4 +1,6 @@
-
+% 
+% POWER_TEST: Script used for test purposes related with the received power.
+%
 
 power1  =   -10; % dBW
 power2  =   -5;

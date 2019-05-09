@@ -4,7 +4,8 @@ function timeCRB = get_time_CRB(scen, rxPow)
 %       Time CRB computation as described by Kay in "Fundamentals of 
 %       Statistical Signal Processing: Estimation Theory", p. 53
 %
-%   Input:      rxPow:      Double. Received signal's power in Watts
+%   Input:      scen:       Struct. Information of the scenario
+%               rxPow:      Double. Received signal's power in Watts
 %
 %   Output:     timeCRB:    CRB of the reception time
     

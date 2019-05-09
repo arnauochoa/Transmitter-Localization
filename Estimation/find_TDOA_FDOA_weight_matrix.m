@@ -1,7 +1,7 @@
 function W = find_TDOA_FDOA_weight_matrix(scen, rxPows)
 %   FIND_TDOA_FDOA_WEIGHT_MATRIX:    Finds weighting matrix for TDOA/FDOA method. 
 %                      
-%       Finds weighting matrix for LS. The weighting matrix can be the
+%       Finds weighting matrix for the TDoA/FDoA method. The weighting matrix can be the
 %       identity matrix or the inverse covariance matrix, built from the
 %       CRLB for time and frequency.
 %

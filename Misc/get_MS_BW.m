@@ -7,6 +7,7 @@ function MSBW = get_MS_BW(scen)
 %   Input:      scen:   Struct. Information of the scenario
 %
 %   Output:     MSBW:   Double. Mean Square Bandwidth
+
     %- Band limit definition
     B               =   scen.bw/2;
     band            =   [-B B];

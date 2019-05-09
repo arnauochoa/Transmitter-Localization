@@ -2,9 +2,10 @@ function tNoise = compute_time_noise(scen, rxPow)
 %   COMPUTE_TIME_NOISE:     Time noise computation
 %
 %       Time noise computation following a Gaussian distributuion with
-%       mean=0 and variance=CRB: N(0, CRB)
+%       mean = 0 and variance = CRB, i.e. N(0, CRB).
 %
-%   Input:      rxPow:      Double. Received signal's power in Watts
+%   Input:      scen:       Struct. Information of the scenario
+%               rxPow:      Double. Received signal's power in Watts
 %
 %   Output:     tNoise:     Double. Additive noise in time
 
