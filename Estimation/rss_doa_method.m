@@ -13,9 +13,10 @@ function txEstPos = rss_doa_method(scen, rx, rxPows, estDoas)
 %   Output:     txEstPos:   2x1 vector. Source's estimated position
 
     %- Some initializations
-    b   =   zeros(scen.numRx, 1);
-    A   =   zeros(scen.numRx, 2);
-    d   =   zeros(scen.numRx, 1);
+    b           =   zeros(scen.numRx, 1);
+    A           =   zeros(scen.numRx, 2);
+    thetaTilde  =   zeros(scen.numRx, 1);
+%     d   =   zeros(scen.numRx, 1);
     
     %- Assign values to b and A
     for i = 1:scen.numRx
@@ -23,13 +24,11 @@ function txEstPos = rss_doa_method(scen, rx, rxPows, estDoas)
         A(i, :)     =   [sin(estDoas(i)), -cos(estDoas(i))];
         
         %- Orientation of the ULA wrt. the incoming DoA
-        thetaTilde  =   estDoas(i) - rx(i).orientation;
-        %- Estimated doa variance
-        d(i)        =   get_doa_CRB(scen, thetaTilde, rxPows(i));
+        thetaTilde(i)  =   estDoas(i) - rx(i).orientation;
     end
     
     %- Weighted Least Squares
-    W           =   diag(d);
+    W           =   find_RSS_DOA_weight_matrix(scen, thetaTilde, rxPows);
     txEstPos    =   pinv(A' * W * A) * A' * W * b;
 end
 

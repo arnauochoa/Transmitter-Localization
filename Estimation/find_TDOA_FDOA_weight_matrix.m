@@ -1,5 +1,5 @@
 function W = find_TDOA_FDOA_weight_matrix(scen, rxPows)
-%   FIND_WEIGHT_MATRIX:    Finds weighting matrix for LS. 
+%   FIND_TDOA_FDOA_WEIGHT_MATRIX:    Finds weighting matrix for TDOA/FDOA method. 
 %                      
 %       Finds weighting matrix for LS. The weighting matrix can be the
 %       identity matrix or the inverse covariance matrix, built from the
@@ -11,7 +11,7 @@ function W = find_TDOA_FDOA_weight_matrix(scen, rxPows)
 %   Output:     W:          (numRx-1)x(numRx-1) matrix. Weighting matrix
 
     size    =   scen.numRx - 1;
-    switch scen.weighting 
+    switch scen.tdoaWeighting 
         case 'I'
             W   = eye(2*size);
         case 'Q'

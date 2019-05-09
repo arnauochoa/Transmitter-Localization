@@ -53,8 +53,12 @@ scen.fdoaVar        =   0;              %               Frequency noise variance
                                         %                   When 0, CRB is used
 scen.doaVar         =   0;              %               DoA error variance. 
                                         %                   When 0, CRB is used
-scen.weighting      =   'Q';            %               Weigting matrix used on LS. 
-                                        %                   I for identity, Q for covariance
+scen.tdoaWeighting  =   'Q';            %               Weigting matrix used on TDOA/FDOA. 
+                                        %                   I for identity, 
+                                        %                   Q for covariance
+scen.rssWeighting   =   'P';            %               Weigting matrix used on RSS/DOA. 
+                                        %                   I for identity, 
+                                        %                   P for RSS-based
 scen.refIndex       =   1;              %               Reference receiver index
 scen.c0             =   1;              %               Average multiplicative gain
 scen.gamma          =   2;              %               Path loss exponent
