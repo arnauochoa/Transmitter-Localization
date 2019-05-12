@@ -4,6 +4,8 @@ function distrubutions = rx_distributions()
 %   	Definition of the distribution of the receivers including
 %   	position, velocity and orientation of the antenna array for each
 %   	receiver.
+%       Orientation of the ULA defined as: 90º if ULA is parallel to X
+%       axis.
 %
 %   Output:     distrubutions:  Cell array. Schemes of the receivers. Every
 %                               cell is an array with the receivers of the 
@@ -36,19 +38,19 @@ function distrubutions = rx_distributions()
     %% SCHEME 2
     rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
     rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
-    rx(1).orientation   =   0;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(1).orientation   =   90;    %   [rad]       Orientation of the ULA wrt. the X axis
     rx(2).pos           =   [400, 0];       %    [m]        Rx2 position
     rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
-    rx(2).orientation   =   0;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(2).orientation   =   90;    %   [rad]       Orientation of the ULA wrt. the X axis
     rx(3).pos           =   [-400, 0];      %    [m]        Rx3 position
     rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
-    rx(3).orientation   =   0;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(3).orientation   =   90;    %   [rad]       Orientation of the ULA wrt. the X axis
     rx(4).pos           =   [0, 400];       %    [m]        Rx4 position
     rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
-    rx(4).orientation   =   0;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(4).orientation   =   90;    %   [rad]       Orientation of the ULA wrt. the X axis
     rx(5).pos           =   [0, -400];      %    [m]        Rx5 position
     rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
-    rx(5).orientation   =   0;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).orientation   =   90;    %   [rad]       Orientation of the ULA wrt. the X axis
 
     distrubutions{end+1}      =   rx;
 
