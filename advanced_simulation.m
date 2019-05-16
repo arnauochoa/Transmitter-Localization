@@ -19,17 +19,17 @@ if isempty(testName), error('A name must be set for this test'); end
 showScenario        =   true;           %               Shows position over 2D space
 c                   =   299792458;      %    [m/s]      Speed of light
 n                   =   1.000293;       %             	Refractive index
-N                   =   300;            %               Number of realizations
+N                   =   200;            %               Number of realizations
 nDim                =   2;              %               Number of dimensions (now only 2)
 
 %% - Receiver parameters --> Defined on rx_distributions
-selectedRxDist      =   1:2;
+selectedRxDist      =   1:1;
 
 %% - Transmitter parameters
 %-- Variable parameter values (positive angle -> anti-clockwise)
-azim.start          =   0;              %     [deg]     First value of azimuth
-azim.end            =   90;             %     [deg]     Last value of azimuth
-azim.steps          =   3;              %               Steps of increment in azimuth
+azim.start          =   45;              %     [deg]     First value of azimuth
+azim.end            =   45;             %     [deg]     Last value of azimuth
+azim.steps          =   1;              %               Steps of increment in azimuth
 
 rad.start           =   800;            %     [m]       First value of radius
 rad.end             =   800;            %     [m]       Last value of radius
@@ -47,10 +47,9 @@ scen.shape          =   's2';           %               Signal band shape:
                                         %                   's' -> sinc, 
                                         %                   't' -> triangle
 scen.freq           =   1575.42 * 1e6;  %     [Hz]      Transmitted signal frequency
-scen.power          =   -5;             %    [dBW]      Transmitted signal power
-scen.nFig           =   2;              %     [dB]      Receiver's noise figure
+scen.power          =   0;              %    [dBW]      Transmitted signal power
 scen.ns             =   10;             %               Number of samples
-scen.temp           =   290;            %     [K]       Ambient temperature
+scen.temp           =   400;            %     [K]       Equivalent temperature of system
 scen.tdoaVar        =   0;              %               Time noise variance. 
                                         %                   When 0, CRB is used
 scen.fdoaVar        =   0;              %               Frequency noise variance. 

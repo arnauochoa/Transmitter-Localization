@@ -6,12 +6,12 @@ clearvars;
 close all;
 clc;
 
-testName    =   'test_1/scheme_1';
+testName    =   'cc/scheme_1';
 directory   =   strcat('Results/', testName);
 filePath    =   strcat(directory, '/data.mat');
 load(filePath);
 
-azIndForCDF     =   1:3;    % Indices of azimuth values to compare on CDF
+azIndForCDF     =   1;    % Indices of azimuth values to compare on CDF
 radIndForCDF    =   1;  % Indices of azimuth values to compare on CDF
 radIndFor2D     =   1;  % Indices of radius to show on 2D plot
 

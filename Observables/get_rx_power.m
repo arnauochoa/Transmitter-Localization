@@ -15,11 +15,8 @@ function [rxPow] = get_rx_power(scen, range)
     %- Received power without noise
     rxPow       =   db2pow(scen.power) / Lbf;
     
-    %- Power CRB (Kay p.37)
-    powCRB      =   4 * rxPow * scen.No / scen.ns;
-    
     %- Amplitude noise
-    powNoise    =   normrnd(0, sqrt(powCRB));
+    powNoise    =   normrnd(0, scen.No);
     
     %- Received power with noise
     rxPow       =   rxPow + powNoise;
