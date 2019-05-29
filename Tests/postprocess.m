@@ -6,7 +6,7 @@ clearvars;
 close all;
 clc;
 
-testName    =   'velB/scheme_3';
+testName    =   'velB2/scheme_3';
 directory   =   strcat('Results/', testName);
 filePath    =   strcat(directory, '/data.mat');
 load(filePath);

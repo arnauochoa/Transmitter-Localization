@@ -36,15 +36,16 @@ function [rxPows, rxTimes, rxFreqs, estDoas, txEstPosA, txEstVelA, txEstPosB, tx
     rxFreqs     =   zeros(numRx, N);
     estDoas     =   zeros(numRx, N);
     
-    refTime     =   zeros(N, 1);
+    %refTime     =   zeros(numRx, N);
     for i = 1:N
         parfor r = 1:numRx
             [rxPows(r, i), rxTimes(r, i), rxFreqs(r, i), estDoas(r, i)] = ...
                 observables_generation(scen, rx(r), tx);
         end
-        refTime(i) = tx.time + rxTimes(1, i);
     end
     
+    refTime     =   tx.time + rxTimes;
+    tau         =   zeros(numRx, N);
     
     for i = 1:N
         [txEstPosA(i, :), txEstVelA(i, :), ~, ~] = ...
@@ -52,12 +53,14 @@ function [rxPows, rxTimes, rxFreqs, estDoas, txEstPosA, txEstVelA, txEstPosB, tx
         
         txEstPosB(i, :)     =   rss_doa_method(scen, rx, rxPows(:, i), estDoas(:, i));
         
-        if oldTx.time ~= -1
-            txEstVelB(i, :)     =   (oldTx.pos - txEstPosB(i, :)) ./ (refTime(i) - oldTx.time);
+        if (~isempty(oldTx.time))
+            tau(:,i)    =   refTime(:, i) - oldTx.time;
+            avgTau      =   mean(tau(:, i));
+            txEstVelB(i, :)     =   (oldTx.pos - txEstPosB(i, :)) ./ avgTau;
         end
     end
     
     oldTx.pos   =   mean(txEstPosB, 1);
-    oldTx.time  =   mean(refTime);
+    oldTx.time  =   mean(refTime, 2);
 end
 
