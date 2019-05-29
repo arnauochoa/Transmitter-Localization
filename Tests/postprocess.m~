@@ -6,7 +6,7 @@ clearvars;
 close all;
 clc;
 
-testName    =   'velB/scheme_3';
+testName    =   'sing/scheme_2';
 directory   =   strcat('Results/', testName);
 filePath    =   strcat(directory, '/data.mat');
 load(filePath);
@@ -345,18 +345,18 @@ title("CDF of RSS/DoA method");
 
 fig = [fig, cdfFigs];
 
-%% CDFs Velocity
-velErrorA      =   zeros(N, rad.steps, azim.steps);
-velErrorB      =   zeros(N, rad.steps, azim.steps);
-velErr2dA      =   zeros(N, nDim, rad.steps, azim.steps);
-velErr2dB      =   zeros(N, nDim, rad.steps, azim.steps);
+%% CDFs Pos
+posErrorA      =   zeros(N, rad.steps, azim.steps);
+posErrorB      =   zeros(N, rad.steps, azim.steps);
+posErr2dA      =   zeros(N, nDim, rad.steps, azim.steps);
+posErr2dB      =   zeros(N, nDim, rad.steps, azim.steps);
 for a = 1:azim.steps
     for r = 1:rad.steps
-       velErr2dA(:, :, r, a)   =   tx(r, a).vel - txEstVelA(:, :, r, a);
-       velErr2dB(:, :, r, a)   =   tx(r, a).vel - txEstVelB(:, :, r, a);
+       posErr2dA(:, :, r, a)   =   tx(r, a).pos - txEstPosA(:, :, r, a);
+       posErr2dB(:, :, r, a)   =   tx(r, a).pos - txEstPosB(:, :, r, a);
        
-       velErrorA(:, r, a)      =   sqrt(sum(velErr2dA(:, :, r, a).^2, 2));
-       velErrorB(:, r, a)      =   sqrt(sum(velErr2dB(:, :, r, a).^2, 2));
+       posErrorA(:, r, a)      =   sqrt(sum(posErr2dA(:, :, r, a).^2, 2));
+       posErrorB(:, r, a)      =   sqrt(sum(posErr2dB(:, :, r, a).^2, 2));
     end
 end
 
@@ -373,22 +373,22 @@ for a = azIndForCDF
         cdfLegend{i} = sprintf('R = %d m, a = %d º', mov.radVals(r), mov.azimVals(a));
         
         figure(cdfFigs(1));
-        cdfplot(velErrorA(:, r, a)); hold on;
+        cdfplot(posErrorA(:, r, a)); hold on;
         
         figure(cdfFigs(2));
-        cdfplot(velErrorB(:, r, a)); hold on;
+        cdfplot(posErrorB(:, r, a)); hold on;
         
         i = i + 1;
     end
 end
 figure(cdfFigs(1));
-xlabel('Error [m/s]');
+xlabel('Error [m]');
 legend(cdfLegend, 'Location', 'best'); 
 legend('boxoff');
 title("CDF of TDoA/FDoA method");
 
 figure(cdfFigs(2));
-xlabel('Error [m/s]');
+xlabel('Error [m]');
 legend(cdfLegend, 'Location', 'best'); 
 legend('boxoff');
 title("CDF of RSS/DoA method");
