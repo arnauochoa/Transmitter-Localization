@@ -36,6 +36,6 @@ function tx = obtain_tx_info(R, azim, vel, dir)
     pos3d   =   [tx.pos, 0];
     vel3d   =   cross(pos3d, w_vect);
     tx.vel  =   vel3d(1:2);
-    tx.time =   0;
+    tx.time = 
 end
 

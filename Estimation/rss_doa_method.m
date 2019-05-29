@@ -30,5 +30,6 @@ function txEstPos = rss_doa_method(scen, rx, rxPows, estDoas)
     %- Weighted Least Squares
     W           =   find_RSS_DOA_weight_matrix(scen, thetaTilde, rxPows);
     txEstPos    =   pinv(A' * W * A) * A' * W * b;
+    
 end
 

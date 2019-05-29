@@ -42,7 +42,7 @@ scen.shape          =   's2';           %               Signal band shape:
 scen.freq           =   1575.42 * 1e6;  %     [Hz]      Transmitted signal frequency
 scen.power          =   0;              %    [dBW]      Transmitted signal power
 scen.ns             =   10;             %               Number of samples
-scen.temp           =   400;            %     [K]       Equivalent temperature of system
+scen.nFig           =   5;              %               Noise figure of the system
 scen.tdoaVar        =   0;              %               Time noise variance. 
                                         %                   When 0, CRB is used
 scen.fdoaVar        =   0;              %               Frequency noise variance. 

@@ -38,7 +38,7 @@ function W = find_TDOA_FDOA_weight_matrix(scen, rxPows)
             Q1          =   diag(tdoaVar);
             Q2          =   diag(fdoaVar);
             O           =   zeros(size);
-            Q           =   [Q1 O; O Q2];
+            Q           =   [Q1 O; O Q2]; %%% <----
             W           =   inv(Q);
         case 'R'
             R1          =   ones(size)/2 + eye(size)/2;
