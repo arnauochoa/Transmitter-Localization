@@ -13,7 +13,12 @@ function estTheta    =   get_est_theta(scen, rx, tx, rxPow)
 %   Output:     estTheta:   Double. Estimated DoA in radians
     
     %- Computation of the true DoA
-    theta       =   atan((tx.pos(2) - rx.pos(2)) / (tx.pos(1) - rx.pos(1)));
+    if tx.pos == rx.pos
+        theta       =   0;
+    else
+        % theta       =   atan((tx.pos(2) - rx.pos(2)) / (tx.pos(1) - rx.pos(1)));
+        theta       =   atan2d((tx.pos(2) - rx.pos(2)), (tx.pos(1) - rx.pos(1)));
+    end
     
     %- Orientation of the ULA wrt. the incoming DoA
     thetaTilde  =   theta - rx.orientation;

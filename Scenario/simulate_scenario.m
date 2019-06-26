@@ -47,7 +47,7 @@ function [rxPows, rxTimes, rxFreqs, estDoas, txEstPosA, txEstVelA, txEstPosB, tx
     refTime     =   tx.time + rxTimes;
     tau         =   zeros(numRx, N);
     
-    for i = 1:N
+    parfor i = 1:N
         [txEstPosA(i, :), txEstVelA(i, :), ~, ~] = ...
             tdoa_fdoa_method(scen, rx, rxPows(:,i), rxTimes(:,i), rxFreqs(:,i));
         

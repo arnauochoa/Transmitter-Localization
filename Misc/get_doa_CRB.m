@@ -6,9 +6,9 @@ function thetaCRB = get_doa_CRB(scen, thetaTilde, rxPow)
 %       DoA-Based Primary-User Localization in Cognitive Radio Networks", 
 %       by Wang et al.
 %
-%   Input:      scen:           Struct. Information of the scenario
-%               thetaTilde: Double. Array orientation wrt. the incoming DoA
-%               rxPow:      Double. Received power att given receiver
+%   Input:      scen:       Struct. Information of the scenario
+%               thetaTilde: Vector. Array orientation wrt. the incoming DoA
+%               rxPow:      Vector. Received power at receivers
 %
 %   Output:     thetaCRB:   Double. CRB of the DoA estimation error
 

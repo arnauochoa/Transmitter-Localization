@@ -19,21 +19,21 @@ if isempty(testName), error('A name must be set for this test'); end
 showScenario        =   true;           %               Shows position over 2D space
 c                   =   299792458;      %    [m/s]      Speed of light
 n                   =   1.000293;       %             	Refractive index
-N                   =   50;            %               Number of realizations
+N                   =   1000;            %               Number of realizations
 nDim                =   2;              %               Number of dimensions (now only 2)
 
 %% - Receiver parameters --> Defined on rx_distributions
-selectedRxDist      =   3;
+selectedRxDist      =   1:4;
 
 %% - Transmitter parameters
 %-- Variable parameter values (positive angle -> anti-clockwise)
 azim.start          =   0;              %     [deg]     First value of azimuth
-azim.end            =   90;             %     [deg]     Last value of azimuth
-azim.steps          =   3;              %               Steps of increment in azimuth
+azim.end            =   180;             %     [deg]     Last value of azimuth
+azim.steps          =   7;              %               Steps of increment in azimuth
 
-rad.start           =   600;            %     [m]       First value of radius
-rad.end             =   600;            %     [m]       Last value of radius
-rad.steps           =   1;              %               Steps of increment in radius
+rad.start           =   300;            %     [m]       First value of radius
+rad.end             =   1500;            %     [m]       Last value of radius
+rad.steps           =   2;              %               Steps of increment in radius
 
 mov.vel             =   0.01;           %   [rad/s]     Angular velocity
 
@@ -47,7 +47,7 @@ scen.shape          =   's2';           %               Signal band shape:
                                         %                   's' -> sinc, 
                                         %                   't' -> triangle
 scen.freq           =   1575.42 * 1e6;  %     [Hz]      Transmitted signal frequency
-scen.power          =   0;              %    [dBW]      Transmitted signal power
+scen.power          =   -10;              %    [dBW]      Transmitted signal power
 scen.ns             =   10;             %               Number of samples
 scen.nFig           =   5;              %               Noise figure of the system
 scen.tdoaVar        =   0;              %               Time noise variance. 
@@ -63,12 +63,6 @@ scen.rssWeighting   =   'P';            %               Weigting matrix used on 
                                         %                   I for identity, 
                                         %                   P for RSS-based
 scen.refIndex       =   1;              %               Reference receiver index
-scen.c0             =   1;              %               Average multiplicative gain
-scen.gamma          =   2;              %               Path loss exponent
-scen.sigmaS         =   6;              %     [dB]      Shadowing standard deviation
-scen.corrDist       =   5;              %     [m]       Correlation distance within which 
-                                        %                   the shadowing effects among 
-                                        %                   nodes are correlated
 scen.spacing        =   0;              %     [m]       Spacing between array elements. 
                                         %                   If 0, set to lambda/2
 scen.nAnt           =   2;              %               Number of antennas of the array
@@ -121,6 +115,11 @@ for s = selectedRxDist
     txEstPosB       =   zeros(N, nDim, rad.steps, azim.steps);
     txEstVelA       =   zeros(N, nDim, rad.steps, azim.steps);
     txEstVelB       =   zeros(N, nDim, rad.steps, azim.steps);
+    
+    rxPows          =   zeros(scen.numRx, N, rad.steps, azim.steps);
+    rxTimes         =   zeros(scen.numRx, N, rad.steps, azim.steps);
+    rxFreqs         =   zeros(scen.numRx, N, rad.steps, azim.steps);
+    estDoas         =   zeros(scen.numRx, N, rad.steps, azim.steps);
 
     %% --- SIMULATION ---
 
@@ -132,8 +131,16 @@ for s = selectedRxDist
             fprintf("  Azimuth = %i º\n", mov.azimVals(a));
             tx(r, a)        =   obtain_tx_info(mov.radVals(r), mov.azimVals(a), mov.vel, mov.dir);
             tx(r, a).time   =   obtain_tx_time(tx(r, :), a, mov.radVals(r), mov.azimVals);
-            [~, ~, ~, ~, txEstPosA(:, :, r, a), txEstVelA(:, :, r, a), txEstPosB(:, :, r, a), txEstVelB(:, :, r, a), oldTx]...
-                =   simulate_scenario(scen, tx(r, a), rx, oldTx);
+            [rxPows(:, :, r, a), ...
+                rxTimes(:, :, r, a), ...
+                rxFreqs(:, :, r, a), ...
+                estDoas(:, :, r, a), ...
+                txEstPosA(:, :, r, a), ...
+                txEstVelA(:, :, r, a), ...
+                txEstPosB(:, :, r, a), ...
+                txEstVelB(:, :, r, a), ...
+                oldTx]...
+                    =   simulate_scenario(scen, tx(r, a), rx, oldTx);
 
             %-- Position and velocity averages
             estA(r, a).pos          =   mean(txEstPosA(:, :, r, a), 1);
@@ -173,9 +180,10 @@ for s = selectedRxDist
             mkdir(directory);
         end
         dataFile = strcat(directory, 'data');
-        save(dataFile,'N', 'mov', 'scen', 'rad', 'azim', 'rx', 'tx', 'pos', 'vel', 'estA', ...
-            'estB', 'txEstPosA', 'txEstPosB', 'txEstVelA','txEstVelB', 'nDim');
-
+        save(dataFile,'N', 'mov', 'scen', 'rad', 'azim', 'rx', 'tx', 'pos', 'vel', ...
+            'estA', 'estB', 'txEstPosA', 'txEstPosB', 'txEstVelA','txEstVelB', 'nDim', ...
+            'rxPows', 'rxTimes', 'rxFreqs', 'estDoas');
+ 
         close all;
     end
 end

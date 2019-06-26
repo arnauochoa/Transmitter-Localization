@@ -15,102 +15,169 @@ function distrubutions = rx_distributions()
     aux.pos             =   [0 0];
     aux.vel             =   [0 0];
     aux.orientation     =   0;
-
-    %% SCHEME 1
-    rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
+    
+    ori1                =   2*pi*rand(6, 1);
+    ori2                =   rem(ori1+pi/2, 2*pi);
+    
+    %% SCHEME 1.1
+    d = 50/sqrt(2);
+    rx(1).pos           =   [d, d];     %    [m]        Rx1 position
     rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
-    rx(1).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(2).pos           =   [400, 0];       %    [m]        Rx2 position
+    rx(1).orientation   =   ori1(1);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(2).pos           =   [100, 0];       %    [m]        Rx2 position
     rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
-    rx(2).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(3).pos           =   [-400, 0];      %    [m]        Rx3 position
+    rx(2).orientation   =   ori1(2);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(3).pos           =   [-100, 0];      %    [m]        Rx3 position
     rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
-    rx(3).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(4).pos           =   [0, 400];       %    [m]        Rx4 position
+    rx(3).orientation   =   ori1(3);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(4).pos           =   [0, 100];       %    [m]        Rx4 position
     rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
-    rx(4).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(5).pos           =   [0, -400];      %    [m]        Rx5 position
+    rx(4).orientation   =   ori1(4);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).pos           =   [0, -100];      %    [m]        Rx5 position
     rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
-    rx(5).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).orientation   =   ori1(5);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(6).pos           =   [-d, -d];   %    [m]        Rx6 position
+    rx(6).vel           =   [0, 0];         %   [m/s]       Rx6 velocity
+    rx(6).orientation   =   ori1(6);    %   [rad]       Orientation of the ULA wrt. the X axis
+
+    distrubutions{end+1}      =   rx;
+    
+    %% SCHEME 1.2
+    d = 50/sqrt(2);
+    rx(1).pos           =   [d, d];     %    [m]        Rx1 position
+    rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
+    rx(1).orientation   =   ori2(1);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(2).pos           =   [100, 0];       %    [m]        Rx2 position
+    rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
+    rx(2).orientation   =   ori2(2);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(3).pos           =   [-100, 0];      %    [m]        Rx3 position
+    rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
+    rx(3).orientation   =   ori2(3);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(4).pos           =   [0, 100];       %    [m]        Rx4 position
+    rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
+    rx(4).orientation   =   ori2(4);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).pos           =   [0, -100];      %    [m]        Rx5 position
+    rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
+    rx(5).orientation   =   ori2(5);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(6).pos           =   [-d, -d];   %    [m]        Rx6 position
+    rx(6).vel           =   [0, 0];         %   [m/s]       Rx6 velocity
+    rx(6).orientation   =   ori2(6);    %   [rad]       Orientation of the ULA wrt. the X axis
 
     distrubutions{end+1}      =   rx;
 
-    %% SCHEME 2
-    rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
+    %% SCHEME 2.1
+    d = 250/sqrt(2);
+    rx(1).pos           =   [d, d];         %    [m]        Rx1 position
     rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
-    rx(1).orientation   =   pi/2;    %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(2).pos           =   [400, 0];       %    [m]        Rx2 position
+    rx(1).orientation   =   ori1(1);   %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(2).pos           =   [500, 0];       %    [m]        Rx2 position
     rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
-    rx(2).orientation   =   pi/2;    %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(3).pos           =   [-400, 0];      %    [m]        Rx3 position
+    rx(2).orientation   =   ori1(2);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(3).pos           =   [-500, 0];      %    [m]        Rx3 position
     rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
-    rx(3).orientation   =   pi/2;    %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(4).pos           =   [0, 400];       %    [m]        Rx4 position
+    rx(3).orientation   =   ori1(3);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(4).pos           =   [0, 500];       %    [m]        Rx4 position
     rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
-    rx(4).orientation   =   pi/2;    %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(5).pos           =   [0, -400];      %    [m]        Rx5 position
+    rx(4).orientation   =   ori1(4);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).pos           =   [0, -500];      %    [m]        Rx5 position
     rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
-    rx(5).orientation   =   pi/2;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).orientation   =   ori1(5);    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(6).pos           =   [-d, -d];       %    [m]        Rx6 position
+    rx(6).vel           =   [0, 0];         %   [m/s]       Rx6 velocity
+    rx(6).orientation   =   ori1(6);    %   [rad]       Orientation of the ULA wrt. the X axis
+
+    distrubutions{end+1}      =   rx;
+    
+    
+    %% SCHEME 2.2
+    d = 250/sqrt(2);
+    rx(1).pos           =   [d, d];         %    [m]        Rx1 position
+    rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
+    rx(1).orientation   =   ori2(1);        %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(2).pos           =   [500, 0];       %    [m]        Rx2 position
+    rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
+    rx(2).orientation   =   ori2(2);        %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(3).pos           =   [-500, 0];      %    [m]        Rx3 position
+    rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
+    rx(3).orientation   =   ori2(3);        %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(4).pos           =   [0, 500];       %    [m]        Rx4 position
+    rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
+    rx(4).orientation   =   ori2(4);        %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).pos           =   [0, -500];      %    [m]        Rx5 position
+    rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
+    rx(5).orientation   =   ori2(5);        %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(6).pos           =   [-d, -d];       %    [m]        Rx6 position
+    rx(6).vel           =   [0, 0];         %   [m/s]       Rx6 velocity
+    rx(6).orientation   =   ori2(6);        %   [rad]       Orientation of the ULA wrt. the X axis
 
     distrubutions{end+1}      =   rx;
 
     %% SCHEME 3
-    rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
+    d = 50/sqrt(2);
+    rx(1).pos           =   [d, d];     %    [m]        Rx1 position
     rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
-    rx(1).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(2).pos           =   [200, 0];       %    [m]        Rx2 position
+    rx(1).orientation   =   pi/4;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(2).pos           =   [100, 0];       %    [m]        Rx2 position
     rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
-    rx(2).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(3).pos           =   [-400, 0];      %    [m]        Rx3 position
+    rx(2).orientation   =   pi/2;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(3).pos           =   [-100, 0];      %    [m]        Rx3 position
     rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
-    rx(3).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(4).pos           =   [0, 400];       %    [m]        Rx4 position
+    rx(3).orientation   =   0;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(4).pos           =   [0, 100];       %    [m]        Rx4 position
     rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
-    rx(4).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(5).pos           =   [0, -200];      %    [m]        Rx5 position
+    rx(4).orientation   =   0;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).pos           =   [0, -100];      %    [m]        Rx5 position
     rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
-    rx(5).orientation   =   2*pi*rand();              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).orientation   =   pi/2;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(6).pos           =   [-d, -d];   %    [m]        Rx6 position
+    rx(6).vel           =   [0, 0];         %   [m/s]       Rx6 velocity
+    rx(6).orientation   =   3*pi/4;    %   [rad]       Orientation of the ULA wrt. the X axis
 
     distrubutions{end+1}      =   rx;
 
     %% SCHEME 4
-    rx(1).pos           =   [0, -400];         %    [m]        Rx1 position
+    d = 250/sqrt(2);
+    rx(1).pos           =   [d, d];         %    [m]        Rx1 position
     rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
-    rx(1).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(2).pos           =   [400, 0];       %    [m]        Rx2 position
+    rx(1).orientation   =   pi/4;           %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(2).pos           =   [500, 0];       %    [m]        Rx2 position
     rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
-    rx(2).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(3).pos           =   [-400, 0];      %    [m]        Rx3 position
+    rx(2).orientation   =   pi/2;           %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(3).pos           =   [-500, 0];      %    [m]        Rx3 position
     rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
     rx(3).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(4).pos           =   [0, 400];       %    [m]        Rx4 position
+    rx(4).pos           =   [0, 500];       %    [m]        Rx4 position
     rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
     rx(4).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).pos           =   [0, -500];      %    [m]        Rx5 position
+    rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
+    rx(5).orientation   =   pi/2;    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(6).pos           =   [-d, -d];       %    [m]        Rx6 position
+    rx(6).vel           =   [0, 0];         %   [m/s]       Rx6 velocity
+    rx(6).orientation   =   3*pi/4;    %   [rad]       Orientation of the ULA wrt. the X axis
 
     distrubutions{end+1}      =   rx;
 
     %% SCHEME 5
-    rx(1).pos           =   [0, 0];         %    [m]        Rx1 position
+    d = 750/sqrt(2);
+    rx(1).pos           =   [d, d];     %    [m]        Rx1 position
     rx(1).vel           =   [0, 0];         %   [m/s]       Rx1 velocity
-    rx(1).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(2).pos           =   [400, 0];       %    [m]        Rx2 position
+    rx(1).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(2).pos           =   [750, 0];       %    [m]        Rx2 position
     rx(2).vel           =   [0, 0];         %   [m/s]       Rx2 velocity
-    rx(2).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(3).pos           =   [-400, 0];      %    [m]        Rx3 position
+    rx(2).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(3).pos           =   [-750, 0];      %    [m]        Rx3 position
     rx(3).vel           =   [0, 0];         %   [m/s]       Rx3 velocity
-    rx(3).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(4).pos           =   [0, 400];       %    [m]        Rx4 position
+    rx(3).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(4).pos           =   [0, 750];       %    [m]        Rx4 position
     rx(4).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
-    rx(4).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(5).pos           =   [0, -400];      %    [m]        Rx5 position
+    rx(4).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).pos           =   [0, -750];      %    [m]        Rx5 position
     rx(5).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
-    rx(5).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(6).pos           =   [200, 200];       %    [m]        Rx4 position
-    rx(6).vel           =   [0, 0];         %   [m/s]       Rx4 velocity
-    rx(6).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
-    rx(7).pos           =   [-200, -200];      %    [m]        Rx5 position
-    rx(7).vel           =   [0, 0];         %   [m/s]       Rx5 velocity
-    rx(7).orientation   =   0;              %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(5).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
+    rx(6).pos           =   [-d, -d];   %    [m]        Rx6 position
+    rx(6).vel           =   [0, 0];         %   [m/s]       Rx6 velocity
+    rx(6).orientation   =   2*pi*rand();    %   [rad]       Orientation of the ULA wrt. the X axis
 
     distrubutions{end+1}      =   rx;
 

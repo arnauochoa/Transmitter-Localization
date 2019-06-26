@@ -13,5 +13,5 @@ function freqCRB = get_freq_CRB(scen, rxPow)
     SNR     =   rxPow/scen.No;
     
     %- Frequency CRB computation: Kay vol. 1, p. 57
-    freqCRB     =   12 / ((2 * pi)^2 * SNR * scen.ns * (scen.ns^2 - 1));
+    freqCRB     =   6 / ((2 * pi)^2 * SNR * scen.ns * (scen.ns^2 - 1));
 end

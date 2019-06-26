@@ -29,7 +29,12 @@ function txEstPos = rss_doa_method(scen, rx, rxPows, estDoas)
     
     %- Weighted Least Squares
     W           =   find_RSS_DOA_weight_matrix(scen, thetaTilde, rxPows);
-    txEstPos    =   pinv(A' * W * A) * A' * W * b;
+    try 
+        txEstPos    =   pinv(A' * W * A) * A' * W * b;
+    catch e
+        fprintf(1,'The identifier was:\n%s',e.identifier);
+        fprintf(1,'There was an error! The message was:\n%s',e.message);
+    end
     
 end
 
