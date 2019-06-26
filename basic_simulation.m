@@ -20,7 +20,7 @@ nDim                =   2;              %                   Number of dimensions
 nbins               =   100;            %                   Number of bins for the histogram
 
 %- Transmitter parameters
-tx.pos              =   [400, 400];     %    [m]      Position X-Y [m]
+tx.pos              =   [300/sqrt(2), 300/sqrt(2)];     %    [m]      Position X-Y [m]
 tx.vel              =   [0, 10];       %  [m/s]  Velocity X-Y [m/s]
 
 %% - Receiver parameters --> Defined on rx_distributions
@@ -40,10 +40,9 @@ scen.shape          =   's2';           %               Signal band shape:
                                         %                   's2'-> sinc squared,
                                         %                   't' -> triangle
 scen.freq           =   1575.42 * 1e6;  %     [Hz]      Transmitted signal frequency
-scen.power          =   -5;             %    [dBW]      Transmitted signal power
-scen.nFig           =   2;              %     [dB]      Receiver's noise figure
+scen.power          =   -20;              %    [dBW]      Transmitted signal power
 scen.ns             =   10;             %               Number of samples
-scen.temp           =   290;            %     [K]       Ambient temperature
+scen.nFig           =   5;              %               Noise figure of the system
 scen.tdoaVar        =   0;              %               Time noise variance. 
                                         %                   When 0, CRB is used
 scen.fdoaVar        =   0;              %               Frequency noise variance. 

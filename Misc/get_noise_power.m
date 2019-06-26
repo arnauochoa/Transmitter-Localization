@@ -9,7 +9,8 @@ function No = get_noise_power(scen)
 %   Output:     No:     Double. Received noise's power in Watts
 
     k       =   physconst('Boltzmann');     % Boltzmann constant [J/K]
+    T0      =   290;                        % Standard noise temperature [K]
     
-    No      =   k .* scen.temp .* scen.bw .* db2pow(scen.nFig);
+    No      =   k .* T0 .* scen.bw .* scen.nFig;
 end
 

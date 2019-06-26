@@ -10,16 +10,17 @@ function [rxPow] = get_rx_power(scen, range)
 %   Output:     rxPow:  Double. Received signal's power in Watts
 
     %- Propagation losses
-    Lbf         =   (4 * pi * range * scen.freq / scen.v)^2;
+    if range < 0.01  % If Tx is very close, rxPow approximates txPow
+        Lbf         =   1;
+    else
+        Lbf         =   (4 * pi * range * scen.freq / scen.v)^2;
+    end
     
     %- Received power without noise
     rxPow       =   db2pow(scen.power) / Lbf;
     
-    %- Power CRB (Kay p.37)
-    powCRB      =   4 * rxPow * scen.No / scen.ns;
-    
     %- Amplitude noise
-    powNoise    =   normrnd(0, sqrt(powCRB));
+    powNoise    =   normrnd(0, scen.No);
     
     %- Received power with noise
     rxPow       =   rxPow + powNoise;
